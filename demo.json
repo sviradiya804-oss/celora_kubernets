@@ -1,0 +1,698 @@
+{
+  "_id": {
+    "$oid": "69699fc46e489dc930d04290"
+  },
+  "jewelryId": "8853ed71-f281-11f0-b9ca-4f17cf964298",
+  "sequence": 41,
+  "title": "Diamond Wedding Band",
+  "jewelryName": "Camille",
+  "description": "Camille is a modern gold ring adorned with graduated brilliant diamonds, softly claw set along a flowing band, blending sculptural elegance, gentle sparkle, and timeless contemporary sophistication for everyday luxury.",
+  "slug": "camille-curved-diamond-wedding-band",
+  "category": {
+    "value": "Wedding Bands"
+  },
+  "jewelryType": "Wedding Bands",
+  "caratWeight": 0.417,
+  "sale": {
+    "saleActive": false
+  },
+  "type": "Premade",
+  "subType": {
+    "$oid": "68aec1700686a0c9081cc4e3"
+  },
+  "subTypeModel": "weddingbandssubtypelist",
+  "cadCode": "6944",
+  "metalWeight": [
+    {
+      "weight": 2.633,
+      "metalType": "14K GOLD",
+      "_id": {
+        "$oid": "69699fc46e489dc930d04291"
+      }
+    },
+    {
+      "weight": 3.001,
+      "metalType": "18K GOLD",
+      "_id": {
+        "$oid": "69699fc46e489dc930d04292"
+      }
+    }
+  ],
+  "averageWidth": 2,
+  "metaDetails": {
+    "metaKeywords": []
+  },
+  "relationship": [
+    {
+      "$oid": "68aec90a0686a0c9081cdaa3"
+    },
+    {
+      "$oid": "68aec9160686a0c9081cdb49"
+    },
+    {
+      "$oid": "68aec9240686a0c9081cdbe5"
+    }
+  ],
+  "relationshipNames": [],
+  "occasion": [
+    {
+      "$oid": "68aec6f10686a0c9081cd004"
+    },
+    {
+      "$oid": "68aec7720686a0c9081cd337"
+    },
+    {
+      "$oid": "68aec7220686a0c9081cd184"
+    },
+    {
+      "$oid": "68aec7010686a0c9081cd046"
+    }
+  ],
+  "occasionNames": [],
+  "diamondType": "Both",
+  "customizedJewelry": false,
+  "isLabGrown": false,
+  "estimatedDeliveryDays": 15,
+  "engravingOptions": {
+    "isEngravingAvailable": false,
+    "maxCharacters": 20,
+    "engravingCost": {
+      "baseCost": 0,
+      "costPerCharacter": 0,
+      "rushOrderCost": 0
+    },
+    "additionalDeliveryDays": 3
+  },
+  "availableMetals": [
+    {
+      "metal": {
+        "$oid": "68afea760686a0c9081db6ad"
+      },
+      "metalType": "14k Rose Gold",
+      "_id": {
+        "$oid": "69699fc46e489dc930d04293"
+      }
+    },
+    {
+      "metal": {
+        "$oid": "68afea6f0686a0c9081db66b"
+      },
+      "metalType": "14k White Gold",
+      "_id": {
+        "$oid": "69699fc46e489dc930d04294"
+      }
+    },
+    {
+      "metal": {
+        "$oid": "68afea2a0686a0c9081db5e5"
+      },
+      "metalType": "14k Yellow Gold",
+      "_id": {
+        "$oid": "69699fc46e489dc930d04295"
+      }
+    },
+    {
+      "metal": {
+        "$oid": "68afea1e0686a0c9081db5a3"
+      },
+      "metalType": "18k Rose Gold",
+      "_id": {
+        "$oid": "69699fc46e489dc930d04296"
+      }
+    },
+    {
+      "metal": {
+        "$oid": "68afea140686a0c9081db561"
+      },
+      "metalType": "18k White Gold",
+      "_id": {
+        "$oid": "69699fc46e489dc930d04297"
+      }
+    },
+    {
+      "metal": {
+        "$oid": "68afe9fc0686a0c9081db51f"
+      },
+      "metalType": "18k Yellow Gold",
+      "_id": {
+        "$oid": "69699fc46e489dc930d04298"
+      }
+    }
+  ],
+  "availableRingSizes": [],
+  "stoneSize": [
+    {
+      "stonesizeValue": "4X2.5MM (0.18 ct)",
+      "stonesizeid": {
+        "$oid": "69665a4ca7c2cea5e8c7e790"
+      },
+      "_id": {
+        "$oid": "69699fc46e489dc930d04299"
+      }
+    }
+  ],
+  "centerStoneVariation": [
+    {
+      "selectAll": false,
+      "selectedStones": [
+        {
+          "stoneReference": {
+            "$oid": "68aeba780686a0c9081cbf93"
+          },
+          "stoneName": "White Diamond (DR)",
+          "stoneCode": "Pear_4X2.5MM_68aeba780686a0c9081cbf93_0.18",
+          "isSelected": true,
+          "stoneShape": "Pear",
+          "caratSize": "4X2.5MM",
+          "pricePerCarat": 0,
+          "rate": 0,
+          "weight": 0.18,
+          "stoneReferenceType": "shapegemstoneDR",
+          "_id": {
+            "$oid": "69699fc46e489dc930d0429b"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "69699fc46e489dc930d0429a"
+      },
+      "accentStones": []
+    },
+    {
+      "selectAll": false,
+      "selectedStones": [
+        {
+          "stoneReference": {
+            "$oid": "68aebc0a0686a0c9081cc12f"
+          },
+          "stoneName": "Lab White Diamond (LC)",
+          "stoneCode": "Pear_4X2.5MM_68aebc0a0686a0c9081cc12f_0.18",
+          "isSelected": true,
+          "stoneShape": "Pear",
+          "caratSize": "4X2.5MM",
+          "pricePerCarat": 0,
+          "rate": 0,
+          "weight": 0.18,
+          "stoneReferenceType": "shapegemstoneDR",
+          "_id": {
+            "$oid": "69699fc46e489dc930d0429d"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "69699fc46e489dc930d0429c"
+      },
+      "accentStones": []
+    }
+  ],
+  "lcVariations": [
+    {
+      "selectAll": false,
+      "_id": {
+        "$oid": "68aebc0a0686a0c9081cc12f"
+      },
+      "selectedStones": []
+    }
+  ],
+  "stoneRateData": [
+    {
+      "shape": "Pear",
+      "color": "White Diamond (K)",
+      "size": "4X2.5MM",
+      "weight": 0.18,
+      "pricePerCarat": 0,
+      "rate": 0,
+      "isAvailable": true,
+      "_id": {
+        "$oid": "69699fc46e489dc930d0429f"
+      }
+    },
+    {
+      "shape": "Pear",
+      "color": "Lab White Diamond (CV)",
+      "size": "4X2.5MM",
+      "weight": 0.18,
+      "pricePerCarat": 0,
+      "rate": 0,
+      "isAvailable": true,
+      "_id": {
+        "$oid": "69699fc46e489dc930d042a0"
+      }
+    }
+  ],
+  "otherDiamonds": [
+    {
+      "shape": {
+        "$oid": "68ae98480686a0c9081ca27b"
+      },
+      "diamondCount": 4,
+      "color": "68aeba780686a0c9081cbf93",
+      "diamondRateData": [
+        {
+          "shape": "Round",
+          "color": "68aeba780686a0c9081cbf93",
+          "caratSize": "1.61mm (0.018 ct)",
+          "weight": 0.018,
+          "pricePerCarat": 560,
+          "rate": 10.08,
+          "_id": {
+            "$oid": "69699fc46e489dc930d042a2"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "69699fc46e489dc930d042a1"
+      }
+    },
+    {
+      "shape": {
+        "$oid": "68ae98480686a0c9081ca27b"
+      },
+      "diamondCount": 4,
+      "color": "68aebc0a0686a0c9081cc12f",
+      "diamondRateData": [
+        {
+          "shape": "Round",
+          "color": "68aebc0a0686a0c9081cc12f",
+          "caratSize": "1.61mm (0.018 ct)",
+          "weight": 0.018,
+          "pricePerCarat": 85,
+          "rate": 1.5299999999999998,
+          "_id": {
+            "$oid": "69699fc46e489dc930d042a4"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "69699fc46e489dc930d042a3"
+      }
+    },
+    {
+      "shape": {
+        "$oid": "68ae98480686a0c9081ca27b"
+      },
+      "diamondCount": 1,
+      "color": "68aeba780686a0c9081cbf93",
+      "diamondRateData": [
+        {
+          "shape": "Round",
+          "color": "68aeba780686a0c9081cbf93",
+          "caratSize": "1.81mm (0.025 ct)",
+          "weight": 0.025,
+          "pricePerCarat": 530,
+          "rate": 13.25,
+          "_id": {
+            "$oid": "69699fc46e489dc930d042a6"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "69699fc46e489dc930d042a5"
+      }
+    },
+    {
+      "shape": {
+        "$oid": "68ae98480686a0c9081ca27b"
+      },
+      "diamondCount": 1,
+      "color": "68aebc0a0686a0c9081cc12f",
+      "diamondRateData": [
+        {
+          "shape": "Round",
+          "color": "68aebc0a0686a0c9081cc12f",
+          "caratSize": "1.81mm (0.025 ct)",
+          "weight": 0.025,
+          "pricePerCarat": 90,
+          "rate": 2.25,
+          "_id": {
+            "$oid": "69699fc46e489dc930d042a8"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "69699fc46e489dc930d042a7"
+      }
+    },
+    {
+      "shape": {
+        "$oid": "68ae98480686a0c9081ca27b"
+      },
+      "diamondCount": 1,
+      "color": "68aeba780686a0c9081cbf93",
+      "diamondRateData": [
+        {
+          "shape": "Round",
+          "color": "68aeba780686a0c9081cbf93",
+          "caratSize": "3.41mm (0.148 ct)",
+          "weight": 0.148,
+          "pricePerCarat": 900,
+          "rate": 133.2,
+          "_id": {
+            "$oid": "69699fc46e489dc930d042aa"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "69699fc46e489dc930d042a9"
+      }
+    },
+    {
+      "shape": {
+        "$oid": "68ae98480686a0c9081ca27b"
+      },
+      "diamondCount": 1,
+      "color": "68aebc0a0686a0c9081cc12f",
+      "diamondRateData": [
+        {
+          "shape": "Round",
+          "color": "68aebc0a0686a0c9081cc12f",
+          "caratSize": "3.41mm (0.148 ct)",
+          "weight": 0.148,
+          "pricePerCarat": 140,
+          "rate": 20.72,
+          "_id": {
+            "$oid": "69699fc46e489dc930d042ac"
+          }
+        }
+      ],
+      "_id": {
+        "$oid": "69699fc46e489dc930d042ab"
+      }
+    }
+  ],
+  "addedDiamonds": {
+    "totalCostNatural": 362.06,
+    "totalCostLab": 362.06,
+    "selectedDiamonds": [
+      {
+        "group": "Pear",
+        "size": "4X2.5MM",
+        "color": "White Diamond (DR)",
+        "caratWeight": 0.18,
+        "costNatural": 0,
+        "costLab": 0,
+        "metalPricing": [
+          {
+            "metal": "14K",
+            "priceNatural": 1821,
+            "_id": {
+              "$oid": "69699fc46e489dc930d042ae"
+            }
+          },
+          {
+            "metal": "18K",
+            "priceNatural": 2169,
+            "_id": {
+              "$oid": "69699fc46e489dc930d042af"
+            }
+          }
+        ],
+        "_id": {
+          "$oid": "69699fc46e489dc930d042ad"
+        }
+      },
+      {
+        "group": "Pear",
+        "size": "4X2.5MM",
+        "color": "Lab White Diamond (LC)",
+        "caratWeight": 0.18,
+        "costNatural": 0,
+        "costLab": 0,
+        "metalPricing": [
+          {
+            "metal": "14K",
+            "priceNatural": 1242,
+            "_id": {
+              "$oid": "69699fc46e489dc930d042b1"
+            }
+          },
+          {
+            "metal": "18K",
+            "priceNatural": 1591,
+            "_id": {
+              "$oid": "69699fc46e489dc930d042b2"
+            }
+          }
+        ],
+        "_id": {
+          "$oid": "69699fc46e489dc930d042b0"
+        }
+      }
+    ]
+  },
+  "pricing": {
+    "baseCurrency": "USD",
+    "exchangeRate": {
+      "$oid": "650fa9a7c87d1d23bca14141"
+    },
+    "variations": [
+      {
+        "metal": {
+          "id": {
+            "$oid": "69665a4ca7c2cea5e8c7e790"
+          },
+          "name": "Pear"
+        },
+        "diamond": {
+          "id": {
+            "$oid": "68aeba780686a0c9081cbf93"
+          },
+          "shape": "Pear",
+          "color": "White Diamond (DR)",
+          "size": "4X2.5MM",
+          "weight": 0.18,
+          "pricePerCt": 700,
+          "totalRate": 307.03
+        },
+        "labourCost": {
+          "id": {
+            "$oid": "650fa9a7c87d1d23bca17171"
+          },
+          "pricePerGram": 18,
+          "totalCost": 3.2399999999999998
+        },
+        "totalPrice": 307.03,
+        "isAvailable": true,
+        "_id": {
+          "$oid": "69699fc46e489dc930d042b3"
+        }
+      },
+      {
+        "metal": {
+          "id": {
+            "$oid": "69665a4ca7c2cea5e8c7e791"
+          },
+          "name": "Pear"
+        },
+        "diamond": {
+          "id": {
+            "$oid": "68aebc0a0686a0c9081cc12f"
+          },
+          "shape": "Pear",
+          "color": "Lab White Diamond (LC)",
+          "size": "4X2.5MM",
+          "weight": 0.18,
+          "pricePerCt": 200,
+          "totalRate": 217.03
+        },
+        "labourCost": {
+          "id": {
+            "$oid": "650fa9a7c87d1d23bca17171"
+          },
+          "pricePerGram": 18,
+          "totalCost": 3.2399999999999998
+        },
+        "totalPrice": 217.03,
+        "isAvailable": true,
+        "_id": {
+          "$oid": "69699fc46e489dc930d042b4"
+        }
+      }
+    ],
+    "metalPricing": [
+      {
+        "metal": {
+          "id": {
+            "$oid": "68afea760686a0c9081db6ad"
+          },
+          "name": "14K"
+        },
+        "finalPrice": {
+          "natural": 658,
+          "lab": 658
+        },
+        "cost": 315.96,
+        "profit": {
+          "natural": 0,
+          "lab": 0
+        },
+        "metalCost": {
+          "pricePerGram": {
+            "natural": 120,
+            "lab": 120
+          },
+          "totalCost": {
+            "natural": 315.96,
+            "lab": 315.96
+          }
+        },
+        "labourCost": {
+          "pricePerGram": 18,
+          "totalCost": 47.39
+        },
+        "totalMetalLabour": {
+          "natural": 363.35,
+          "lab": 363.35
+        },
+        "totalMetalLabourGst": {
+          "natural": 10.9,
+          "lab": 10.9
+        },
+        "diamondRateCost": {
+          "natural": 181.03,
+          "lab": 181.03
+        },
+        "totalDiamondRate": {
+          "natural": 181.03,
+          "lab": 181.03
+        },
+        "totalAmount": {
+          "natural": 658,
+          "lab": 658
+        },
+        "shippingCharges": 90,
+        "packagingCharges": 20,
+        "grandTotal": {
+          "natural": 658,
+          "lab": 658
+        },
+        "_id": {
+          "$oid": "69699fc46e489dc930d042b5"
+        }
+      },
+      {
+        "metal": {
+          "id": {
+            "$oid": "68afea1e0686a0c9081db5a3"
+          },
+          "name": "18K"
+        },
+        "finalPrice": {
+          "natural": 809.23,
+          "lab": 809.23
+        },
+        "cost": 456.15,
+        "profit": {
+          "natural": 0,
+          "lab": 0
+        },
+        "metalCost": {
+          "pricePerGram": {
+            "natural": 152,
+            "lab": 152
+          },
+          "totalCost": {
+            "natural": 456.15,
+            "lab": 456.15
+          }
+        },
+        "labourCost": {
+          "pricePerGram": 18,
+          "totalCost": 54.02
+        },
+        "totalMetalLabour": {
+          "natural": 510.17,
+          "lab": 510.17
+        },
+        "totalMetalLabourGst": {
+          "natural": 15.31,
+          "lab": 15.31
+        },
+        "diamondRateCost": {
+          "natural": 181.03,
+          "lab": 181.03
+        },
+        "totalDiamondRate": {
+          "natural": 181.03,
+          "lab": 181.03
+        },
+        "totalAmount": {
+          "natural": 809.23,
+          "lab": 809.23
+        },
+        "shippingCharges": 90,
+        "packagingCharges": 20,
+        "grandTotal": {
+          "natural": 809.23,
+          "lab": 809.23
+        },
+        "_id": {
+          "$oid": "69699fc46e489dc930d042b6"
+        }
+      }
+    ]
+  },
+  "discounts": {
+    "specialDiscount": 0,
+    "specialLabDiscount": 0,
+    "applicableDiscounts": []
+  },
+  "favourite": false,
+  "bestseller": false,
+  "images": {
+    "pear": [
+      "https://celora4images.blob.core.windows.net/jewelry/04d64c74-4727-431d-b5a6-ab7d5297a028-r6944rd042-wg-diamond-b.png",
+      "https://celora4images.blob.core.windows.net/jewelry/ac2bd750-549d-4ce6-990a-a578cff35a1b-r6944rd042-wg-diamond-d.png",
+      "https://celora4images.blob.core.windows.net/jewelry/69f4724d-49d3-4c46-b03f-988630021e55-r6944rd042-rg-diamond-a.png",
+      "https://celora4images.blob.core.windows.net/jewelry/47d42d75-9aff-47e3-9519-a7a5ab59c1fb-r6944rd042-rg-diamond-b.png",
+      "https://celora4images.blob.core.windows.net/jewelry/2d7583eb-69c9-4e66-a318-028cda437472-r6944rd042-rg-diamond-c.png",
+      "https://celora4images.blob.core.windows.net/jewelry/5ad8472c-c374-4e5d-b706-651cca15ce69-r6944rd042-rg-diamond-d.png",
+      "https://celora4images.blob.core.windows.net/jewelry/4ff781aa-b87a-480f-8e80-050abff937ed-r6944rd042-wg-diamond-a.png",
+      "https://celora4images.blob.core.windows.net/jewelry/27e3cb20-07e2-4d15-829d-62f4052f0ae5-r6944rd042-wg-diamond-c.png",
+      "https://celora4images.blob.core.windows.net/jewelry/a4b38057-d2c5-43c8-b7a2-357823c4dd62-r6944rd042-yg-diamond-a.png",
+      "https://celora4images.blob.core.windows.net/jewelry/3febc56c-87fc-4bb8-9b4e-8e672554a42f-r6944rd042-yg-diamond-b.png",
+      "https://celora4images.blob.core.windows.net/jewelry/083ac8b9-207d-408b-a424-e3b9240d9d87-r6944rd042-yg-diamond-d.png",
+      "https://celora4images.blob.core.windows.net/jewelry/e693c055-602a-40c4-9bad-8da5be5900cd-r6944rd042-yg-diamond-c.png"
+    ],
+    "model360": {
+      "enabled": false
+    },
+    "oval": [],
+    "round": [],
+    "cushion": [],
+    "emerald": [],
+    "asscher": [],
+    "heart": [],
+    "princess": [],
+    "marquise": [],
+    "radiant": [],
+    "variationImages": [],
+    "model": []
+  },
+  "tags": [],
+  "status": "draft",
+  "inStock": true,
+  "stockQuantity": 0,
+  "isFeatured": false,
+  "isHighlighted": false,
+  "isNewArrival": false,
+  "isBestSeller": false,
+  "viewCount": 0,
+  "purchaseCount": 0,
+  "wishlistCount": 0,
+  "createdBy": {
+    "$oid": "685cd5ad2169d032519eeb3f"
+  },
+  "updatedBy": {
+    "$oid": "685cd5ad2169d032519eeb3f"
+  },
+  "createdOn": {
+    "$date": "2026-01-16T02:17:40.039Z"
+  },
+  "updatedOn": {
+    "$date": "2026-01-16T02:17:40.039Z"
+  },
+  "availableShapes": [],
+  "diamondRates": [],
+  "__v": 0
+}

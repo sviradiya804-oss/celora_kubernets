@@ -1,0 +1,21 @@
+{
+  "sitemap": "https://celorajewelry.com/sitemap.xml",
+  "disallow": [
+    "/admin",
+    "/cart",
+    "/checkout",
+    "/api",
+    "/user",
+    "/private"
+  ],
+  "allow": [
+    "/jewelry",
+    "/blog",
+    "/engagement-rings",
+    "/wedding-bands",
+    "/pendants",
+    "/earrings",
+    "/bracelets",
+    "/shop"
+  ]
+}

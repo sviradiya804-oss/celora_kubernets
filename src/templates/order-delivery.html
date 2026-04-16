@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Out for Delivery - Celora Jewelry</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f8f9fa;
+      color: #2c3e50;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+    }
+    
+    .email-container {
+      max-width: 650px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+      color: #ffffff;
+      padding: 40px 30px;
+      text-align: center;
+      position: relative;
+    }
+    
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="40" r="1.5" fill="rgba(255,255,255,0.1)"/><circle cx="40" cy="70" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+    }
+    
+    .header h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .header p {
+      font-size: 18px;
+      opacity: 0.95;
+      position: relative;
+      z-index: 1;
+    }
+    
+    .content {
+      padding: 40px 30px;
+    }
+    
+    .greeting {
+      font-size: 18px;
+      margin-bottom: 24px;
+      color: #2c3e50;
+    }
+    
+    .order-summary {
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+      border-left: 4px solid #2196f3;
+      padding: 24px;
+      margin: 24px 0;
+      border-radius: 8px;
+    }
+    
+    .order-summary h3 {
+      color: #1565c0;
+      margin-bottom: 16px;
+      font-size: 20px;
+    }
+    
+    .order-detail {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #90caf9;
+    }
+    
+    .order-detail:last-child {
+      border-bottom: none;
+      font-weight: 600;
+      color: #0d47a1;
+    }
+    
+    .order-detail label {
+      font-weight: 500;
+      color: #1565c0;
+    }
+    
+    .order-detail span {
+      font-weight: 600;
+      color: #0d47a1;
+    }
+    
+    .status-badge {
+      display: inline-block;
+      background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin: 16px 0;
+    }
+    
+    .tracking-section {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+      text-align: center;
+    }
+    
+    .tracking-number {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1976d2;
+      background: white;
+      padding: 16px;
+      border-radius: 8px;
+      margin: 16px 0;
+      letter-spacing: 1px;
+      border: 2px solid #2196f3;
+    }
+    
+    .images-section {
+      margin: 32px 0;
+      text-align: center;
+    }
+    
+    .images-section h3 {
+      color: #495057;
+      margin-bottom: 20px;
+      font-size: 20px;
+    }
+    
+    .image-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    
+    .image-item {
+      text-align: center;
+    }
+    
+    .image-item img {
+      max-width: 200px;
+      max-height: 200px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    
+    .image-item img:hover {
+      transform: scale(1.05);
+    }
+    
+    .image-caption {
+      font-size: 12px;
+      color: #6c757d;
+      margin-top: 8px;
+    }
+    
+    .cta-section {
+      text-align: center;
+      margin: 32px 0;
+    }
+    
+    .cta-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+      color: #ffffff;
+      text-decoration: none;
+      padding: 16px 32px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(33, 150, 243, 0.3);
+      margin: 8px;
+    }
+    
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(33, 150, 243, 0.4);
+    }
+    
+    .delivery-timeline {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    
+    .delivery-timeline h4 {
+      color: #495057;
+      margin-bottom: 16px;
+      font-size: 18px;
+    }
+    
+    .timeline-item {
+      display: flex;
+      align-items: center;
+      margin: 16px 0;
+      padding: 12px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .timeline-icon {
+      font-size: 24px;
+      margin-right: 16px;
+      width: 40px;
+      text-align: center;
+    }
+    
+    .timeline-content {
+      flex: 1;
+    }
+    
+    .timeline-time {
+      font-size: 12px;
+      color: #6c757d;
+      font-weight: 500;
+    }
+    
+    .timeline-status {
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    
+    .progress-bar {
+      background-color: #e0e0e0;
+      border-radius: 10px;
+      height: 8px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      background: linear-gradient(90deg, #2196f3 0%, #1976d2 100%);
+      height: 100%;
+      width: 80%;
+      border-radius: 10px;
+      transition: width 0.3s ease;
+    }
+    
+    .footer {
+      background-color: #f8f9fa;
+      padding: 32px 30px;
+      text-align: center;
+      border-top: 1px solid #dee2e6;
+    }
+    
+    .footer p {
+      margin: 8px 0;
+      font-size: 14px;
+      color: #6c757d;
+    }
+    
+    .footer a {
+      color: #2196f3;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    
+    .footer a:hover {
+      text-decoration: underline;
+    }
+    
+    .company-info {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid #dee2e6;
+    }
+    
+    @media (max-width: 600px) {
+      .email-container {
+        margin: 10px;
+        border-radius: 8px;
+      }
+      
+      .header, .content, .footer {
+        padding: 20px;
+      }
+      
+      .header h1 {
+        font-size: 28px;
+      }
+      
+      .image-gallery {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .order-detail {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
+      
+      .timeline-item {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .timeline-icon {
+        margin-right: 0;
+        margin-bottom: 8px;
+      }
+      
+      .cta-button {
+        display: block;
+        margin: 8px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <div class="header">
+      <h1>Out for Delivery</h1>
+      <p>Your jewelry is on its way!</p>
+    </div>
+    
+    <div class="content">
+      <div class="greeting">
+        Hello <strong>{{customerName}}</strong>,
+      </div>
+      
+      <p>Great news! Your order has been packaged and is now out for delivery. Our trusted delivery partner is bringing your beautiful jewelry directly to your doorstep. You can expect delivery within the next 1-2 business days.</p>
+      
+      <div class="order-summary">
+        <h3>📋 Order Information</h3>
+        <div class="order-detail">
+          <label>Order ID:</label>
+          <span>#{{orderId}}</span>
+        </div>
+        <div class="order-detail">
+          <label>Order Date:</label>
+          <span>{{orderDate}}</span>
+        </div>
+        <div class="order-detail">
+          <label>Current Status:</label>
+          <span>Out for Delivery</span>
+        </div>
+        {{#if estimatedDelivery}}
+        <div class="order-detail">
+          <label>Estimated Delivery:</label>
+          <span>{{estimatedDelivery}}</span>
+        </div>
+        {{/if}}
+      </div>
+      
+      <div class="status-badge">
+        🚚 Out for Delivery
+      </div>
+      
+      <div style="text-align: center; margin: 24px 0;">
+        <h4 style="color: #1976d2; margin-bottom: 12px;">Delivery Progress</h4>
+        <div class="progress-bar">
+          <div class="progress-fill"></div>
+        </div>
+        <p style="font-size: 14px; color: #6c757d;">80% Complete</p>
+      </div>
+      
+      {{#if trackingId}}
+      <div class="tracking-section">
+        <h4 style="color: #1976d2; margin-bottom: 16px;">📦 Track Your Package</h4>
+        <p>Use this tracking number to monitor your delivery:</p>
+        <div class="tracking-number">{{trackingId}}</div>
+        <p style="font-size: 14px; color: #6c757d;">Click the button below to track in real-time</p>
+        {{#if trackingLink}}
+        <div style="text-align: center; margin-top: 16px;">
+          <a href="{{trackingLink}}" target="_blank" class="cta-button" style="display: inline-block; text-decoration: none;">🚚 Track Package</a>
+        </div>
+        {{/if}}
+      </div>
+      {{/if}}
+      
+      <div class="delivery-timeline">
+        <h4>📍 Delivery Timeline:</h4>
+        <div class="timeline-item">
+          <div class="timeline-icon">✅</div>
+          <div class="timeline-content">
+            <div class="timeline-status">Order Confirmed</div>
+            <div class="timeline-time">{{orderDate}}</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-icon">✅</div>
+          <div class="timeline-content">
+            <div class="timeline-status">Manufacturing Complete</div>
+            <div class="timeline-time">{{manufacturingDate}}</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-icon">✅</div>
+          <div class="timeline-content">
+            <div class="timeline-status">Quality Approved</div>
+            <div class="timeline-time">{{qualityDate}}</div>
+          </div>
+        </div>
+        <div class="timeline-item" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);">
+          <div class="timeline-icon">🚚</div>
+          <div class="timeline-content">
+            <div class="timeline-status">Out for Delivery</div>
+            <div class="timeline-time">Now</div>
+          </div>
+        </div>
+        <div class="timeline-item" style="opacity: 0.6;">
+          <div class="timeline-icon">📦</div>
+          <div class="timeline-content">
+            <div class="timeline-status">Delivered</div>
+            <div class="timeline-time">{{estimatedDelivery}}</div>
+          </div>
+        </div>
+      </div>
+      
+      {{#if hasImages}}
+      <div class="images-section">
+        <h3>📸 Package Photos</h3>
+        <p>Here are photos of your packaged order:</p>
+        
+        <div class="image-gallery">
+          {{#each images}}
+          <div class="image-item">
+            <img src="cid:{{cid}}" alt="Package Photo {{index}}" />
+            <div class="image-caption">Package Photo {{index}}</div>
+          </div>
+          {{/each}}
+        </div>
+        
+        <p style="font-size: 13px; color: #6c757d; font-style: italic;">
+          📎 These images are also attached to this email for your records.
+        </p>
+      </div>
+      {{/if}}
+      
+      <div style="background-color: #e3f2fd; padding: 20px; border-radius: 8px; margin: 24px 0;">
+        <h4 style="color: #1565c0; margin-bottom: 12px;">📋 Delivery Instructions</h4>
+        <ul style="color: #0d47a1; padding-left: 20px;">
+          <li>Please be available to receive your package</li>
+          <li>A signature may be required for delivery</li>
+          <li>If you're not home, the package will be left in a safe location</li>
+          <li>Contact the carrier directly for delivery questions</li>
+        </ul>
+      </div>
+      
+      <div class="cta-section">
+        {{#if trackingId}}
+          {{#if trackingLink}}
+          <a href="{{trackingLink}}" target="_blank" class="cta-button">🚚 Track Package</a>
+          {{else}}
+          <a href="{{trackOrderUrl}}" target="_blank" class="cta-button">📦 Track Order Status</a>
+          {{/if}}
+        {{/if}}
+        <a href="mailto:support@celorajewelry.com" class="cta-button">✉️ Contact Support</a>
+      </div>
+    </div>
+    
+    <div class="footer">
+      <p><strong>Almost there!</strong></p>
+      <p>Your beautiful jewelry will be with you soon. Thank you for choosing Celora!</p>
+      
+      <div class="company-info">
+        <p>Questions? Contact us at <a href="mailto:support@celorajewelry.com">support@celorajewelry.com</a></p>
+        <p>Visit us: <a href="https://celorajewelry.com">celorajewelry.com</a></p>
+        <p>© 2025 Celora Jewelry. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

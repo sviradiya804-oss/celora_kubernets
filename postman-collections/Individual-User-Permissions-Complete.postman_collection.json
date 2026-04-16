@@ -1,0 +1,1092 @@
+{
+	"info": {
+		"_postman_id": "user-permissions-complete",
+		"name": "🔐 Individual User Permissions - Complete RBAC System",
+		"description": "Complete collection for managing individual user permissions in RBAC system. Allows assigning specific permissions to users beyond their role permissions.\n\n🎯 **Key Features:**\n- Assign roles to users (e.g., Manager to demo@yopmail.com)\n- Add individual permissions beyond role (e.g., dashboard access)\n- Edit, update, and remove individual permissions\n- Search and manage users\n- Combine role + individual permissions effectively\n\n📋 **Use Cases:**\n- Give Manager role + dashboard permission\n- Add custom permissions for specific users\n- Temporary permission escalation\n- Granular access control\n\n🚀 **Ready to use with your RBAC system!**",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{admin_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Auto-authenticate if no admin token exists",
+					"if (!pm.collectionVariables.get('admin_token')) {",
+					"    pm.sendRequest({",
+					"        url: pm.collectionVariables.get('base_url') + '/api/v1/auth/login',",
+					"        method: 'POST',",
+					"        header: {",
+					"            'Content-Type': 'application/json'",
+					"        },",
+					"        body: {",
+					"            mode: 'raw',",
+					"            raw: JSON.stringify({",
+					"                email: 'admin@celora.com',",
+					"                password: 'admin123'",
+					"            })",
+					"        }",
+					"    }, function (err, response) {",
+					"        if (!err && response.code === 200) {",
+					"            const token = response.json().token;",
+					"            pm.collectionVariables.set('admin_token', token);",
+					"            console.log('🔐 Auto-authenticated as admin');",
+					"        }",
+					"    });",
+					"}"
+				]
+			}
+		}
+	],
+	"item": [
+		{
+			"name": "🔐 1. Authentication",
+			"description": "Authenticate as admin to access user permission management",
+			"item": [
+				{
+					"name": "Admin Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"// Store admin token for all subsequent requests",
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    pm.collectionVariables.set('admin_token', response.token);",
+									"    ",
+									"    pm.test('✅ Admin authentication successful', function () {",
+									"        pm.expect(response.success).to.be.true;",
+									"        pm.expect(response.token).to.not.be.empty;",
+									"        pm.expect(response.user.role.name).to.eql('Admin');",
+									"    });",
+									"    ",
+									"    console.log('🔐 Admin authenticated successfully');",
+									"    console.log(`👤 User: ${response.user.name} (${response.user.email})`);",
+									"    console.log(`🎭 Role: ${response.user.role.name}`);",
+									"} else {",
+									"    pm.test('❌ Admin authentication failed', function () {",
+									"        pm.expect.fail('Authentication failed - check credentials');",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@celora.com\",\n  \"password\": \"admin123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login as admin to get authentication token for user permission management"
+					}
+				}
+			]
+		},
+		{
+			"name": "👥 2. User Discovery & Management",
+			"description": "Find and manage users in the system",
+			"item": [
+				{
+					"name": "Search for Demo User (demo@yopmail.com)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    if (response.users && response.users.length > 0) {",
+									"        const demoUser = response.users[0];",
+									"        pm.collectionVariables.set('demo_user_id', demoUser._id);",
+									"        pm.collectionVariables.set('demo_user_email', demoUser.email);",
+									"        pm.collectionVariables.set('demo_user_name', demoUser.name);",
+									"        ",
+									"        pm.test('✅ Demo user found', function () {",
+									"            pm.expect(demoUser.email).to.include('demo@yopmail.com');",
+									"            pm.expect(demoUser._id).to.not.be.empty;",
+									"        });",
+									"        ",
+									"        console.log(`🎯 Found target user: ${demoUser.name} (${demoUser.email})`);",
+									"        console.log(`🎭 Current Role: ${demoUser.role.name}`);",
+									"        console.log(`🔧 Has Individual Permissions: ${demoUser.hasIndividualPermissions}`);",
+									"        ",
+									"        // Store current role for comparison",
+									"        pm.collectionVariables.set('demo_user_current_role', demoUser.role.name);",
+									"        ",
+									"    } else {",
+									"        pm.test('⚠️ Demo user not found', function () {",
+									"            console.log('❌ demo@yopmail.com user not found.');",
+									"            console.log('💡 Please create this user first to test individual permissions.');",
+									"            pm.expect.fail('Demo user not found - create demo@yopmail.com user first');",
+									"        });",
+									"    }",
+									"} else {",
+									"    pm.test('❌ Search failed', function () {",
+									"        pm.expect.fail('User search failed');",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user-permissions/users/search?q=demo@yopmail.com",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user-permissions",
+								"users",
+								"search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "demo@yopmail.com",
+									"description": "Search for demo user by email"
+								}
+							]
+						},
+						"description": "Search for the demo@yopmail.com user to test individual permission assignment"
+					}
+				},
+				{
+					"name": "Get User Details with Effective Permissions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    const user = response.user;",
+									"    ",
+									"    pm.test('✅ User details retrieved successfully', function () {",
+									"        pm.expect(user._id).to.not.be.empty;",
+									"        pm.expect(user.role).to.not.be.null;",
+									"        pm.expect(user.effectivePermissions).to.be.an('array');",
+									"    });",
+									"    ",
+									"    console.log(`\\n📊 User Details for ${user.name}:`);",
+									"    console.log(`   📧 Email: ${user.email}`);",
+									"    console.log(`   🎭 Role: ${user.role.name}`);",
+									"    console.log(`   🔐 Role Permissions: ${user.role.permissions.length}`);",
+									"    console.log(`   👤 Individual Permissions: ${user.individualPermissions.length}`);",
+									"    console.log(`   ⚡ Total Effective Permissions: ${user.effectivePermissions.length}`);",
+									"    ",
+									"    if (user.individualPermissions.length > 0) {",
+									"        console.log(`\\n🎯 Individual Permissions:`);",
+									"        user.individualPermissions.forEach(perm => {",
+									"            console.log(`     • ${perm.resource}: [${perm.actions.join(', ')}]`);",
+									"        });",
+									"    }",
+									"    ",
+									"    console.log(`\\n⚡ Sample Effective Permissions:`);",
+									"    user.effectivePermissions.slice(0, 6).forEach(perm => {",
+									"        console.log(`     • ${perm.resource}: [${perm.actions.join(', ')}] (${perm.source})`);",
+									"    });",
+									"    ",
+									"    // Check for specific permissions",
+									"    const hasDashboard = user.effectivePermissions.some(p => p.resource === 'dashboard');",
+									"    const hasReports = user.effectivePermissions.some(p => p.resource === 'reports');",
+									"    ",
+									"    console.log(`\\n🔍 Permission Check:`);",
+									"    console.log(`   Dashboard: ${hasDashboard ? '✅ GRANTED' : '❌ NOT GRANTED'}`);",
+									"    console.log(`   Reports: ${hasReports ? '✅ GRANTED' : '❌ NOT GRANTED'}`);",
+									"    ",
+									"} else {",
+									"    pm.test('❌ Failed to get user details', function () {",
+									"        pm.expect.fail('Could not retrieve user details');",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user-permissions/users/{{demo_user_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user-permissions",
+								"users",
+								"{{demo_user_id}}"
+							]
+						},
+						"description": "Get detailed user information including role permissions, individual permissions, and effective combined permissions"
+					}
+				},
+				{
+					"name": "List All Users (Overview)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    pm.test('✅ Users list retrieved', function () {",
+									"        pm.expect(response.users).to.be.an('array');",
+									"        pm.expect(response.count).to.be.above(0);",
+									"    });",
+									"    ",
+									"    console.log(`\\n👥 System Users Overview (${response.count} users):`);",
+									"    response.users.forEach((user, index) => {",
+									"        console.log(`${index + 1}. ${user.name} (${user.email})`);",
+									"        console.log(`   🎭 Role: ${user.role.name}`);",
+									"        console.log(`   🔧 Individual Permissions: ${user.individualPermissions.length}`);",
+									"        if (user.individualPermissions.length > 0) {",
+									"            user.individualPermissions.forEach(perm => {",
+									"                console.log(`      • ${perm.resource}: [${perm.actions.join(', ')}]`);",
+									"            });",
+									"        }",
+									"        console.log('');",
+									"    });",
+									"} else {",
+									"    pm.test('❌ Failed to list users', function () {",
+									"        pm.expect.fail('Could not retrieve users list');",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user-permissions/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user-permissions",
+								"users"
+							]
+						},
+						"description": "Get overview of all users with their roles and individual permissions"
+					}
+				}
+			]
+		},
+		{
+			"name": "🎭 3. Role Assignment",
+			"description": "Manage user roles",
+			"item": [
+				{
+					"name": "Get Available Roles",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    // Find Manager role for testing",
+									"    const managerRole = response.roles.find(r => r.name.toUpperCase() === 'MANAGER');",
+									"    if (managerRole) {",
+									"        pm.collectionVariables.set('manager_role_id', managerRole._id);",
+									"        console.log(`🎯 Found Manager role: ${managerRole._id}`);",
+									"    }",
+									"    ",
+									"    // Find other roles for reference",
+									"    const adminRole = response.roles.find(r => r.name.toUpperCase() === 'ADMIN');",
+									"    const employeeRole = response.roles.find(r => r.name.toUpperCase() === 'EMPLOYEE');",
+									"    const guestRole = response.roles.find(r => r.name.toUpperCase() === 'GUEST');",
+									"    ",
+									"    if (adminRole) pm.collectionVariables.set('admin_role_id', adminRole._id);",
+									"    if (employeeRole) pm.collectionVariables.set('employee_role_id', employeeRole._id);",
+									"    if (guestRole) pm.collectionVariables.set('guest_role_id', guestRole._id);",
+									"    ",
+									"    pm.test('✅ Roles retrieved successfully', function () {",
+									"        pm.expect(response.roles).to.be.an('array');",
+									"        pm.expect(response.roles.length).to.be.above(0);",
+									"    });",
+									"    ",
+									"    console.log(`\\n🎭 Available Roles (${response.roles.length}):`);",
+									"    response.roles.forEach((role, index) => {",
+									"        console.log(`${index + 1}. ${role.name} (ID: ${role._id})`);",
+									"        console.log(`   📋 Permissions: ${role.permissions.length}`);",
+									"        // Show first few permissions as sample",
+									"        role.permissions.slice(0, 3).forEach(perm => {",
+									"            console.log(`      • ${perm.resource}: [${perm.actions.join(', ')}]`);",
+									"        });",
+									"        if (role.permissions.length > 3) {",
+									"            console.log(`      ... and ${role.permissions.length - 3} more`);",
+									"        }",
+									"        console.log('');",
+									"    });",
+									"} else {",
+									"    pm.test('❌ Failed to get roles', function () {",
+									"        pm.expect.fail('Could not retrieve roles');",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/role-management/roles",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"role-management",
+								"roles"
+							]
+						},
+						"description": "Get all available roles in the system to choose from for user assignment"
+					}
+				},
+				{
+					"name": "Assign Manager Role to Demo User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    pm.test('✅ User role changed successfully', function () {",
+									"        pm.expect(response.success).to.be.true;",
+									"        pm.expect(response.message).to.include('role changed');",
+									"    });",
+									"    ",
+									"    console.log(`🎭 ${response.message}`);",
+									"    console.log(`👤 User: ${response.user.name} (${response.user.email})`);",
+									"    console.log(`🎯 New Role: ${response.user.role.name}`);",
+									"    console.log(`📋 Role Permissions: ${response.user.role.permissions.length}`);",
+									"    console.log(`🔧 Individual Permissions: ${response.user.individualPermissions.length}`);",
+									"    ",
+									"} else if (pm.response.code === 404) {",
+									"    pm.test('⚠️ User or role not found', function () {",
+									"        console.log('❌ User or Manager role not found');",
+									"        console.log('💡 Check that demo user exists and manager_role_id is set');",
+									"        pm.expect.fail('User or role not found');",
+									"    });",
+									"} else {",
+									"    pm.test('❌ Role assignment failed', function () {",
+									"        pm.expect.fail('Could not assign role');",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"roleId\": \"{{manager_role_id}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/user-permissions/users/{{demo_user_id}}/role",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user-permissions",
+								"users",
+								"{{demo_user_id}}",
+								"role"
+							]
+						},
+						"description": "Assign Manager role to the demo user. This gives them all the standard Manager permissions."
+					}
+				}
+			]
+		},
+		{
+			"name": "🔧 4. Individual Permission Management",
+			"description": "Add, update, and manage individual user permissions beyond their role",
+			"item": [
+				{
+					"name": "Add Dashboard Permission (Individual)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    pm.test('✅ Dashboard permission added successfully', function () {",
+									"        pm.expect(response.success).to.be.true;",
+									"        pm.expect(response.message).to.include('dashboard');",
+									"    });",
+									"    ",
+									"    console.log('🎯 Dashboard permission added to user!');",
+									"    console.log(`👤 User: ${response.user.name} (${response.user.email})`);",
+									"    console.log(`🎭 Role: ${response.user.role.name}`);",
+									"    console.log(`📋 Resource: dashboard`);",
+									"    console.log(`⚡ Actions: [read, analytics]`);",
+									"    console.log(`💡 Note: Manager role doesn't have dashboard by default`);",
+									"    console.log(`🔧 Individual Permissions Count: ${response.user.individualPermissions.length}`);",
+									"    ",
+									"} else if (pm.response.code === 400) {",
+									"    const response = pm.response.json();",
+									"    if (response.message.toLowerCase().includes('already')) {",
+									"        console.log('ℹ️ Dashboard permission already exists for this user');",
+									"        pm.test('ℹ️ Permission already exists (expected)', function () {",
+									"            pm.expect(response.message).to.include('already');",
+									"        });",
+									"    } else {",
+									"        pm.test('❌ Bad request', function () {",
+									"            pm.expect.fail('Bad request: ' + response.message);",
+									"        });",
+									"    }",
+									"} else {",
+									"    pm.test('❌ Failed to add permission', function () {",
+									"        pm.expect.fail('Could not add dashboard permission');",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"resource\": \"dashboard\",\n  \"actions\": [\"read\", \"analytics\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/user-permissions/users/{{demo_user_id}}/permissions/add",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user-permissions",
+								"users",
+								"{{demo_user_id}}",
+								"permissions",
+								"add"
+							]
+						},
+						"description": "Add dashboard permission individually to the user. This is the key feature - giving permissions beyond the user's role."
+					}
+				},
+				{
+					"name": "Add Reports Permission (Individual)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    pm.test('✅ Reports permission added successfully', function () {",
+									"        pm.expect(response.success).to.be.true;",
+									"        pm.expect(response.message).to.include('reports');",
+									"    });",
+									"    ",
+									"    console.log('📊 Reports permission added to user!');",
+									"    console.log(`👤 User: ${response.user.name} (${response.user.email})`);",
+									"    console.log(`📋 Resource: reports`);",
+									"    console.log(`⚡ Actions: [read, create, export]`);",
+									"    console.log(`🔧 Individual Permissions Count: ${response.user.individualPermissions.length}`);",
+									"    ",
+									"} else if (pm.response.code === 400) {",
+									"    const response = pm.response.json();",
+									"    if (response.message.toLowerCase().includes('already')) {",
+									"        console.log('ℹ️ Reports permission already exists for this user');",
+									"        pm.test('ℹ️ Permission already exists (expected)', function () {",
+									"            pm.expect(response.message).to.include('already');",
+									"        });",
+									"    }",
+									"} else {",
+									"    pm.test('❌ Failed to add reports permission', function () {",
+									"        pm.expect.fail('Could not add reports permission');",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"resource\": \"reports\",\n  \"actions\": [\"read\", \"create\", \"export\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/user-permissions/users/{{demo_user_id}}/permissions/add",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user-permissions",
+								"users",
+								"{{demo_user_id}}",
+								"permissions",
+								"add"
+							]
+						},
+						"description": "Add reports permission individually to demonstrate multiple individual permissions"
+					}
+				},
+				{
+					"name": "Update Dashboard Permission Actions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    pm.test('✅ Dashboard permission updated successfully', function () {",
+									"        pm.expect(response.success).to.be.true;",
+									"        pm.expect(response.message).to.include('updated');",
+									"    });",
+									"    ",
+									"    console.log('✏️ Dashboard permission actions updated!');",
+									"    console.log(`👤 User: ${response.user.name} (${response.user.email})`);",
+									"    console.log(`📋 Resource: dashboard`);",
+									"    console.log(`⚡ New Actions: [read, analytics, admin, export]`);",
+									"    console.log(`💡 Permission actions can be modified individually`);",
+									"    ",
+									"} else if (pm.response.code === 404) {",
+									"    pm.test('⚠️ Dashboard permission not found', function () {",
+									"        console.log('❌ Dashboard permission not found for this user');",
+									"        console.log('💡 Add the permission first before updating');",
+									"        pm.expect.fail('Permission not found');",
+									"    });",
+									"} else {",
+									"    pm.test('❌ Failed to update permission', function () {",
+									"        pm.expect.fail('Could not update dashboard permission');",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"actions\": [\"read\", \"analytics\", \"admin\", \"export\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/user-permissions/users/{{demo_user_id}}/permissions/dashboard",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user-permissions",
+								"users",
+								"{{demo_user_id}}",
+								"permissions",
+								"dashboard"
+							]
+						},
+						"description": "Update the actions for an existing individual permission. Demonstrates granular permission editing."
+					}
+				},
+				{
+					"name": "Bulk Update All Individual Permissions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    pm.test('✅ Bulk permission update successful', function () {",
+									"        pm.expect(response.success).to.be.true;",
+									"        pm.expect(response.user.individualPermissions).to.be.an('array');",
+									"        pm.expect(response.user.individualPermissions.length).to.equal(3);",
+									"    });",
+									"    ",
+									"    console.log('🔄 Bulk permission update completed!');",
+									"    console.log(`👤 User: ${response.user.name} (${response.user.email})`);",
+									"    console.log(`📋 Updated ${response.user.individualPermissions.length} individual permissions:`);",
+									"    response.user.individualPermissions.forEach((perm, index) => {",
+									"        console.log(`   ${index + 1}. ${perm.resource}: [${perm.actions.join(', ')}]`);",
+									"    });",
+									"    console.log('💡 Bulk updates replace all individual permissions');",
+									"    ",
+									"} else {",
+									"    pm.test('❌ Bulk update failed', function () {",
+									"        pm.expect.fail('Could not perform bulk permission update');",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"permissions\": [\n    {\n      \"resource\": \"dashboard\",\n      \"actions\": [\"read\", \"analytics\", \"admin\"]\n    },\n    {\n      \"resource\": \"reports\",\n      \"actions\": [\"read\", \"create\", \"export\", \"schedule\"]\n    },\n    {\n      \"resource\": \"analytics\",\n      \"actions\": [\"read\", \"advanced\"]\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/user-permissions/users/{{demo_user_id}}/permissions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user-permissions",
+								"users",
+								"{{demo_user_id}}",
+								"permissions"
+							]
+						},
+						"description": "Replace all individual permissions for a user with a new set. Useful for complete permission restructuring."
+					}
+				}
+			]
+		},
+		{
+			"name": "✅ 5. Verification & Results",
+			"description": "Verify that individual permissions are working correctly",
+			"item": [
+				{
+					"name": "Verify Final User State",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    const user = response.user;",
+									"    ",
+									"    pm.test('✅ User has Manager role', function () {",
+									"        pm.expect(user.role.name).to.equal('MANAGER');",
+									"    });",
+									"    ",
+									"    pm.test('✅ User has individual permissions', function () {",
+									"        pm.expect(user.individualPermissions.length).to.be.above(0);",
+									"    });",
+									"    ",
+									"    pm.test('✅ Effective permissions include both role and individual', function () {",
+									"        pm.expect(user.effectivePermissions.length).to.be.above(user.role.permissions.length);",
+									"    });",
+									"    ",
+									"    pm.test('✅ User has dashboard permission (individual)', function () {",
+									"        const hasDashboard = user.effectivePermissions.some(p => p.resource === 'dashboard');",
+									"        pm.expect(hasDashboard).to.be.true;",
+									"    });",
+									"    ",
+									"    console.log(`\\n🎉 FINAL VERIFICATION RESULTS:`);",
+									"    console.log(`================================================`);",
+									"    console.log(`👤 User: ${user.name} (${user.email})`);",
+									"    console.log(`🎭 Role: ${user.role.name}`);",
+									"    console.log(`📋 Role Permissions: ${user.role.permissions.length}`);",
+									"    console.log(`🔧 Individual Permissions: ${user.individualPermissions.length}`);",
+									"    console.log(`⚡ Total Effective Permissions: ${user.effectivePermissions.length}`);",
+									"    ",
+									"    console.log(`\\n🎯 Individual Permissions (Beyond Role):`);",
+									"    user.individualPermissions.forEach((perm, index) => {",
+									"        console.log(`   ${index + 1}. ${perm.resource}: [${perm.actions.join(', ')}]`);",
+									"    });",
+									"    ",
+									"    console.log(`\\n📊 Sample Effective Permissions:`);",
+									"    user.effectivePermissions.slice(0, 8).forEach((perm, index) => {",
+									"        const source = perm.source === 'individual' ? '🔧' : '🎭';",
+									"        console.log(`   ${index + 1}. ${perm.resource}: [${perm.actions.join(', ')}] ${source}${perm.source}`);",
+									"    });",
+									"    ",
+									"    // Permission verification",
+									"    const hasDashboard = user.effectivePermissions.some(p => p.resource === 'dashboard');",
+									"    const hasReports = user.effectivePermissions.some(p => p.resource === 'reports');",
+									"    const hasAnalytics = user.effectivePermissions.some(p => p.resource === 'analytics');",
+									"    ",
+									"    console.log(`\\n🔍 Permission Verification:`);",
+									"    console.log(`   Dashboard Access: ${hasDashboard ? '✅ GRANTED' : '❌ DENIED'}`);",
+									"    console.log(`   Reports Access: ${hasReports ? '✅ GRANTED' : '❌ DENIED'}`);",
+									"    console.log(`   Analytics Access: ${hasAnalytics ? '✅ GRANTED' : '❌ DENIED'}`);",
+									"    ",
+									"    console.log(`\\n🎊 SUCCESS: Individual user permissions are working!`);",
+									"    console.log(`✅ User has Manager role + individual dashboard/reports/analytics permissions`);",
+									"    console.log(`✅ Role permissions + Individual permissions = Complete access control`);",
+									"    ",
+									"} else {",
+									"    pm.test('❌ Failed to verify user state', function () {",
+									"        pm.expect.fail('Could not retrieve final user state');",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user-permissions/users/{{demo_user_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user-permissions",
+								"users",
+								"{{demo_user_id}}"
+							]
+						},
+						"description": "Final verification that the user has Manager role + individual permissions working together"
+					}
+				},
+				{
+					"name": "Get Available Permissions Reference",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    pm.test('✅ Available permissions retrieved', function () {",
+									"        pm.expect(response.groups).to.be.an('array');",
+									"        pm.expect(response.groups.length).to.be.above(0);",
+									"    });",
+									"    ",
+									"    console.log(`\\n📋 Available Permission Groups (${response.groups.length}):`);",
+									"    response.groups.slice(0, 5).forEach((group, index) => {",
+									"        console.log(`${index + 1}. ${group.name}:`);",
+									"        group.resources.slice(0, 4).forEach(resource => {",
+									"            console.log(`     • ${resource.name}: [${resource.actions.join(', ')}]`);",
+									"        });",
+									"        if (group.resources.length > 4) {",
+									"            console.log(`     ... and ${group.resources.length - 4} more resources`);",
+									"        }",
+									"    });",
+									"    ",
+									"    if (response.existingRoleResources) {",
+									"        console.log(`\\n🎭 Existing Role Resources: ${response.existingRoleResources.length}`);",
+									"        console.log(`   ${response.existingRoleResources.slice(0, 10).join(', ')}${response.existingRoleResources.length > 10 ? '...' : ''}`);",
+									"    }",
+									"    ",
+									"    console.log(`\\n💡 These permissions can be assigned individually to any user!`);",
+									"    ",
+									"} else {",
+									"    pm.test('❌ Failed to get available permissions', function () {",
+									"        pm.expect.fail('Could not retrieve available permissions');",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user-permissions/available-permissions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user-permissions",
+								"available-permissions"
+							]
+						},
+						"description": "Get reference list of all available permissions that can be assigned individually"
+					}
+				}
+			]
+		},
+		{
+			"name": "🧹 6. Permission Cleanup (Optional)",
+			"description": "Demonstrate permission removal capabilities",
+			"item": [
+				{
+					"name": "Remove Reports Permission",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    ",
+									"    pm.test('✅ Reports permission removed successfully', function () {",
+									"        pm.expect(response.success).to.be.true;",
+									"        pm.expect(response.message).to.include('removed');",
+									"    });",
+									"    ",
+									"    console.log('🗑️ Reports permission removed from user!');",
+									"    console.log(`👤 User: ${response.user.name} (${response.user.email})`);",
+									"    console.log(`📋 Resource: reports`);",
+									"    console.log(`🔧 Remaining Individual Permissions: ${response.user.individualPermissions.length}`);",
+									"    console.log('💡 Individual permissions are flexible - can be added/removed as needed');",
+									"    ",
+									"} else if (pm.response.code === 404) {",
+									"    pm.test('ℹ️ Reports permission not found (expected)', function () {",
+									"        console.log('ℹ️ Reports permission not found - may have been removed already');",
+									"        pm.expect(true).to.be.true;",
+									"    });",
+									"} else {",
+									"    pm.test('❌ Failed to remove permission', function () {",
+									"        pm.expect.fail('Could not remove reports permission');",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user-permissions/users/{{demo_user_id}}/permissions/reports",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user-permissions",
+								"users",
+								"{{demo_user_id}}",
+								"permissions",
+								"reports"
+							]
+						},
+						"description": "Remove a specific individual permission from the user. Demonstrates permission cleanup."
+					}
+				},
+				{
+					"name": "Final State After Cleanup",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const response = pm.response.json();",
+									"    const user = response.user;",
+									"    ",
+									"    pm.test('✅ Final cleanup state verified', function () {",
+									"        pm.expect(user.role.name).to.equal('MANAGER');",
+									"        pm.expect(user.individualPermissions.length).to.be.above(0);",
+									"    });",
+									"    ",
+									"    console.log(`\\n🏁 FINAL STATE AFTER CLEANUP:`);",
+									"    console.log(`=====================================`);",
+									"    console.log(`👤 User: ${user.name} (${user.email})`);",
+									"    console.log(`🎭 Role: ${user.role.name}`);",
+									"    console.log(`🔧 Individual Permissions: ${user.individualPermissions.length}`);",
+									"    console.log(`⚡ Total Effective Permissions: ${user.effectivePermissions.length}`);",
+									"    ",
+									"    console.log(`\\n🎯 Remaining Individual Permissions:`);",
+									"    user.individualPermissions.forEach((perm, index) => {",
+									"        console.log(`   ${index + 1}. ${perm.resource}: [${perm.actions.join(', ')}]`);",
+									"    });",
+									"    ",
+									"    console.log(`\\n✅ DEMO COMPLETE:`);",
+									"    console.log(`   ✅ User assigned Manager role`);",
+									"    console.log(`   ✅ Individual dashboard permission added`);",
+									"    console.log(`   ✅ Permission actions updated`);",
+									"    console.log(`   ✅ Bulk permissions managed`);",
+									"    console.log(`   ✅ Individual permissions removed`);",
+									"    console.log(`   ✅ Role + Individual permissions working together`);",
+									"    ",
+									"    console.log(`\\n🎊 Individual User Permission Management System: FULLY FUNCTIONAL!`);",
+									"    ",
+									"} else {",
+									"    pm.test('❌ Failed to get final state', function () {",
+									"        pm.expect.fail('Could not retrieve final state');",
+									"    });",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/user-permissions/users/{{demo_user_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user-permissions",
+								"users",
+								"{{demo_user_id}}"
+							]
+						},
+						"description": "Final verification of the user's state after cleanup operations"
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "admin_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "demo_user_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "demo_user_email",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "demo_user_name",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "manager_role_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "admin_role_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "employee_role_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "guest_role_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

@@ -1,0 +1,1 @@
+0 0 * * * node /usr/src/app/cron/exchangeRateCron.js >> /var/log/cron/exchange.log 2>&1

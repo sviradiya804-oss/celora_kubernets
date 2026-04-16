@@ -1,0 +1,639 @@
+{
+	"info": {
+		"_postman_id": "currency-mgmt-2025",
+		"name": "Celora Currency Management API",
+		"description": "Complete currency conversion API collection for both authenticated and guest users",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Get Available Currencies",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Has currencies array\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.currencies).to.be.an('array');",
+							"    pm.expect(jsonData.baseCurrency).to.eql('USD');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/currency/available",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"currency",
+						"available"
+					]
+				},
+				"description": "Public endpoint - Get list of all available currencies with exchange rates"
+			},
+			"response": []
+		},
+		{
+			"name": "2. Validate Currency",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Currency is valid\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.valid).to.be.true;",
+							"    pm.expect(jsonData.currency.code).to.eql('EUR');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"currency\": \"EUR\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/currency/validate",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"currency",
+						"validate"
+					]
+				},
+				"description": "Public endpoint - Validate if a currency code is supported and get its details"
+			},
+			"response": []
+		},
+		{
+			"name": "3. Set Currency (Guest User - via query param)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Price converted to EUR\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.data[0].pricing.metalPricing[0].currencyCode).to.eql('EUR');",
+							"    pm.expect(jsonData.data[0].pricing.metalPricing[0].currencySymbol).to.eql('€');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/jewelry?currency=EUR&limit=1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"jewelry"
+					],
+					"query": [
+						{
+							"key": "currency",
+							"value": "EUR",
+							"description": "Currency code to convert prices to"
+						},
+						{
+							"key": "limit",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Guest users can use ?currency=EUR query parameter to get prices in any currency"
+			},
+			"response": []
+		},
+		{
+			"name": "4. Set Currency (Guest User - via header)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Price converted to INR\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.data[0].pricing.metalPricing[0].currencyCode).to.eql('INR');",
+							"    pm.expect(jsonData.data[0].pricing.metalPricing[0].currencySymbol).to.eql('₹');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Currency",
+						"value": "INR",
+						"description": "Currency header for guest users"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/jewelry?limit=1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"jewelry"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Guest users can also use X-Currency header to set currency preference"
+			},
+			"response": []
+		},
+		{
+			"name": "5. Set Currency Preference (Authenticated)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Currency preference saved\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.success).to.be.true;",
+							"    pm.expect(jsonData.message).to.include('saved to profile');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}",
+						"description": "JWT token for authenticated user"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"currency\": \"EUR\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/currency/set",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"currency",
+						"set"
+					]
+				},
+				"description": "Authenticated users can save currency preference to their profile"
+			},
+			"response": []
+		},
+		{
+			"name": "6. Get User Currency Preference",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Has preference data\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.preference).to.have.property('currency');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}",
+						"description": "JWT token required"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/currency/preference",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"currency",
+						"preference"
+					]
+				},
+				"description": "Get authenticated user's saved currency preference"
+			},
+			"response": []
+		},
+		{
+			"name": "7. Update Currency Preference",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Preference updated\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.preference.currency).to.eql('INR');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"currency\": \"INR\",\n  \"country\": \"India\"\n}"
+				},
+				"url": {
+					"raw": "{{base_url}}/api/currency/preference",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"currency",
+						"preference"
+					]
+				},
+				"description": "Update user's currency preference"
+			},
+			"response": []
+		},
+		{
+			"name": "8. Reset to Default (USD)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Reset to USD\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.preference.currency).to.eql('USD');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/currency/preference",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"currency",
+						"preference"
+					]
+				},
+				"description": "Reset user's currency preference to default USD"
+			},
+			"response": []
+		},
+		{
+			"name": "9. Test All Routes - Jewelry (EUR)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Jewelry prices converted\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.data[0].pricing.metalPricing[0].currencyCode).to.eql('EUR');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/jewelry?currency=EUR&limit=2",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"jewelry"
+					],
+					"query": [
+						{
+							"key": "currency",
+							"value": "EUR"
+						},
+						{
+							"key": "limit",
+							"value": "2"
+						}
+					]
+				},
+				"description": "Test jewelry route with currency conversion"
+			},
+			"response": []
+		},
+		{
+			"name": "10. Test Cart with Currency (INR)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Currency",
+						"value": "INR"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/cart",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"cart"
+					]
+				},
+				"description": "Test cart route with INR currency conversion"
+			},
+			"response": []
+		},
+		{
+			"name": "11. Test Checkout with Currency (AUD)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/checkout?currency=AUD",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"checkout"
+					],
+					"query": [
+						{
+							"key": "currency",
+							"value": "AUD"
+						}
+					]
+				},
+				"description": "Test checkout with AUD currency"
+			},
+			"response": []
+		},
+		{
+			"name": "12. Test Orders with Currency (EUR)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/order?currency=EUR",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"order"
+					],
+					"query": [
+						{
+							"key": "currency",
+							"value": "EUR"
+						}
+					]
+				},
+				"description": "Test orders with EUR currency conversion"
+			},
+			"response": []
+		},
+		{
+			"name": "13. Compare Prices - USD vs EUR vs INR",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Store results for comparison",
+							"pm.test(\"Check conversion rates\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    console.log('Testing currency conversions...');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/jewelry?limit=1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"jewelry"
+					],
+					"query": [
+						{
+							"key": "currency",
+							"value": "USD",
+							"disabled": true
+						},
+						{
+							"key": "limit",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Compare same product in different currencies. Change ?currency parameter to USD, EUR, INR, AUD"
+			},
+			"response": []
+		},
+		{
+			"name": "14. Invalid Currency Test",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Fallback to USD for invalid currency\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    // Should still return data, fallback to USD",
+							"    pm.expect(jsonData.success).to.be.true;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/jewelry?currency=INVALID&limit=1",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"jewelry"
+					],
+					"query": [
+						{
+							"key": "currency",
+							"value": "INVALID"
+						},
+						{
+							"key": "limit",
+							"value": "1"
+						}
+					]
+				},
+				"description": "Test with invalid currency code - should fallback gracefully"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "your_jwt_token_here",
+			"type": "string"
+		}
+	]
+}

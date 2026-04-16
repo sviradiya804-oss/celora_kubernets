@@ -1,0 +1,586 @@
+{
+  "info": {
+    "name": "Celora Vendor API",
+    "description": "Complete API collection for vendor management system including registration, login, profile management, document upload, diamond management and admin operations",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "vendorToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "vendorId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Vendor Authentication",
+      "item": [
+        {
+          "name": "Register Vendor",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"email\": \"john.doe@vendor.com\",\n  \"company_name\": \"Diamond Suppliers Inc\",\n  \"contact_number\": \"+1234567890\",\n  \"origin\": \"USA\",\n  \"operating_From\": \"New York\",\n  \"vendor_Type\": \"Natural Diamond\",\n  \"password\": \"testpassword123\",\n  \"adminVendorPassword\": \"adminpassword123\",\n  \"businessDetails\": {\n    \"gstNumber\": \"GST123456789\",\n    \"companyAddress\": \"123 Diamond Street, New York\",\n    \"phoneNumber\": \"+1234567890\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor", "register"]
+            },
+              "description": "Register a new vendor with all required details.\n\nExample JSON:\n{\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"email\": \"john.doe@vendor.com\",\n  \"company_name\": \"Diamond Suppliers Inc\",\n  \"contact_number\": \"+1234567890\",\n  \"origin\": \"USA\",\n  \"operating_From\": \"New York\",\n  \"vendor_Type\": \"Natural Diamond\",\n  \"password\": \"testpassword123\",\n  \"businessDetails\": {\n    \"gstNumber\": \"GST123456789\",\n    \"companyAddress\": \"123 Diamond Street, New York\",\n    \"phoneNumber\": \"+1234567890\"\n  }\n}"
+          },
+          "response": []
+        },
+        {
+          "name": "Vendor Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.token) {",
+                  "        pm.collectionVariables.set('vendorToken', response.token);",
+                  "        pm.collectionVariables.set('vendorId', response.vendor.id);",
+                  "    }",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"john.doe@vendor.com\",\n  \"password\": \"testpassword123\"\n}\n\nOR\n\n{\n  \"email\": \"john.doe@vendor.com\",\n  \"password\": \"adminpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor", "login"]
+            },
+            "description": "Login vendor and get authentication token"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Vendor Profile Management",
+      "item": [
+        {
+          "name": "Get Vendor Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{vendorToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor", "profile"]
+            },
+            "description": "Get current vendor's profile information"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Vendor Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{vendorToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"contact_number\": \"+1987654321\",\n  \"businessDetails\": {\n    \"gstNumber\": \"GST987654321\",\n    \"companyAddress\": \"456 Updated Street, New York\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor", "profile"]
+            },
+            "description": "Update vendor profile information"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Document Management",
+      "item": [
+        {
+          "name": "Upload Document",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{vendorToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "document",
+                  "type": "file",
+                  "src": [],
+                  "description": "Upload document file (PDF, JPG, PNG)"
+                },
+                {
+                  "key": "documentType",
+                  "value": "businessCard",
+                  "type": "text",
+                  "description": "Allowed values: businessCard, ownerProof, passport, pancard"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor/upload-document",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor", "upload-document"]
+            },
+            "description": "Upload vendor verification documents.\n\nForm-data fields:\n- document (file): PDF/JPG/PNG\n- documentType (text): businessCard, ownerProof, passport, pancard\n\nReturns:\n- documentType\n- documentUrl (URL of uploaded file)\n- verificationStatus\n\nIf file is missing or upload fails, returns error.\n\nRe-upload allowed if KYC is rejected."
+          },
+          "response": [
+            {
+              "name": "Success",
+              "originalRequest": {},
+              "status": "OK",
+              "code": 200,
+              "body": "{\n  \"success\": true,\n  \"message\": \"Document uploaded successfully\",\n  \"document\": {\n    \"documentType\": \"businessCard\",\n    \"documentUrl\": \"https://your-storage-url/file.png\",\n    \"verificationStatus\": \"pending\"\n  }\n}"
+            },
+            {
+              "name": "Error",
+              "originalRequest": {},
+              "status": "Bad Request",
+              "code": 400,
+              "body": "{\n  \"message\": \"Document upload failed or file missing\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Vendor Dashboard",
+      "item": [
+        {
+          "name": "Get Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{vendorToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor/dashboard",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor", "dashboard"]
+            },
+            "description": "Get vendor dashboard statistics including diamond counts, orders, revenue"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Diamond Management",
+      "item": [
+        {
+          "name": "Add Single Diamond",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{vendorToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"diamondId\": \"DMD001\",\n  \"stock_id\": \"STK001\",\n  \"ReportNo\": \"GIA123456789\",\n  \"shape\": \"Round\",\n  \"carats\": 1.5,\n  \"col\": \"G\",\n  \"clar\": \"VS1\",\n  \"cut\": \"Excellent\",\n  \"pol\": \"Excellent\",\n  \"symm\": \"Excellent\",\n  \"flo\": \"None\",\n  \"length\": 7.5,\n  \"width\": 7.5,\n  \"height\": 4.5,\n  \"depth\": 60.5,\n  \"table\": 57.0,\n  \"lab\": \"GIA\",\n  \"price\": 8500,\n  \"price_per_carat\": 5667,\n  \"vendorPrice\": 8000,\n  \"vendorCurrency\": \"USD\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor/diamonds",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor", "diamonds"]
+            },
+              "description": "Add a single diamond to vendor inventory.\n\n**Only possible after admin approves KYC/documents.**\nIf KYC is pending or rejected, vendor can only update profile, upload/change documents, and check dashboard.\n\nExample JSON:\n{\n  \"diamondId\": \"DMD001\",\n  \"stock_id\": \"STK001\",\n  \"ReportNo\": \"GIA123456789\",\n  \"shape\": \"Round\",\n  \"carats\": 1.5,\n  \"col\": \"G\",\n  \"clar\": \"VS1\",\n  \"cut\": \"Excellent\",\n  \"pol\": \"Excellent\",\n  \"symm\": \"Excellent\",\n  \"flo\": \"None\",\n  \"length\": 7.5,\n  \"width\": 7.5,\n  \"height\": 4.5,\n  \"depth\": 60.5,\n  \"table\": 57.0,\n  \"lab\": \"GIA\",\n  \"price\": 8500,\n  \"price_per_carat\": 5667,\n  \"vendorPrice\": 8000,\n  \"vendorCurrency\": \"USD\"\n}"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Vendor Diamonds",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{vendorToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor/diamonds?page=1&limit=20&status=pending",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor", "diamonds"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "description": "pending, approved, rejected"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "disabled": true,
+                  "description": "Search by diamondId, stock_id, shape"
+                }
+              ]
+            },
+            "description": "Get vendor's diamonds with pagination and filtering"
+          },
+          "response": []
+        },
+        {
+          "name": "Import Diamonds from Excel",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{vendorToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": [],
+                  "description": "Excel file with diamond data"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor/diamonds/import",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor", "diamonds", "import"]
+            },
+            "description": "Import multiple diamonds from Excel file (requires approved vendor)"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin - Vendor Management",
+      "item": [
+        {
+          "name": "Get Vendor Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor/admin/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor", "admin", "stats"]
+            },
+            "description": "Get admin dashboard stats for vendor verification"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Vendors",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor/admin/vendors?page=1&limit=20&status=pending",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor", "admin", "vendors"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "description": "pending, approved, rejected"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "disabled": true,
+                  "description": "Search by name, email, company"
+                }
+              ]
+            },
+            "description": "Get all vendors with pagination and filtering"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Vendor Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor/admin/vendors/{{vendorId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor", "admin", "vendors", "{{vendorId}}"]
+            },
+            "description": "Get detailed vendor information including documents and diamond stats"
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Vendor",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"approved\",\n  \"reason\": \"All documents verified successfully\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor/admin/vendors/{{vendorId}}/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor", "admin", "vendors", "{{vendorId}}", "verify"]
+            },
+              "description": "Approve or reject vendor verification.\n\nExample Approve JSON:\n{\n  \"status\": \"approved\",\n  \"reason\": \"All documents verified successfully\"\n}\n\nExample Reject JSON:\n{\n  \"status\": \"rejected\",\n  \"reason\": \"Documents are incomplete or invalid\"\n}"
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Document",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"verified\",\n  \"reason\": \"Document is clear and valid\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor/admin/vendors/{{vendorId}}/documents/pancard/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor", "admin", "vendors", "{{vendorId}}", "documents", "pancard", "verify"]
+            },
+            "description": "Verify or reject specific vendor document"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin - Diamond Verification",
+      "item": [
+        {
+          "name": "Get Diamonds for Verification",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor/admin/diamonds?page=1&limit=20&status=pending",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor", "admin", "diamonds"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "status",
+                  "value": "pending",
+                  "description": "pending, approved, rejected"
+                },
+                {
+                  "key": "vendorId",
+                  "value": "",
+                  "disabled": true,
+                  "description": "Filter by specific vendor"
+                }
+              ]
+            },
+            "description": "Get all vendor diamonds pending verification"
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Diamond",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"approved\",\n  \"reason\": \"Diamond details verified and authentic\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/vendor/admin/diamonds/:diamondId/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "vendor", "admin", "diamonds", ":diamondId", "verify"],
+              "variable": [
+                {
+                  "key": "diamondId",
+                  "value": "",
+                  "description": "ID of the diamond to verify"
+                }
+              ]
+            },
+            "description": "Approve or reject vendor diamond"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sample Excel Templates",
+      "item": [
+        {
+          "name": "Diamond Import Template Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "",
+              "host": [""]
+            },
+            "description": "Excel template should contain columns:\n\nRequired:\n- diamondId\n- stock_id\n- shape\n- carats\n\nOptional:\n- ReportNo\n- col (color)\n- clar (clarity)\n- cut\n- pol (polish)\n- symm (symmetry)\n- flo (fluorescence)\n- floCol\n- length\n- width\n- height\n- depth\n- table\n- culet\n- lab\n- girdle\n- eyeClean\n- brown\n- green\n- milky\n- discount\n- price\n- price_per_carat\n- video\n- image\n- pdf\n- mine_of_origin\n- vendorPrice\n- vendorCurrency"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ]
+}

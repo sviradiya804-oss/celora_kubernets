@@ -1,0 +1,700 @@
+{
+	"info": {
+		"_postman_id": "order-tracking-001",
+		"name": "Order Tracking API",
+		"description": "Complete Order Tracking API Collection - Public and Authenticated endpoints for tracking orders",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3003",
+			"type": "default"
+		},
+		{
+			"key": "order_id",
+			"value": "a9c58960-6c89-11f0-a2cf-a39f555992d0",
+			"type": "default"
+		},
+		{
+			"key": "customer_email",
+			"value": "20bmiit076@gmail.com",
+			"type": "default"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "default"
+		}
+	],
+	"item": [
+		{
+			"name": "Public Order Tracking (No Auth)",
+			"item": [
+				{
+					"name": "Track Order with Email",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has success true\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.eql(true);",
+									"});",
+									"",
+									"pm.test(\"Response contains order data\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('orderId');",
+									"    pm.expect(jsonData.data).to.have.property('status');",
+									"    pm.expect(jsonData.data).to.have.property('progress');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": \"{{order_id}}\",\n  \"email\": \"{{customer_email}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/public/track-order",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"track-order"
+							]
+						},
+						"description": "Track order by providing Order ID and Customer Email. Returns full order details including progress, products, tracking info, and shipping details."
+					},
+					"response": []
+				},
+				{
+					"name": "Quick Status Check (Order ID Only)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains basic status\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('orderId');",
+									"    pm.expect(jsonData.data).to.have.property('status');",
+									"    pm.expect(jsonData.data).to.have.property('statusMessage');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/public/track-order/{{order_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"track-order",
+								"{{order_id}}"
+							]
+						},
+						"description": "Get quick order status without email verification. Returns limited information: order status, progress percentage, and delivery status."
+					},
+					"response": []
+				},
+				{
+					"name": "Track Order - Wrong Email (Should Fail)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});",
+									"",
+									"pm.test(\"Response has success false\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.eql(false);",
+									"});",
+									"",
+									"pm.test(\"Error message indicates email verification failed\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.include('Email verification failed');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": \"{{order_id}}\",\n  \"email\": \"wrong@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/public/track-order",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"track-order"
+							]
+						},
+						"description": "Test email verification - should return 403 error when email doesn't match order"
+					},
+					"response": []
+				},
+				{
+					"name": "Track Order - Invalid Order ID (Should Fail)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Error message indicates order not found\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.include('Order not found');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": \"INVALID-ORDER-ID\",\n  \"email\": \"{{customer_email}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/public/track-order",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"track-order"
+							]
+						},
+						"description": "Test with invalid order ID - should return 404 error"
+					},
+					"response": []
+				},
+				{
+					"name": "Track Order with Currency Conversion (EUR)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Currency conversion applied\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('formattedTotal');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "currency",
+								"value": "EUR",
+								"description": "Request currency conversion to EUR"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"orderId\": \"{{order_id}}\",\n  \"email\": \"{{customer_email}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/public/track-order",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"public",
+								"track-order"
+							]
+						},
+						"description": "Track order with currency conversion. Add 'currency' header to convert prices."
+					},
+					"response": []
+				}
+			],
+			"description": "Public endpoints for order tracking without authentication. Customers can track orders using Order ID and Email verification."
+		},
+		{
+			"name": "Customer Order API (Authenticated)",
+			"item": [
+				{
+					"name": "Get All My Orders",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains orders array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('orders');",
+									"    pm.expect(jsonData.data.orders).to.be.an('array');",
+									"});",
+									"",
+									"// Save first order ID for other requests",
+									"var jsonData = pm.response.json();",
+									"if (jsonData.data.orders.length > 0) {",
+									"    pm.collectionVariables.set('order_id', jsonData.data.orders[0].orderId);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/customer/orders?page=1&limit=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"orders"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "status",
+									"value": "Confirmed",
+									"disabled": true
+								},
+								{
+									"key": "sortBy",
+									"value": "createdOn",
+									"disabled": true
+								},
+								{
+									"key": "sortOrder",
+									"value": "desc",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get all orders for the authenticated customer. Supports pagination, filtering by status, and sorting."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order Details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains detailed order info\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('orderId');",
+									"    pm.expect(jsonData.data).to.have.property('products');",
+									"    pm.expect(jsonData.data).to.have.property('progress');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/customer/orders/{{order_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"orders",
+								"{{order_id}}"
+							]
+						},
+						"description": "Get detailed information about a specific order including products, progress, tracking, and addresses."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order Tracking",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains tracking info\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('orderId');",
+									"    pm.expect(jsonData.data).to.have.property('progress');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/customer/orders/{{order_id}}/tracking",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"orders",
+								"{{order_id}}",
+								"tracking"
+							]
+						},
+						"description": "Get detailed tracking information for an order including carrier, tracking number, and shipment progress."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order Invoice",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains invoice URL\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('invoiceUrl');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/customer/orders/{{order_id}}/invoice",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"orders",
+								"{{order_id}}",
+								"invoice"
+							]
+						},
+						"description": "Get invoice URL for a specific order."
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order Statistics",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains statistics\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('totalOrders');",
+									"    pm.expect(jsonData.data).to.have.property('ordersByStatus');",
+									"    pm.expect(jsonData.data).to.have.property('recentOrders');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/customer/orders/stats/summary",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"orders",
+								"stats",
+								"summary"
+							]
+						},
+						"description": "Get order statistics including total orders, breakdown by status, total spent, and recent orders."
+					},
+					"response": []
+				},
+				{
+					"name": "Filter Orders by Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"All returned orders have correct status\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    jsonData.data.orders.forEach(function(order) {",
+									"        pm.expect(order.status).to.eql('Confirmed');",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/customer/orders?status=Confirmed",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"orders"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "Confirmed"
+								}
+							]
+						},
+						"description": "Filter orders by status. Available statuses: Pending, Confirmed, Manufacturing, Quality Assurance, Out For Delivery, Delivered, Cancelled"
+					},
+					"response": []
+				},
+				{
+					"name": "Sort Orders by Date",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Orders are sorted correctly\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.orders).to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/customer/orders?sortBy=createdOn&sortOrder=desc",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"customer",
+								"orders"
+							],
+							"query": [
+								{
+									"key": "sortBy",
+									"value": "createdOn",
+									"description": "Field to sort by: createdOn, total, status"
+								},
+								{
+									"key": "sortOrder",
+									"value": "desc",
+									"description": "Sort order: asc or desc"
+								}
+							]
+						},
+						"description": "Sort orders by different fields. Available sort fields: createdOn, total, status"
+					},
+					"response": []
+				}
+			],
+			"description": "Authenticated endpoints for logged-in customers to view their orders. Requires JWT Bearer token.",
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{auth_token}}",
+						"type": "string"
+					}
+				]
+			}
+		}
+	]
+}

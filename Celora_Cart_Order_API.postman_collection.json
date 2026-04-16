@@ -1,0 +1,583 @@
+{
+  "info": {
+    "_postman_id": "celora-cart-order-api",
+    "name": "Celora Cart & Order API",
+    "description": "Complete Cart to Order Flow API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "sessionId",
+      "value": "session-123-abc-def",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "507f1f77bcf86cd799439011",
+      "type": "string"
+    },
+    {
+      "key": "orderId",
+      "value": "ORD-123456",
+      "type": "string"
+    },
+    {
+      "key": "itemId",
+      "value": "item-uuid-1",
+      "type": "string"
+    },
+    {
+      "key": "subOrderId",
+      "value": "suborder-uuid-1",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "🛒 CART OPERATIONS",
+      "item": [
+        {
+          "name": "1. Add Item to Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"507f1f77bcf86cd799439011\",\n  \"quantity\": 1,\n  \"selectedVariant\": {\n    \"selectedOptions\": {\n      \"metaldetail\": \"18K Gold\",\n      \"ringsize\": \"7\"\n    }\n  },\n  \"diamondDetails\": {\n    \"shape\": \"Round\",\n    \"carats\": 1.5,\n    \"col\": \"D\",\n    \"clar\": \"VS1\",\n    \"lab\": false,\n    \"diamondType\": \"Natural\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/add-item",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "add-item"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. View Cart",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cart/view-cart?sessionId={{sessionId}}&userId={{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "view-cart"],
+              "query": [
+                {
+                  "key": "sessionId",
+                  "value": "{{sessionId}}"
+                },
+                {
+                  "key": "userId",
+                  "value": "{{userId}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Update Item Quantity",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\",\n  \"itemId\": \"{{itemId}}\",\n  \"newQuantity\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/update-quantity",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "update-quantity"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Remove Item from Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\",\n  \"itemId\": \"{{itemId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/remove-item/{{itemId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "remove-item", "{{itemId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Apply Coupon",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\",\n  \"couponCode\": \"SAVE20\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/apply-coupon",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "apply-coupon"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6. Remove Coupon",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/remove-coupon",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "remove-coupon"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "7. Clear Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/clear-cart",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "clear-cart"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💳 CHECKOUT & PAYMENT",
+      "item": [
+        {
+          "name": "1. Checkout with Payment (Stripe)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\",\n  \"cardNumber\": \"4242424242424242\",\n  \"expiryMonth\": \"12\",\n  \"expiryYear\": \"2025\",\n  \"cvv\": \"123\",\n  \"cardholderName\": \"John Doe\",\n  \"currency\": \"usd\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/checkout-with-payment",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "checkout-with-payment"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📦 ORDER OPERATIONS",
+      "item": [
+        {
+          "name": "1. Get Order Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/{{orderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders", "{{orderId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. List User Orders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders?userId={{userId}}&page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["orders"],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "{{userId}}"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔐 ADMIN OPERATIONS",
+      "item": [
+        {
+          "name": "1. List All Orders (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer admin-token-here",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/orders?status=Confirmed&currency=usd&page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "orders"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "Confirmed",
+                  "disabled": false
+                },
+                {
+                  "key": "paymentStatus",
+                  "value": "paid",
+                  "disabled": true
+                },
+                {
+                  "key": "currency",
+                  "value": "usd"
+                },
+                {
+                  "key": "dateFrom",
+                  "value": "2026-01-01",
+                  "disabled": true
+                },
+                {
+                  "key": "dateTo",
+                  "value": "2026-12-31",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Update Order Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer admin-token-here",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newStatus\": \"Confirmed\",\n  \"notes\": \"Order approved and ready for processing\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/orders/{{orderId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "orders", "{{orderId}}", "status"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Update SubOrder Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer admin-token-here",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Manufacturing\",\n  \"progress\": {\n    \"confirmed\": {\n      \"date\": \"2026-03-30T10:00:00Z\",\n      \"approvedBy\": \"admin-user-id\",\n      \"notes\": \"Approved for manufacturing\"\n    }\n  },\n  \"tracking\": {\n    \"trackingId\": \"TRACK-123456\",\n    \"trackingLink\": \"https://track.fedex.com?id=123\",\n    \"carrier\": \"FedEx\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/orders/{{orderId}}/suborder/{{subOrderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "orders", "{{orderId}}", "suborder", "{{subOrderId}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. Update Delivery Information",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer admin-token-here",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estimatedDeliveryDays\": 21,\n  \"expectedDeliveryDate\": \"2026-04-20T00:00:00Z\",\n  \"reason\": \"Custom design requires extra time for quality assurance\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/orders/{{orderId}}/delivery",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "orders", "{{orderId}}", "delivery"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5. Apply Manual Discount",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer admin-token-here",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"manualDiscountAmount\": 500,\n  \"reason\": \"Customer service adjustment\",\n  \"adminNotes\": \"Small scratch on setting - customer satisfaction\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/orders/{{orderId}}/discount",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "orders", "{{orderId}}", "discount"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "6. Process Refund",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer admin-token-here",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refundAmount\": 7172,\n  \"reason\": \"Customer requested full refund\",\n  \"refundToSource\": true,\n  \"adminNotes\": \"Processed per customer request\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/orders/{{orderId}}/refund",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "orders", "{{orderId}}", "refund"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💰 COUPONS (Admin)",
+      "item": [
+        {
+          "name": "1. Create Flat Discount Coupon",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer admin-token-here",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"SAVE100\",\n  \"type\": \"flat\",\n  \"discountAmount\": 100,\n  \"minCartValue\": 500,\n  \"currency\": \"usd\",\n  \"maxUses\": 100,\n  \"expiryDate\": \"2026-12-31\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/coupons",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "coupons"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2. Create Percentage Discount Coupon",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer admin-token-here",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"SAVE20\",\n  \"type\": \"percentage\",\n  \"discountPercentage\": 20,\n  \"minCartValue\": 200,\n  \"currency\": \"usd\",\n  \"maxUses\": 500,\n  \"expiryDate\": \"2026-12-31\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/coupons",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "coupons"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "3. Create Category Discount Coupon",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer admin-token-here",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"RING15\",\n  \"type\": \"category\",\n  \"category\": \"Rings\",\n  \"discountPercentage\": 15,\n  \"applicableCategories\": [\"Rings\", \"Engagement\"],\n  \"maxUses\": 1000,\n  \"expiryDate\": \"2026-12-31\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/coupons",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "coupons"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4. List All Coupons",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer admin-token-here",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/coupons?page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "coupons"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

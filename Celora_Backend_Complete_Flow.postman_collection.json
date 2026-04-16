@@ -1,0 +1,894 @@
+{
+  "info": {
+    "name": "Celora Backend - Complete Cart & Payment Flow",
+    "description": "Comprehensive API collection for cart management, checkout, payment processing, and order management with security testing",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "LOCAL_URL",
+      "value": "http://localhost:3000",
+      "type": "string",
+      "description": "Base URL for local development"
+    },
+    {
+      "key": "STAGING_URL", 
+      "value": "https://staging.celorajewelry.com",
+      "type": "string",
+      "description": "Staging environment URL"
+    },
+    {
+      "key": "PROD_URL",
+      "value": "https://api.celorajewelry.com", 
+      "type": "string",
+      "description": "Production environment URL"
+    },
+    {
+      "key": "BASE_URL",
+      "value": "{{LOCAL_URL}}",
+      "type": "string",
+      "description": "Current active environment URL"
+    },
+    {
+      "key": "TEST_SESSION_ID",
+      "value": "",
+      "type": "string",
+      "description": "Generated session ID for testing"
+    },
+    {
+      "key": "TEST_USER_ID",
+      "value": "66b123456789abcdef123456",
+      "type": "string",
+      "description": "Test user MongoDB ObjectId"
+    },
+    {
+      "key": "TEST_PRODUCT_ID",
+      "value": "66b123456789abcdef123457",
+      "type": "string", 
+      "description": "Test product MongoDB ObjectId"
+    },
+    {
+      "key": "TEST_ORDER_ID",
+      "value": "",
+      "type": "string",
+      "description": "Generated order ID from checkout"
+    },
+    {
+      "key": "STRIPE_SESSION_ID",
+      "value": "",
+      "type": "string",
+      "description": "Stripe checkout session ID"
+    },
+    {
+      "key": "AUTH_TOKEN",
+      "value": "",
+      "type": "string",
+      "description": "JWT authentication token"
+    },
+    {
+      "key": "ADMIN_TOKEN",
+      "value": "",
+      "type": "string", 
+      "description": "Admin JWT token for protected operations"
+    },
+    {
+      "key": "TEST_EMAIL",
+      "value": "test@example.com",
+      "type": "string",
+      "description": "Email for testing notifications"
+    },
+    {
+      "key": "CUSTOMER_NAME",
+      "value": "John Doe",
+      "type": "string",
+      "description": "Test customer name"
+    }
+  ],
+  "item": [
+    {
+      "name": "🛒 Cart Management",
+      "item": [
+        {
+          "name": "Add Item to Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{TEST_SESSION_ID}}\",\n  \"userId\": \"{{TEST_USER_ID}}\",\n  \"productId\": \"{{TEST_PRODUCT_ID}}\",\n  \"quantity\": 2,\n  \"selectedVariant\": \"18k Yellow Gold\"\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/cart/add",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "cart", "add"]
+            },
+            "description": "Add a product to the cart with variant selection"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Cart Item Quantity",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{TEST_SESSION_ID}}\",\n  \"userId\": \"{{TEST_USER_ID}}\",\n  \"productId\": \"{{TEST_PRODUCT_ID}}\",\n  \"quantity\": 3\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/cart/update",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "cart", "update"]
+            },
+            "description": "Update the quantity of an item in the cart"
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Item from Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{TEST_SESSION_ID}}\",\n  \"userId\": \"{{TEST_USER_ID}\"\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/cart/remove/{{TEST_PRODUCT_ID}}",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "cart", "remove", "{{TEST_PRODUCT_ID}}"]
+            },
+            "description": "Remove a specific item from the cart"
+          },
+          "response": []
+        },
+        {
+          "name": "Apply Coupon Code",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{TEST_SESSION_ID}}\",\n  \"userId\": \"{{TEST_USER_ID}}\",\n  \"code\": \"SAVE10\"\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/cart/apply-coupon",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "cart", "apply-coupon"]
+            },
+            "description": "Apply a discount coupon to the cart"
+          },
+          "response": []
+        },
+        {
+          "name": "Clear Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{TEST_SESSION_ID}}\",\n  \"userId\": \"{{TEST_USER_ID}\"\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/cart/clear",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "cart", "clear"]
+            },
+            "description": "Clear all items from the cart"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "💳 Payment & Checkout",
+      "item": [
+        {
+          "name": "Checkout Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{TEST_SESSION_ID}}\",\n  \"userId\": \"{{TEST_USER_ID}}\"\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/cart/checkout",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "cart", "checkout"]
+            },
+            "description": "Create Stripe checkout session from cart",
+            "event": [
+              {
+                "listen": "test",
+                "script": {
+                  "exec": [
+                    "if (pm.response.to.have.status(200)) {",
+                    "    const response = pm.response.json();",
+                    "    if (response.sessionId) {",
+                    "        pm.collectionVariables.set('STRIPE_SESSION_ID', response.sessionId);",
+                    "    }",
+                    "    if (response.orderId) {",
+                    "        pm.collectionVariables.set('TEST_ORDER_ID', response.orderId);",
+                    "    }",
+                    "}"
+                  ]
+                }
+              }
+            ]
+          },
+          "response": []
+        },
+        {
+          "name": "Create Payment Intent",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": 29999,\n  \"currency\": \"usd\"\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/payments/create-payment-intent",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "payments", "create-payment-intent"]
+            },
+            "description": "Create a Stripe payment intent for custom amount"
+          },
+          "response": []
+        },
+        {
+          "name": "Check Payment Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/payments/status/{{STRIPE_SESSION_ID}}",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "payments", "status", "{{STRIPE_SESSION_ID}}"]
+            },
+            "description": "Check the payment status of a Stripe session"
+          },
+          "response": []
+        },
+        {
+          "name": "Payment Success Callback",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/payments/success/{{STRIPE_SESSION_ID}}",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "payments", "success", "{{STRIPE_SESSION_ID}}"]
+            },
+            "description": "Simulate successful payment callback"
+          },
+          "response": []
+        },
+        {
+          "name": "Payment Cancel Callback",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/payments/cancel/{{STRIPE_SESSION_ID}}",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "payments", "cancel", "{{STRIPE_SESSION_ID}}"]
+            },
+            "description": "Simulate cancelled payment callback"
+          },
+          "response": []
+        },
+        {
+          "name": "Payment Failed Callback",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/payments/failed/{{STRIPE_SESSION_ID}}",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "payments", "failed", "{{STRIPE_SESSION_ID}}"]
+            },
+            "description": "Simulate failed payment callback"
+          },
+          "response": []
+        },
+        {
+          "name": "Retry Payment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/payments/retry/{{TEST_ORDER_ID}}",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "payments", "retry", "{{TEST_ORDER_ID}}"]
+            },
+            "description": "Create new payment session for failed order"
+          },
+          "response": []
+        },
+        {
+          "name": "Process Refund",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentIntentId\": \"pi_1234567890\",\n  \"amount\": 5000\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/payments/refund",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "payments", "refund"]
+            },
+            "description": "Process a refund for a payment"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📦 Order Management",
+      "item": [
+        {
+          "name": "Get User Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{AUTH_TOKEN}}"
+              }
+            ],
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/orders/user/{{TEST_USER_ID}}",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "orders", "user", "{{TEST_USER_ID}}"]
+            },
+            "description": "Get all orders for a specific user"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Order",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/orders/{{TEST_ORDER_ID}}",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "orders", "{{TEST_ORDER_ID}}"]
+            },
+            "description": "Get details of a specific order"
+          },
+          "response": []
+        },
+        {
+          "name": "Complete Order (Internal)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer\": \"{{TEST_USER_ID}}\",\n  \"products\": [\n    {\n      \"productId\": \"{{TEST_PRODUCT_ID}}\",\n      \"quantity\": 1,\n      \"type\": \"Premade\"\n    }\n  ],\n  \"total\": 299.99,\n  \"paymetmethod\": \"stripe\",\n  \"status\": \"Confirmed\"\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/orders/complete-order",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "orders", "complete-order"]
+            },
+            "description": "Complete an order and generate invoice"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Order Details with Payment Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/payments/order/{{TEST_ORDER_ID}}",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "payments", "order", "{{TEST_ORDER_ID}}"]
+            },
+            "description": "Get order details including payment and Stripe session info"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📧 Order Status Updates",
+      "item": [
+        {
+          "name": "Update Order Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newStatus\": \"Manufacturing\",\n  \"statusMessage\": \"Your order has entered the manufacturing phase. Our skilled artisans are crafting your jewelry with precision and care.\",\n  \"customerEmail\": \"customer@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/payments/update-order-status/{{TEST_ORDER_ID}}",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "payments", "update-order-status", "{{TEST_ORDER_ID}}"]
+            },
+            "description": "Update order status and send notification email"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Order Status with Image",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "newStatus",
+                  "value": "Quality Assurance",
+                  "type": "text"
+                },
+                {
+                  "key": "statusMessage",
+                  "value": "Your order is now undergoing quality assurance checks.",
+                  "type": "text"
+                },
+                {
+                  "key": "customerEmail",
+                  "value": "customer@example.com",
+                  "type": "text"
+                },
+                {
+                  "key": "statusImage",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/payments/update-order-status/{{TEST_ORDER_ID}}",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "payments", "update-order-status", "{{TEST_ORDER_ID}}"]
+            },
+            "description": "Update order status with an attached image"
+          },
+          "response": []
+        },
+        {
+          "name": "Send Status Email Manually",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"{{TEST_ORDER_ID}}\",\n  \"status\": \"Out For Delivery\",\n  \"imageUrls\": [\n    \"https://example.com/tracking-image1.jpg\",\n    \"https://example.com/tracking-image2.jpg\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/orders/send-status-email",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "orders", "send-status-email"]
+            },
+            "description": "Manually trigger status email with images"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📧 Email Testing",
+      "item": [
+        {
+          "name": "Test Order Confirmation Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"type\": \"confirmed\",\n  \"orderId\": \"TEST-ORDER-123\",\n  \"customerName\": \"John Doe\"\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/orders/test-email",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "orders", "test-email"]
+            },
+            "description": "Send test order confirmation email"
+          },
+          "response": []
+        },
+        {
+          "name": "Test Manufacturing Email with Images",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"type\": \"manufacturing\",\n  \"imageUrls\": [\n    \"https://picsum.photos/400/300?random=1\",\n    \"https://picsum.photos/400/300?random=2\"\n  ],\n  \"orderId\": \"TEST-ORDER-123\",\n  \"customerName\": \"John Doe\"\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/orders/test-email-with-images",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "orders", "test-email-with-images"]
+            },
+            "description": "Send test manufacturing email with sample images"
+          },
+          "response": []
+        },
+        {
+          "name": "Test Quality Assurance Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"type\": \"quality\",\n  \"orderId\": \"TEST-ORDER-123\",\n  \"customerName\": \"Jane Smith\"\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/orders/test-email",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "orders", "test-email"]
+            },
+            "description": "Send test quality assurance email"
+          },
+          "response": []
+        },
+        {
+          "name": "Test Delivery Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"type\": \"delivery\",\n  \"orderId\": \"TEST-ORDER-123\",\n  \"customerName\": \"Bob Johnson\"\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/orders/test-email",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "orders", "test-email"]
+            },
+            "description": "Send test out for delivery email"
+          },
+          "response": []
+        },
+        {
+          "name": "Test Delivered Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"test@example.com\",\n  \"type\": \"delivered\",\n  \"orderId\": \"TEST-ORDER-123\",\n  \"customerName\": \"Alice Brown\"\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/orders/test-email",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "orders", "test-email"]
+            },
+            "description": "Send test delivery confirmation email"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔒 Security Tests",
+      "item": [
+        {
+          "name": "NoSQL Injection - Cart Add",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"test-session\",\n  \"userId\": {\"$ne\": null},\n  \"productId\": {\"$where\": \"this.price < 1000\"},\n  \"quantity\": 1\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/cart/add",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "cart", "add"]
+            },
+            "description": "Test NoSQL injection vulnerability in cart add"
+          },
+          "response": []
+        },
+        {
+          "name": "XSS Payload - Cart Add",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"<script>alert('XSS')</script>\",\n  \"userId\": \"{{TEST_USER_ID}}\",\n  \"productId\": \"{{TEST_PRODUCT_ID}}\",\n  \"quantity\": 1,\n  \"selectedVariant\": \"<img src=x onerror=alert(1)>\"\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/cart/add",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "cart", "add"]
+            },
+            "description": "Test XSS vulnerability in cart parameters"
+          },
+          "response": []
+        },
+        {
+          "name": "Missing Required Fields - Checkout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/cart/checkout",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "cart", "checkout"]
+            },
+            "description": "Test required field validation bypass"
+          },
+          "response": []
+        },
+        {
+          "name": "Invalid Payment Amount",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"amount\": -100,\n  \"currency\": {\"$ne\": \"usd\"}\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/payments/create-payment-intent",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "payments", "create-payment-intent"]
+            },
+            "description": "Test payment validation with negative amount and injection"
+          },
+          "response": []
+        },
+        {
+          "name": "Parameter Pollution",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"test-session\",\n  \"sessionId\": {\"$ne\": null},\n  \"userId\": \"{{TEST_USER_ID}}\",\n  \"productId\": \"{{TEST_PRODUCT_ID}}\",\n  \"quantity\": 1,\n  \"quantity\": 999999\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/cart/add",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "cart", "add"]
+            },
+            "description": "Test parameter pollution vulnerability"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔍 Common CRUD Operations",
+      "item": [
+        {
+          "name": "Get Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/product?limit=10",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "product"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get products for cart selection"
+          },
+          "response": []
+        },
+        {
+          "name": "Search Products",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"category\": \"rings\",\n  \"price\": {\"$lt\": 1000}\n}"
+            },
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/product/search",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "product", "search"]
+            },
+            "description": "Search products with filters"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Product",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/product/{{TEST_PRODUCT_ID}}",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "product", "{{TEST_PRODUCT_ID}}"]
+            },
+            "description": "Get details of a specific product"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Available Coupons",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{LOCAL_URL}}/api/coupon",
+              "host": ["{{LOCAL_URL}}"],
+              "path": ["api", "coupon"]
+            },
+            "description": "Get available coupon codes"
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Auto-generate session ID if not set",
+          "if (!pm.collectionVariables.get('TEST_SESSION_ID') || pm.collectionVariables.get('TEST_SESSION_ID') === '') {",
+          "    pm.collectionVariables.set('TEST_SESSION_ID', 'test-session-' + Math.random().toString(36).substr(2, 9));",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Global test to check for common security issues",
+          "pm.test('Response should not contain script tags', function () {",
+          "    const responseText = pm.response.text();",
+          "    pm.expect(responseText).to.not.include('<script>');",
+          "    pm.expect(responseText).to.not.include('javascript:');",
+          "});",
+          "",
+          "pm.test('Response should not expose sensitive data', function () {",
+          "    const responseText = pm.response.text();",
+          "    pm.expect(responseText).to.not.include('password');",
+          "    pm.expect(responseText).to.not.include('secret');",
+          "    pm.expect(responseText).to.not.include('private_key');",
+          "});",
+          "",
+          "// Log response for security review",
+          "if (pm.response.code >= 400) {",
+          "    console.log('Security Test - Response Code:', pm.response.code);",
+          "    console.log('Security Test - Response Body:', pm.response.text());",
+          "}"
+        ]
+      }
+    }
+  ]
+}

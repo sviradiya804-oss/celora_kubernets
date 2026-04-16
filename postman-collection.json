@@ -1,0 +1,1620 @@
+{
+	"info": {
+		"_postman_id": "1658e8e6-de48-4028-b544-43e664253a0d",
+		"name": "🛒 Celora Backend - Secure Cart & Payment Flow",
+		"description": "Complete API collection for cart management, checkout, payment processing, order management, and comprehensive security testing. Includes authentication flows, validation testing, and production-ready scenarios.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24302412",
+		"_collection_link": "https://interstellar-rocket-623521.postman.co/workspace/Vatsal-workspace~d4a5f746-5f57-4332-8f21-b9b76b0a1e9b/collection/24302412-1658e8e6-de48-4028-b544-43e664253a0d?action=share&source=collection_link&creator=24302412"
+	},
+	"item": [
+		{
+			"name": "🔧 Setup & Authentication",
+			"item": [
+				{
+					"name": "Get Available Products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Auto-populate product ID from response",
+									"if (pm.response.to.have.status(200)) {",
+									"    const response = pm.response.json();",
+									"    if (response.data && response.data.length > 0) {",
+									"        const productId = response.data[0]._id;",
+									"        pm.collectionVariables.set('VALID_PRODUCT_ID', productId);",
+									"        console.log('Set VALID_PRODUCT_ID to:', productId);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/product?limit=5",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"product"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						},
+						"description": "Get real products to use in testing"
+					},
+					"response": []
+				},
+				{
+					"name": "Generate Session ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Generate unique session ID",
+									"const sessionId = 'session-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);",
+									"pm.collectionVariables.set('TEST_SESSION_ID', sessionId);",
+									"console.log('Generated SESSION_ID:', sessionId);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/health",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"health"
+							]
+						},
+						"description": "Health check and session generation"
+					},
+					"response": []
+				},
+				{
+					"name": "Register Test User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"{{CUSTOMER_NAME}}\",\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"password\": \"TestPassword123!\",\n  \"confirmPassword\": \"TestPassword123!\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/register",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						},
+						"description": "Register a test user (may fail if user exists)"
+					},
+					"response": []
+				},
+				{
+					"name": "Login Test User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.to.have.status(200)) {",
+									"    const response = pm.response.json();",
+									"    if (response.token) {",
+									"        pm.collectionVariables.set('AUTH_TOKEN', response.token);",
+									"        console.log('Auth token saved');",
+									"    }",
+									"    if (response.user && response.user._id) {",
+									"        pm.collectionVariables.set('TEST_USER_ID', response.user._id);",
+									"        console.log('User ID updated to:', response.user._id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"password\": \"TestPassword123!\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/v1/auth/login",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login and get authentication token"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🛒 Complete Cart Flow",
+			"item": [
+				{
+					"name": "1. Add Item to Cart",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{AUTH_TOKEN}}",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"{{TEST_SESSION_ID}}\",\n  \"userId\": \"{{TEST_USER_ID}}\",\n  \"productId\": \"68874c95b7ab72bcdb87e08d\",\n  \"quantity\": 10,\n  \"selectedVariant\": \"Premade\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/cart/add",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"add"
+							]
+						},
+						"description": "Add product to cart with real product ID"
+					},
+					"response": []
+				},
+				{
+					"name": "2. Add Second Item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"{{TEST_SESSION_ID}}\",\n  \"userId\": \"{{TEST_USER_ID}}\",\n  \"productId\": \"{{VALID_PRODUCT_ID}}\",\n  \"quantity\": 5,\n  \"selectedVariant\": \"Premade\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/cart/add",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"add"
+							]
+						},
+						"description": "Add another item (same product, different variant)"
+					},
+					"response": []
+				},
+				{
+					"name": "3. Update Cart Quantity",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"{{TEST_SESSION_ID}}\",\n  \"userId\": \"{{TEST_USER_ID}}\",\n  \"productId\": \"6874ab1e6da13d33f67e7cfe\",\n  \"quantity\": 3\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/cart/update",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"update"
+							]
+						},
+						"description": "Update quantity of cart item"
+					},
+					"response": []
+				},
+				{
+					"name": "4. Apply Valid Coupon",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"{{TEST_SESSION_ID}}\",\n  \"userId\": \"{{TEST_USER_ID}}\",\n  \"code\": \"CART20\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/cart/apply-coupon",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"apply-coupon"
+							]
+						},
+						"description": "Apply discount coupon (may fail if coupon doesn't exist)"
+					},
+					"response": []
+				},
+				{
+					"name": "5. Proceed to Checkout (Enhanced)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.to.have.status(200)) {",
+									"    const response = pm.response.json();",
+									"    if (response.sessionId) {",
+									"        pm.collectionVariables.set('STRIPE_SESSION_ID', response.sessionId);",
+									"        console.log('Stripe session ID saved:', response.sessionId);",
+									"    }",
+									"    if (response.orderId) {",
+									"        pm.collectionVariables.set('TEST_ORDER_ID', response.orderId);",
+									"        console.log('Order ID saved:', response.orderId);",
+									"    }",
+									"    if (response.orderSummary) {",
+									"        console.log('Order Summary:', JSON.stringify(response.orderSummary, null, 2));",
+									"    }",
+									"    ",
+									"    // Validate enhanced response",
+									"    pm.test('Response includes enhanced order data', function () {",
+									"        pm.expect(response).to.have.property('orderSummary');",
+									"        pm.expect(response.orderSummary).to.have.property('subtotal');",
+									"        pm.expect(response.orderSummary).to.have.property('total');",
+									"        pm.expect(response.orderSummary).to.have.property('itemCount');",
+									"    });",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"{{TEST_SESSION_ID}}\",\n  \"userId\": \"{{TEST_USER_ID}}\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/cart/checkout",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"checkout"
+							]
+						},
+						"description": "Create enhanced Stripe checkout session with detailed product information, images, and customer data collection"
+					},
+					"response": []
+				},
+				{
+					"name": "GET CART",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/cart/{{TEST_USER_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"{{TEST_USER_ID}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "6. Remove Product from Cart",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"{{TEST_SESSION_ID}}\",\n  \"userId\": \"{{TEST_USER_ID}}\",\n  \"productId\": \"{{VALID_PRODUCT_ID}}\",\n  \"selectedVariant\": \"Premade\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/cart/remove",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"remove"
+							]
+						},
+						"description": "Remove specific product from cart"
+					},
+					"response": []
+				},
+				{
+					"name": "7. Clear Entire Cart",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"{{TEST_SESSION_ID}}\",\n  \"userId\": \"{{TEST_USER_ID}}\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/cart/clear",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"clear"
+							]
+						},
+						"description": "Clear all items from cart"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "💳 Payment Simulation",
+			"item": [
+				{
+					"name": "Check Payment Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/payments/status/{{STRIPE_SESSION_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"status",
+								"{{STRIPE_SESSION_ID}}"
+							]
+						},
+						"description": "Check current payment status"
+					},
+					"response": []
+				},
+				{
+					"name": "Simulate Payment Success",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/payments/success/{{STRIPE_SESSION_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"success",
+								"{{STRIPE_SESSION_ID}}"
+							]
+						},
+						"description": "Simulate successful payment (for testing)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order with Payment Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/payments/order/{{TEST_ORDER_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"order",
+								"{{TEST_ORDER_ID}}"
+							]
+						},
+						"description": "Get complete order details including payment info"
+					},
+					"response": []
+				},
+				{
+					"name": "Process Refund",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"reason\": \"Customer requested refund\",\n  \"amount\": null\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/payments/refund/{{TEST_ORDER_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"refund",
+								"{{TEST_ORDER_ID}}"
+							]
+						},
+						"description": "Process full or partial refund for an order"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📦 Order Status Management",
+			"item": [
+				{
+					"name": "Update to Manufacturing",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ADMIN_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "newStatus",
+									"value": "Manufacturing",
+									"type": "text"
+								},
+								{
+									"key": "statusMessage",
+									"value": "Your jewelry has entered our manufacturing process. Our skilled artisans are carefully crafting your piece.",
+									"type": "text"
+								},
+								{
+									"key": "customerEmail",
+									"value": "{{TEST_EMAIL}}",
+									"type": "text"
+								},
+								{
+									"key": "statusImage",
+									"type": "file",
+									"src": "postman-cloud:///1f0567cd-0236-4780-9777-481377f615a1"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/payments/update-order-status/{{TEST_ORDER_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"update-order-status",
+								"{{TEST_ORDER_ID}}"
+							]
+						},
+						"description": "Update order to manufacturing status"
+					},
+					"response": []
+				},
+				{
+					"name": "Update to Quality Assurance",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "newStatus",
+									"value": "Quality Assurance",
+									"type": "text"
+								},
+								{
+									"key": "statusMessage",
+									"value": "Your jewelry has entered our manufacturing process. Our skilled artisans are carefully crafting your piece.",
+									"type": "text"
+								},
+								{
+									"key": "customerEmail",
+									"value": "{{TEST_EMAIL}}",
+									"type": "text"
+								},
+								{
+									"key": "statusImage",
+									"type": "file",
+									"src": "postman-cloud:///1f0567cd-0236-4780-9777-481377f615a1"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/payments/update-order-status/{{TEST_ORDER_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"update-order-status",
+								"{{TEST_ORDER_ID}}"
+							]
+						},
+						"description": "Update to quality assurance status"
+					},
+					"response": []
+				},
+				{
+					"name": "Update to Out For Delivery",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"newStatus\": \"Out For Delivery\",\n  \"statusMessage\": \"Great news! Your jewelry is now out for delivery and should arrive within 1-2 business days.\",\n  \"customerEmail\": \"{{TEST_EMAIL}}\",\n  \"trackingId\" : \"ABCD\",\n  \"trackingLink\" : \"https://track.example.com/AVXSDSAD\"\n\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/payments/update-order-status/{{TEST_ORDER_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"update-order-status",
+								"{{TEST_ORDER_ID}}"
+							]
+						},
+						"description": "Update to out for delivery status"
+					},
+					"response": []
+				},
+				{
+					"name": "Update to Delivered",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"newStatus\": \"Delivered\",\n  \"statusMessage\": \"Your jewelry has been successfully delivered! We hope you love your new piece.\",\n  \"customerEmail\": \"{{TEST_EMAIL}}\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/payments/update-order-status/{{TEST_ORDER_ID}}",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"update-order-status",
+								"{{TEST_ORDER_ID}}"
+							]
+						},
+						"description": "Mark order as delivered"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "� Dashboard & Analytics",
+			"item": [
+				{
+					"name": "Dashboard Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/dashboard/health",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"dashboard",
+								"health"
+							]
+						},
+						"description": "Check dashboard data availability and model structure"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Dashboard Data",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/dashboard",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"dashboard"
+							]
+						},
+						"description": "Get comprehensive dashboard analytics"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Dashboard Data (Date Range)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/dashboard?from=2025-01-01&to=2025-12-31",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"dashboard"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2025-01-01"
+								},
+								{
+									"key": "to",
+									"value": "2025-12-31"
+								}
+							]
+						},
+						"description": "Get dashboard data for specific date range"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "�📧 Unified Email Template Testing",
+			"item": [
+				{
+					"name": "Test Single Status Email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"customerName\": \"{{CUSTOMER_NAME}}\",\n  \"orderId\": \"{{TEST_ORDER_ID}}\",\n  \"status\": \"Confirmed\",\n  \"includeImages\": false,\n  \"includeProducts\": true,\n  \"includeTracking\": false\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/test-email/unified",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"test-email",
+								"unified"
+							]
+						},
+						"description": "Test the unified email template with any status"
+					},
+					"response": []
+				},
+				{
+					"name": "Test All Order Statuses",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"customerName\": \"{{CUSTOMER_NAME}}\",\n  \"orderId\": \"FULL-TEST-ORDER\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/test-email/all-statuses",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"test-email",
+								"all-statuses"
+							]
+						},
+						"description": "Send all 5 order status emails in sequence"
+					},
+					"response": []
+				},
+				{
+					"name": "Test Confirmation Email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"customerName\": \"{{CUSTOMER_NAME}}\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/test-email/confirmation",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"test-email",
+								"confirmation"
+							]
+						},
+						"description": "Test order confirmation email"
+					},
+					"response": []
+				},
+				{
+					"name": "Test Manufacturing Email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"customerName\": \"{{CUSTOMER_NAME}}\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/test-email/manufacturing",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"test-email",
+								"manufacturing"
+							]
+						},
+						"description": "Test manufacturing progress email"
+					},
+					"response": []
+				},
+				{
+					"name": "Test Quality Assurance Email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"customerName\": \"{{CUSTOMER_NAME}}\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/test-email/quality",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"test-email",
+								"quality"
+							]
+						},
+						"description": "Test quality assurance email"
+					},
+					"response": []
+				},
+				{
+					"name": "Test Delivery Email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"customerName\": \"{{CUSTOMER_NAME}}\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/test-email/delivery",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"test-email",
+								"delivery"
+							]
+						},
+						"description": "Test out for delivery email"
+					},
+					"response": []
+				},
+				{
+					"name": "Test Delivered Email",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"{{TEST_EMAIL}}\",\n  \"customerName\": \"{{CUSTOMER_NAME}}\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/test-email/delivered",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"test-email",
+								"delivered"
+							]
+						},
+						"description": "Test delivery confirmation email"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Order Status (Real)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ADMIN_TOKEN}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"newStatus\": \"Manufacturing\",\n  \"statusMessage\": \"Your jewelry has entered our manufacturing process. Our skilled artisans are carefully crafting your piece.\",\n  \"customerEmail\": \"{{TEST_EMAIL}}\",\n  \"images\": [\n    {\n      \"filename\": \"manufacturing-progress-1.jpg\",\n      \"description\": \"Initial crafting stage\",\n      \"path\": null\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/orders/{{TEST_ORDER_ID}}/status",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"{{TEST_ORDER_ID}}",
+								"status"
+							]
+						},
+						"description": "Actually update an order status and send email"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🔒 Security Validation Tests",
+			"item": [
+				{
+					"name": "NoSQL Injection - Cart Add",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"test-session\",\n  \"userId\": {\"$ne\": null},\n  \"productId\": {\"$where\": \"this.price < 1000\"},\n  \"quantity\": 1\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/cart/add",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"add"
+							]
+						},
+						"description": "🔴 Should FAIL - NoSQL injection attempt"
+					},
+					"response": []
+				},
+				{
+					"name": "XSS Payload Test",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"<script>alert('XSS')</script>\",\n  \"userId\": \"{{TEST_USER_ID}}\",\n  \"productId\": \"{{VALID_PRODUCT_ID}}\",\n  \"quantity\": 1,\n  \"selectedVariant\": \"<img src=x onerror=alert(1)>\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/cart/add",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"add"
+							]
+						},
+						"description": "🔴 Should sanitize XSS payloads"
+					},
+					"response": []
+				},
+				{
+					"name": "Missing Required Fields",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/cart/checkout",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"checkout"
+							]
+						},
+						"description": "🔴 Should FAIL - Missing required fields"
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Payment Amount",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount\": -100,\n  \"currency\": {\"$ne\": \"usd\"}\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/payments/create-payment-intent",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"create-payment-intent"
+							]
+						},
+						"description": "🔴 Should FAIL - Negative amount and injection"
+					},
+					"response": []
+				},
+				{
+					"name": "Parameter Pollution",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"test-session\",\n  \"sessionId\": {\"$ne\": null},\n  \"userId\": \"{{TEST_USER_ID}}\",\n  \"productId\": \"{{VALID_PRODUCT_ID}}\",\n  \"quantity\": 1,\n  \"quantity\": 999999\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/cart/add",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"add"
+							]
+						},
+						"description": "🔴 Should handle parameter pollution gracefully"
+					},
+					"response": []
+				},
+				{
+					"name": "Unauthorized Order Creation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customer\": \"{{TEST_USER_ID}}\",\n  \"products\": [\n    {\n      \"productId\": \"{{VALID_PRODUCT_ID}}\",\n      \"quantity\": 1\n    }\n  ],\n  \"total\": 1.00\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/orders/complete-order",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"complete-order"
+							]
+						},
+						"description": "🔴 Should FAIL - No authentication"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🧪 Edge Cases & Error Handling",
+			"item": [
+				{
+					"name": "Add Non-existent Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"{{TEST_SESSION_ID}}\",\n  \"userId\": \"{{TEST_USER_ID}}\",\n  \"productId\": \"66b999999999999999999999\",\n  \"quantity\": 1\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/cart/add",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"add"
+							]
+						},
+						"description": "Test with non-existent product ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Checkout Empty Cart",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"empty-cart-session\",\n  \"userId\": \"{{TEST_USER_ID}}\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/cart/checkout",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"checkout"
+							]
+						},
+						"description": "Try to checkout with empty cart"
+					},
+					"response": []
+				},
+				{
+					"name": "Apply Invalid Coupon",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"{{TEST_SESSION_ID}}\",\n  \"userId\": \"{{TEST_USER_ID}}\",\n  \"code\": \"INVALID_COUPON_12345\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/cart/apply-coupon",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"apply-coupon"
+							]
+						},
+						"description": "Test with invalid coupon code"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Non-existent Order",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"newStatus\": \"Manufacturing\",\n  \"customerEmail\": \"{{TEST_EMAIL}}\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/payments/update-order-status/NONEXISTENT-ORDER-123",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"update-order-status",
+								"NONEXISTENT-ORDER-123"
+							]
+						},
+						"description": "Try to update non-existent order"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "🎫 Enhanced Coupon System Testing",
+			"item": [
+				{
+					"name": "Test Category-Specific Coupon",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"{{TEST_SESSION_ID}}\",\n  \"userId\": \"{{TEST_USER_ID}}\",\n  \"code\": \"RINGS20\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/cart/apply-coupon",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"apply-coupon"
+							]
+						},
+						"description": "Test coupon that applies only to specific category (e.g., Rings)"
+					},
+					"response": []
+				},
+				{
+					"name": "Test Product-Specific Coupon",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"{{TEST_SESSION_ID}}\",\n  \"userId\": \"{{TEST_USER_ID}}\",\n  \"code\": \"PRODUCT15\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/cart/apply-coupon",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"apply-coupon"
+							]
+						},
+						"description": "Test coupon that applies only to specific products"
+					},
+					"response": []
+				},
+				{
+					"name": "Test General Cart Coupon",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"{{TEST_SESSION_ID}}\",\n  \"userId\": \"{{TEST_USER_ID}}\",\n  \"code\": \"CART10\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/cart/apply-coupon",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"apply-coupon"
+							]
+						},
+						"description": "Test general coupon that applies to entire cart"
+					},
+					"response": []
+				},
+				{
+					"name": "Test Coupon with Minimum Amount",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"{{TEST_SESSION_ID}}\",\n  \"userId\": \"{{TEST_USER_ID}}\",\n  \"code\": \"MIN100\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/cart/apply-coupon",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"apply-coupon"
+							]
+						},
+						"description": "Test coupon with minimum order amount requirement"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "📊 Performance & Load Testing",
+			"item": [
+				{
+					"name": "Rapid Cart Additions",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"load-test-{{$randomInt}}\",\n  \"userId\": \"{{TEST_USER_ID}}\",\n  \"productId\": \"{{VALID_PRODUCT_ID}}\",\n  \"quantity\": 1\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}/api/cart/add",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"cart",
+								"add"
+							]
+						},
+						"description": "Use with runner to test rate limiting"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{AUTH_TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Ensure we have a session ID",
+					"if (!pm.collectionVariables.get('TEST_SESSION_ID')) {",
+					"    const sessionId = 'session-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);",
+					"    pm.collectionVariables.set('TEST_SESSION_ID', sessionId);",
+					"}",
+					"",
+					"// Add timing for performance monitoring",
+					"pm.globals.set('requestStartTime', Date.now());"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global security checks",
+					"pm.test('Response time is acceptable', function () {",
+					"    const startTime = pm.globals.get('requestStartTime');",
+					"    const responseTime = Date.now() - startTime;",
+					"    pm.expect(responseTime).to.be.below(5000); // 5 seconds max",
+					"});",
+					"",
+					"pm.test('No script tags in response', function () {",
+					"    const responseText = pm.response.text();",
+					"    pm.expect(responseText).to.not.include('<script>');",
+					"    pm.expect(responseText).to.not.include('javascript:');",
+					"});",
+					"",
+					"pm.test('No sensitive data exposed', function () {",
+					"    const responseText = pm.response.text().toLowerCase();",
+					"    pm.expect(responseText).to.not.include('password');",
+					"    pm.expect(responseText).to.not.include('secret');",
+					"    pm.expect(responseText).to.not.include('private_key');",
+					"    pm.expect(responseText).to.not.include('api_key');",
+					"});",
+					"",
+					"// Log security test results",
+					"if (pm.request.name.includes('🔴')) {",
+					"    if (pm.response.code >= 400) {",
+					"        console.log('✅ Security test passed - Request properly rejected');",
+					"    } else {",
+					"        console.log('⚠️ Security test warning - Request was accepted');",
+					"    }",
+					"}",
+					"",
+					"// Response structure validation",
+					"if (pm.response.code < 400) {",
+					"    pm.test('Response has proper structure', function () {",
+					"        const response = pm.response.json();",
+					"        pm.expect(response).to.be.an('object');",
+					"    });",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "LOCAL_URL",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "STAGING_URL",
+			"value": "https://staging-api.celorajewelry.com",
+			"type": "string"
+		},
+		{
+			"key": "PROD_URL",
+			"value": "https://api.celorajewelry.com",
+			"type": "string"
+		},
+		{
+			"key": "BASE_URL",
+			"value": "{{LOCAL_URL}}",
+			"type": "string"
+		},
+		{
+			"key": "TEST_SESSION_ID",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "TEST_USER_ID",
+			"value": "6888b41aecdfc15d639591bd",
+			"type": "string"
+		},
+		{
+			"key": "VALID_PRODUCT_ID",
+			"value": "6874ab1e6da13d33f67e7cfe",
+			"type": "string"
+		},
+		{
+			"key": "TEST_ORDER_ID",
+			"value": "688754ad05d9dc8e4d02f0d1",
+			"type": "string"
+		},
+		{
+			"key": "STRIPE_SESSION_ID",
+			"value": "cs_test_a1sQ7jNWe7O155TeeswQMzgZSk2SvpBkoBTRr0ZUz5znVKHgUMecmI7DP6",
+			"type": "string"
+		},
+		{
+			"key": "AUTH_TOKEN",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "ADMIN_TOKEN",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "TEST_EMAIL",
+			"value": "20bmiit076@gmail.com",
+			"type": "string"
+		},
+		{
+			"key": "CUSTOMER_NAME",
+			"value": "John Doe",
+			"type": "string"
+		}
+	]
+}

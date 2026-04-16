@@ -1,0 +1,7 @@
+global:
+  scrape_interval: 15s # How often to scrape metrics
+
+scrape_configs:
+  - job_name: 'celora-backend'
+    static_configs:
+      - targets: ['celora-backend:5000'] # 'celora-backend' is the service name in docker-compose

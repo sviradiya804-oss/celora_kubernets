@@ -1,0 +1,587 @@
+{
+  "info": {
+    "name": "Celora Backend - Order & Cart Management",
+    "description": "Complete collection for cart operations, order management, payments, and customer order tracking",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{authToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://celora-backend.vercel.app",
+      "type": "string"
+    },
+    {
+      "key": "localUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "cartId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "orderId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "paymentIntentId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Cart Management",
+      "item": [
+        {
+          "name": "Add Item to Cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200 || pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.cart && response.cart._id) {",
+                  "        pm.collectionVariables.set('cartId', response.cart._id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"6870abab68f9b4a37c8c856c\",\n  \"productType\": \"jewelry\",\n  \"quantity\": 1,\n  \"selectedOptions\": {\n    \"shape\": \"6884b4355b8a2ab54b74cd0a\",\n    \"metaldetail\": \"686ab482d853bd069777c9f2\",\n    \"ringsize\": \"68123456789abcdef0123456\",\n    \"centerStone\": {\n      \"carat\": 1.5,\n      \"color\": \"F\",\n      \"clarity\": \"VS1\"\n    },\n    \"engraving\": {\n      \"text\": \"Forever Yours\",\n      \"font\": \"Script\",\n      \"position\": \"Inside Band\"\n    }\n  },\n  \"customizations\": {\n    \"metalType\": \"18K White Gold\",\n    \"gemstoneUpgrade\": true\n  },\n  \"price\": 3600\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "add"]
+            }
+          }
+        },
+        {
+          "name": "Get Cart",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cart",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart"]
+            }
+          }
+        },
+        {
+          "name": "Update Cart Item",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity\": 2,\n  \"selectedOptions\": {\n    \"engraving\": {\n      \"text\": \"Always & Forever\",\n      \"font\": \"Cursive\",\n      \"position\": \"Inside Band\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/update/CART_ITEM_ID",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "update", "CART_ITEM_ID"]
+            }
+          }
+        },
+        {
+          "name": "Remove Cart Item",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cart/remove/CART_ITEM_ID",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "remove", "CART_ITEM_ID"]
+            }
+          }
+        },
+        {
+          "name": "Clear Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cart/clear",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "clear"]
+            }
+          }
+        },
+        {
+          "name": "Apply Coupon",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"couponCode\": \"SAVE10\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/apply-coupon",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "apply-coupon"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Order Management",
+      "item": [
+        {
+          "name": "Create Order from Cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.order && response.order._id) {",
+                  "        pm.collectionVariables.set('orderId', response.order._id);",
+                  "    }",
+                  "    if (response.order && response.order.orderId) {",
+                  "        pm.collectionVariables.set('orderNumber', response.order.orderId);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shippingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+1234567890\",\n    \"address1\": \"123 Main Street\",\n    \"address2\": \"Apt 4B\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"zipCode\": \"10001\",\n    \"country\": \"USA\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+1234567890\",\n    \"address1\": \"123 Main Street\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"zipCode\": \"10001\",\n    \"country\": \"USA\"\n  },\n  \"paymentMethod\": \"stripe\",\n  \"specialInstructions\": \"Please handle with care - engagement ring\",\n  \"giftMessage\": \"Congratulations on your engagement!\",\n  \"expediteShipping\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/order/create",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "create"]
+            }
+          }
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/order/{{orderId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "{{orderId}}"]
+            }
+          }
+        },
+        {
+          "name": "Get User Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/order/user/orders?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "user", "orders"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "10"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Order Status (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"Manufacturing\",\n  \"statusMessage\": \"Your jewelry has entered our manufacturing process\",\n  \"estimatedDelivery\": \"2024-02-15\",\n  \"trackingNumber\": \"CEL123456789\",\n  \"internalNotes\": \"Special handling required for custom engraving\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/order/{{orderId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "{{orderId}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "Cancel Order",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reason\": \"Customer requested cancellation\",\n  \"refundAmount\": 3600,\n  \"refundMethod\": \"original_payment_method\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/order/{{orderId}}/cancel",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "{{orderId}}", "cancel"]
+            }
+          }
+        },
+        {
+          "name": "Get All Orders (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/order?page=1&limit=20&status=Pending",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "order"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "20"},
+                {"key": "status", "value": "Pending"}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payment Processing",
+      "item": [
+        {
+          "name": "Create Payment Intent",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.paymentIntent && response.paymentIntent.id) {",
+                  "        pm.collectionVariables.set('paymentIntentId', response.paymentIntent.id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"{{orderId}}\",\n  \"amount\": 3600,\n  \"currency\": \"usd\",\n  \"paymentMethodTypes\": [\"card\"],\n  \"metadata\": {\n    \"orderType\": \"jewelry\",\n    \"hasEngraving\": \"true\",\n    \"customerEmail\": \"john.doe@example.com\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/payments/create-payment-intent",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", "create-payment-intent"]
+            }
+          }
+        },
+        {
+          "name": "Confirm Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentIntentId\": \"{{paymentIntentId}}\",\n  \"paymentMethodId\": \"pm_card_visa\",\n  \"billingDetails\": {\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+1234567890\",\n    \"address\": {\n      \"line1\": \"123 Main Street\",\n      \"city\": \"New York\",\n      \"state\": \"NY\",\n      \"postal_code\": \"10001\",\n      \"country\": \"US\"\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/payments/confirm-payment",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", "confirm-payment"]
+            }
+          }
+        },
+        {
+          "name": "Get Payment Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/payments/status/{{paymentIntentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", "status", "{{paymentIntentId}}"]
+            }
+          }
+        },
+        {
+          "name": "Process Refund",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paymentIntentId\": \"{{paymentIntentId}}\",\n  \"amount\": 3600,\n  \"reason\": \"requested_by_customer\",\n  \"metadata\": {\n    \"orderId\": \"{{orderId}}\",\n    \"refundReason\": \"Customer changed mind before manufacturing\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/payments/refund",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", "refund"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Engraving Management",
+      "item": [
+        {
+          "name": "Add Engraving to Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"{{orderId}}\",\n  \"productIndex\": 0,\n  \"engravingDetails\": {\n    \"text\": \"Forever & Always\",\n    \"font\": \"Script\",\n    \"position\": \"Inside Band\",\n    \"depth\": \"Deep\",\n    \"specialInstructions\": \"Please center the text perfectly\"\n  },\n  \"additionalCost\": 75\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/order/{{orderId}}/engraving/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "{{orderId}}", "engraving", "add"]
+            }
+          }
+        },
+        {
+          "name": "Update Engraving Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"In Progress\",\n  \"progress\": 50,\n  \"estimatedCompletion\": \"2024-02-10\",\n  \"artisanNotes\": \"Text positioning approved, starting engraving process\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/order/{{orderId}}/engraving/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["order", "{{orderId}}", "engraving", "status"]
+            }
+          }
+        },
+        {
+          "name": "Get Engraving Options",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/engraving/options",
+              "host": ["{{baseUrl}}"],
+              "path": ["engraving", "options"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Customer Order Tracking",
+      "item": [
+        {
+          "name": "Track Order by Order Number",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/track/ORDER_NUMBER_HERE",
+              "host": ["{{baseUrl}}"],
+              "path": ["track", "ORDER_NUMBER_HERE"]
+            }
+          }
+        },
+        {
+          "name": "Get Order Timeline",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/customer-order/{{orderId}}/timeline",
+              "host": ["{{baseUrl}}"],
+              "path": ["customer-order", "{{orderId}}", "timeline"]
+            }
+          }
+        },
+        {
+          "name": "Get Order Progress",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/customer-order/{{orderId}}/progress",
+              "host": ["{{baseUrl}}"],
+              "path": ["customer-order", "{{orderId}}", "progress"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

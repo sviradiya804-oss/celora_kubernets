@@ -1,0 +1,254 @@
+{
+  "info": {
+    "name": "Celora Cart & Checkout",
+    "_postman_id": "celora-cart-collection",
+    "description": "Collection for cart flows: register/login/logout, cart CRUD, coupons, checkout (Stripe), and debug endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth / Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"Password123!\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/auth/register",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","v1","auth","register"]
+        }
+      }
+    },
+    {
+      "name": "Auth / Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"Password123!\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","v1","auth","login"]
+        }
+      }
+    },
+    {
+      "name": "Auth / Logout",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+        ],
+        "body": { "mode": "raw", "raw": "{}" },
+        "url": { "raw": "{{baseUrl}}/api/v1/auth/logout", "host": ["{{baseUrl}}"], "path": ["api","v1","auth","logout"] }
+      }
+    },
+    {
+      "name": "Cart / Add Item",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\",\n  \"productId\": \"{{sampleProductId}}\",\n  \"quantity\": 1\n}"
+        },
+        "url": { "raw": "{{baseUrl}}/api/cart/add", "host": ["{{baseUrl}}"], "path": ["api","cart","add"] }
+      }
+    },
+    {
+      "name": "Cart / Update Quantity",
+      "request": {
+        "method": "PUT",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\",\n  \"productId\": \"{{sampleProductId}}\",\n  \"quantity\": 2\n}" },
+        "url": { "raw": "{{baseUrl}}/api/cart/update", "host": ["{{baseUrl}}"], "path": ["api","cart","update"] }
+      }
+    },
+    {
+      "name": "Cart / Remove Item",
+      "request": {
+        "method": "DELETE",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\"\n}" },
+        "url": { "raw": "{{baseUrl}}/api/cart/remove/{{sampleProductId}}", "host": ["{{baseUrl}}"], "path": ["api","cart","remove","{{sampleProductId}}"] }
+      }
+    },
+    {
+      "name": "Cart / Clear",
+      "request": {
+        "method": "DELETE",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\"\n}" },
+        "url": { "raw": "{{baseUrl}}/api/cart/clear", "host": ["{{baseUrl}}"], "path": ["api","cart","clear"] }
+      }
+    },
+    {
+      "name": "Cart / Get",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/cart/{{userId}}?sessionId={{sessionId}}", "host": ["{{baseUrl}}"], "path": ["api","cart","{{userId}}"], "query": [ { "key": "sessionId", "value": "{{sessionId}}" } ] }
+      }
+    },
+    {
+      "name": "Cart / Apply Coupon",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\",\n  \"code\": \"{{couponCode}}\"\n}" },
+        "url": { "raw": "{{baseUrl}}/api/cart/apply-coupon", "host": ["{{baseUrl}}"], "path": ["api","cart","apply-coupon"] }
+      }
+    },
+    {
+      "name": "Cart / Remove Coupon",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\"\n}" },
+        "url": { "raw": "{{baseUrl}}/api/cart/remove-coupon", "host": ["{{baseUrl}}"], "path": ["api","cart","remove-coupon"] }
+      }
+    },
+    {
+      "name": "Checkout / Create Stripe Session",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\"\n}" },
+        "url": { "raw": "{{baseUrl}}/api/cart/checkout", "host": ["{{baseUrl}}"], "path": ["api","cart","checkout"] }
+      }
+    },
+    {
+      "name": "Checkout / Cancel Pending Checkout",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\",\n  \"checkoutSessionId\": \"{{checkoutSessionId}}\"\n}" },
+        "url": { "raw": "{{baseUrl}}/api/cart/cancel-pending-checkout", "host": ["{{baseUrl}}"], "path": ["api","cart","cancel-pending-checkout"] }
+      }
+    },
+    {
+      "name": "Customer / Update Info",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"phone\": \"+1234567890\",\n  \"billingAddress\": {\n    \"line1\": \"123 Main St\",\n    \"city\": \"City\",\n    \"country\": \"US\"\n  },\n  \"shippingAddress\": {\n    \"line1\": \"123 Main St\",\n    \"city\": \"City\",\n    \"country\": \"US\"\n  }\n}" },
+        "url": { "raw": "{{baseUrl}}/api/cart/update-customer-info", "host": ["{{baseUrl}}"], "path": ["api","cart","update-customer-info"] }
+      }
+    },
+    {
+      "name": "Customer / Get Info",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/cart/customer-info/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api","cart","customer-info","{{userId}}"] }
+      }
+    },
+    {
+      "name": "Debug / Cart State",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/cart/debug/cart/{{userId}}/{{sessionId}}", "host": ["{{baseUrl}}"], "path": ["api","cart","debug","cart","{{userId}}","{{sessionId}}"] }
+      }
+    },
+    {
+      "name": "Debug / Discount Calculation",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\"\n}" },
+        "url": { "raw": "{{baseUrl}}/api/cart/debug/discount", "host": ["{{baseUrl}}"], "path": ["api","cart","debug","discount"] }
+      }
+    },
+    {
+      "name": "Payment / Create Payment Intent",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"amount\": 1000,\n  \"currency\": \"usd\"\n}" },
+        "url": { "raw": "{{baseUrl}}/api/payments/create-payment-intent", "host": ["{{baseUrl}}"], "path": ["api","payments","create-payment-intent"] }
+      }
+    },
+    {
+      "name": "Payment / Status (session)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/payments/status/{{checkoutSessionId}}", "host": ["{{baseUrl}}"], "path": ["api","payments","status","{{checkoutSessionId}}"] }
+      }
+    },
+    {
+      "name": "Payment / Success (web)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/payments/success/{{checkoutSessionId}}", "host": ["{{baseUrl}}"], "path": ["api","payments","success","{{checkoutSessionId}}"] }
+      }
+    },
+    {
+      "name": "Payment / Failed (web)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/payments/failed/{{checkoutSessionId}}", "host": ["{{baseUrl}}"], "path": ["api","payments","failed","{{checkoutSessionId}}"] }
+      }
+    },
+    {
+      "name": "Payment / Cancel (web)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/payments/cancel/{{checkoutSessionId}}", "host": ["{{baseUrl}}"], "path": ["api","payments","cancel","{{checkoutSessionId}}"] }
+      }
+    },
+    {
+      "name": "Payment / Retry Order",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": { "mode": "raw", "raw": "{}" },
+        "url": { "raw": "{{baseUrl}}/api/payments/retry/{{orderId}}", "host": ["{{baseUrl}}"], "path": ["api","payments","retry","{{orderId}}"] }
+      }
+    },
+    {
+      "name": "Payment / Order Details",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/payments/order/{{orderId}}", "host": ["{{baseUrl}}"], "path": ["api","payments","order","{{orderId}}"] }
+      }
+    },
+    {
+      "name": "Payment / Payment Details (admin)",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{accessToken}}" } ],
+        "url": { "raw": "{{baseUrl}}/api/payments/payment-details/{{orderId}}", "host": ["{{baseUrl}}"], "path": ["api","payments","payment-details","{{orderId}}"] }
+      }
+    }
+  ],
+  "event": [],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "sessionId", "value": "session-1234" },
+    { "key": "userId", "value": "" },
+    { "key": "sampleProductId", "value": "" },
+    { "key": "couponCode", "value": "" },
+    { "key": "accessToken", "value": "" },
+    { "key": "checkoutSessionId", "value": "" },
+    { "key": "checkoutUrl", "value": "" }
+  ]
+}

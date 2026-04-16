@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Your Order - Celora Jewelry</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .search-section {
+            padding: 40px;
+            text-align: center;
+        }
+
+        .search-form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .search-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .result-section {
+            padding: 40px;
+            display: none;
+        }
+
+        .order-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .order-id {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .order-status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+
+        .status-confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-manufacturing {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-delivered {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .progress-container {
+            margin: 30px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #28a745, #20c997);
+            transition: width 0.5s ease;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .progress-step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .step-completed {
+            background: #28a745;
+            color: white;
+        }
+
+        .step-pending {
+            background: #e9ecef;
+            color: #6c757d;
+        }
+
+        .step-title {
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .step-date {
+            font-size: 0.8em;
+            color: #6c757d;
+        }
+
+        .products-section {
+            margin-top: 30px;
+        }
+
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .product-item:last-child {
+            border-bottom: none;
+        }
+
+        .product-info h4 {
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .product-details {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        .product-price {
+            text-align: right;
+        }
+
+        .price {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .quantity {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        .total-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 2px solid #e9ecef;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .total-row.final {
+            font-weight: bold;
+            font-size: 1.2em;
+            border-top: 2px solid #dee2e6;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .info-section {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .info-section h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .tracking-info {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .tracking-info strong {
+            color: #f57c00;
+        }
+
+        @media (max-width: 768px) {
+            .order-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .progress-steps {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .progress-step {
+                display: flex;
+                align-items: center;
+                text-align: left;
+                gap: 15px;
+            }
+
+            .step-icon {
+                margin: 0;
+            }
+
+            .product-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Track Your Order</h1>
+            <p>Enter your order details to see the latest status</p>
+        </div>
+
+        <div class="search-section" id="searchSection">
+            <form class="search-form" id="trackingForm">
+                <div class="form-group">
+                    <label for="orderId">Order ID</label>
+                    <input type="text" id="orderId" name="orderId" placeholder="e.g., ORD-1234567890" required>
+                </div>
+                <button type="submit" class="search-btn" id="searchBtn">
+                    Track Order
+                </button>
+            </form>
+
+            <div class="info-section">
+                <h3>💡 How to find your Order ID</h3>
+                <p>Your Order ID can be found in:</p>
+                <ul style="text-align: left; margin-top: 10px;">
+                    <li>Order confirmation email</li>
+                    <li>Invoice PDF attachment</li>
+                    <li>Payment confirmation page</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="result-section" id="resultSection">
+            <!-- Results will be populated here -->
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = window.location.origin + '/api/customer-order';
+
+        document.getElementById('trackingForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const orderId = document.getElementById('orderId').value.trim();
+            if (!orderId) {
+                alert('Please enter an Order ID');
+                return;
+            }
+
+            await trackOrder(orderId);
+        });
+
+        async function trackOrder(orderId) {
+            const searchBtn = document.getElementById('searchBtn');
+            const resultSection = document.getElementById('resultSection');
+
+            // Show loading state
+            searchBtn.disabled = true;
+            searchBtn.innerHTML = '<div class="spinner"></div> Tracking...';
+            resultSection.style.display = 'block';
+            resultSection.innerHTML = '<div class="loading"><div class="spinner"></div><p>Loading order details...</p></div>';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/status/${orderId}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    displayOrderDetails(data.order);
+                } else {
+                    displayError(data.error || 'Order not found');
+                }
+            } catch (error) {
+                console.error('Error tracking order:', error);
+                displayError('Unable to track order. Please try again later.');
+            } finally {
+                // Reset button
+                searchBtn.disabled = false;
+                searchBtn.innerHTML = 'Track Order';
+            }
+        }
+
+        function displayOrderDetails(order) {
+            const resultSection = document.getElementById('resultSection');
+
+            const statusClass = order.status.toLowerCase().replace(/\s+/g, '-');
+            const progressPercentage = order.progressPercentage || 0;
+
+            let progressStepsHTML = '';
+            if (order.progress && order.progress.length > 0) {
+                progressStepsHTML = order.progress.map(step => `
+                    <div class="progress-step">
+                        <div class="step-icon step-completed">${step.icon}</div>
+                        <div class="step-title">${step.title}</div>
+                        <div class="step-date">${new Date(step.date).toLocaleDateString()}</div>
+                    </div>
+                `).join('');
+            }
+
+            let productsHTML = '';
+            if (order.hasProducts) {
+                productsHTML = `
+                    <div class="products-section">
+                        <h3>📦 Products Ordered</h3>
+                        ${order.products.map(product => `
+                            <div class="product-item">
+                                <div class="product-info">
+                                    <h4>${product.title}</h4>
+                                    <div class="product-details">
+                                        ${product.category ? `Category: ${product.category}` : ''}
+                                        ${product.material ? ` | Material: ${product.material}` : ''}
+                                    </div>
+                                </div>
+                                <div class="product-price">
+                                    <div class="price">${product.formattedPrice}</div>
+                                    <div class="quantity">Qty: ${product.quantity}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                        
+                        <div class="total-section">
+                            <div class="total-row">
+                                <span>Subtotal:</span>
+                                <span>${order.formattedSubtotal}</span>
+                            </div>
+                            ${order.discount > 0 ? `
+                                <div class="total-row">
+                                    <span>Discount:</span>
+                                    <span>-${order.formattedDiscount}</span>
+                                </div>
+                            ` : ''}
+                            <div class="total-row final">
+                                <span>Total:</span>
+                                <span>${order.formattedTotal}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            let trackingHTML = '';
+            if (order.trackingInfo) {
+                trackingHTML = `
+                    <div class="tracking-info">
+                        <strong>📍 Tracking Information</strong><br>
+                        Tracking ID: ${order.trackingInfo.trackingNumber}<br>
+                        ${order.trackingInfo.trackingUrl ?
+                        `<a href="${order.trackingInfo.trackingUrl}" target="_blank">Track Package →</a>` : ''
+                    }
+                    </div>
+                `;
+            }
+
+            resultSection.innerHTML = `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-id">#${order.orderId}</div>
+                        <div class="order-status status-${statusClass}">${order.status}</div>
+                    </div>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progressPercentage}%"></div>
+                        </div>
+                        
+                        <div class="progress-steps">
+                            ${progressStepsHTML}
+                        </div>
+                    </div>
+                    
+                    ${trackingHTML}
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; margin: 20px 0;">
+                        <div>
+                            <strong>Order Date:</strong><br>
+                            ${order.orderDate}
+                        </div>
+                        <div>
+                            <strong>Payment Status:</strong><br>
+                            ${order.paymentStatus}
+                        </div>
+                        <div>
+                            <strong>Customer:</strong><br>
+                            ${order.customer.name}
+                        </div>
+                    </div>
+                    
+                    ${productsHTML}
+                    
+                    ${order.nextStep ? `
+                        <div class="info-section">
+                            <h3>🚀 What's Next?</h3>
+                            <p><strong>${order.nextStep.title}:</strong> ${order.nextStep.description}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function displayError(message) {
+            const resultSection = document.getElementById('resultSection');
+            resultSection.innerHTML = `
+                <div class="error-message">
+                    ❌ ${message}
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button onclick="location.reload()" class="search-btn" style="width: auto; padding: 10px 20px;">
+                        Try Again
+                    </button>
+                </div>
+            `;
+        }
+
+        // Auto-populate orderId from URL parameter if present
+        window.addEventListener('load', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderIdFromUrl = urlParams.get('orderId') || window.location.pathname.split('/').pop();
+
+            if (orderIdFromUrl && orderIdFromUrl.startsWith('ORD-')) {
+                document.getElementById('orderId').value = orderIdFromUrl;
+                trackOrder(orderIdFromUrl);
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1243 @@
+openapi: 3.0.0
+info:
+  title: Dynamic API
+  version: 1.0.0
+paths:
+  /data:
+    post:
+      summary: Insert new data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/data'
+      responses:
+        '200':
+          description: Successful insert
+  /data/{id}:
+    get:
+      summary: Get data by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /signup:
+    post:
+      summary: Insert new signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/signup'
+      responses:
+        '200':
+          description: Successful insert
+  /signup/{id}:
+    get:
+      summary: Get signup by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /login:
+    post:
+      summary: Insert new login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/login'
+      responses:
+        '200':
+          description: Successful insert
+  /login/{id}:
+    get:
+      summary: Get login by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /contactus:
+    post:
+      summary: Insert new contactus
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/contactus'
+      responses:
+        '200':
+          description: Successful insert
+  /contactus/{id}:
+    get:
+      summary: Get contactus by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /role:
+    post:
+      summary: Insert new role
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/role'
+      responses:
+        '200':
+          description: Successful insert
+  /role/{id}:
+    get:
+      summary: Get role by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /aboutUs:
+    post:
+      summary: Insert new aboutUs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/aboutUs'
+      responses:
+        '200':
+          description: Successful insert
+  /aboutUs/{id}:
+    get:
+      summary: Get aboutUs by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /faq:
+    post:
+      summary: Insert new faq
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/faq'
+      responses:
+        '200':
+          description: Successful insert
+  /faq/{id}:
+    get:
+      summary: Get faq by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /jewelCare:
+    post:
+      summary: Insert new jewelCare
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/jewelCare'
+      responses:
+        '200':
+          description: Successful insert
+  /jewelCare/{id}:
+    get:
+      summary: Get jewelCare by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /blog:
+    post:
+      summary: Insert new blog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/blog'
+      responses:
+        '200':
+          description: Successful insert
+  /blog/{id}:
+    get:
+      summary: Get blog by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /blogType:
+    post:
+      summary: Insert new blogType
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/blogType'
+      responses:
+        '200':
+          description: Successful insert
+  /blogType/{id}:
+    get:
+      summary: Get blogType by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /education:
+    post:
+      summary: Insert new education
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/education'
+      responses:
+        '200':
+          description: Successful insert
+  /education/{id}:
+    get:
+      summary: Get education by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /banner:
+    post:
+      summary: Insert new banner
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/banner'
+      responses:
+        '200':
+          description: Successful insert
+  /banner/{id}:
+    get:
+      summary: Get banner by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /diamondCircle:
+    post:
+      summary: Insert new diamondCircle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/diamondCircle'
+      responses:
+        '200':
+          description: Successful insert
+  /diamondCircle/{id}:
+    get:
+      summary: Get diamondCircle by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /shape:
+    post:
+      summary: Insert new shape
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/shape'
+      responses:
+        '200':
+          description: Successful insert
+  /shape/{id}:
+    get:
+      summary: Get shape by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /carat-size:
+    post:
+      summary: Insert new carat-size
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/carat-size'
+      responses:
+        '200':
+          description: Successful insert
+  /carat-size/{id}:
+    get:
+      summary: Get carat-size by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /jewelryCategory:
+    post:
+      summary: Insert new jewelryCategory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/jewelryCategory'
+      responses:
+        '200':
+          description: Successful insert
+  /jewelryCategory/{id}:
+    get:
+      summary: Get jewelryCategory by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /megaMenu:
+    post:
+      summary: Insert new megaMenu
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/megaMenu'
+      responses:
+        '200':
+          description: Successful insert
+  /megaMenu/{id}:
+    get:
+      summary: Get megaMenu by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /ringSize:
+    post:
+      summary: Insert new ringSize
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ringSize'
+      responses:
+        '200':
+          description: Successful insert
+  /ringSize/{id}:
+    get:
+      summary: Get ringSize by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /customer:
+    post:
+      summary: Insert new customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/customer'
+      responses:
+        '200':
+          description: Successful insert
+  /customer/{id}:
+    get:
+      summary: Get customer by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /newsletter:
+    post:
+      summary: Insert new newsletter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newsletter'
+      responses:
+        '200':
+          description: Successful insert
+  /newsletter/{id}:
+    get:
+      summary: Get newsletter by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /virtualAppointment:
+    post:
+      summary: Insert new virtualAppointment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/virtualAppointment'
+      responses:
+        '200':
+          description: Successful insert
+  /virtualAppointment/{id}:
+    get:
+      summary: Get virtualAppointment by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /promotionalStrip:
+    post:
+      summary: Insert new promotionalStrip
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/promotionalStrip'
+      responses:
+        '200':
+          description: Successful insert
+  /promotionalStrip/{id}:
+    get:
+      summary: Get promotionalStrip by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /promotionalImage:
+    post:
+      summary: Insert new promotionalImage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/promotionalImage'
+      responses:
+        '200':
+          description: Successful insert
+  /promotionalImage/{id}:
+    get:
+      summary: Get promotionalImage by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /introPopup:
+    post:
+      summary: Insert new introPopup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/introPopup'
+      responses:
+        '200':
+          description: Successful insert
+  /introPopup/{id}:
+    get:
+      summary: Get introPopup by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /flatDiscount:
+    post:
+      summary: Insert new flatDiscount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/flatDiscount'
+      responses:
+        '200':
+          description: Successful insert
+  /flatDiscount/{id}:
+    get:
+      summary: Get flatDiscount by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /coupon:
+    post:
+      summary: Insert new coupon
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/coupon'
+      responses:
+        '200':
+          description: Successful insert
+  /coupon/{id}:
+    get:
+      summary: Get coupon by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /priceManagement:
+    post:
+      summary: Insert new priceManagement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/priceManagement'
+      responses:
+        '200':
+          description: Successful insert
+  /priceManagement/{id}:
+    get:
+      summary: Get priceManagement by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /inventory:
+    post:
+      summary: Insert new inventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/inventory'
+      responses:
+        '200':
+          description: Successful insert
+  /inventory/{id}:
+    get:
+      summary: Get inventory by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /collection:
+    post:
+      summary: Insert new collection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/collection'
+      responses:
+        '200':
+          description: Successful insert
+  /collection/{id}:
+    get:
+      summary: Get collection by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /order:
+    post:
+      summary: Insert new order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/order'
+      responses:
+        '200':
+          description: Successful insert
+  /order/{id}:
+    get:
+      summary: Get order by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful fetch
+        '404':
+          description: Not found
+  /auth/register:
+    post:
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                role:
+                  type: string
+              required:
+                - name
+                - email
+                - password
+                - role
+      responses:
+        '201':
+          description: User registered successfully
+        '400':
+          description: User already exists or role not found
+  /auth/login:
+    post:
+      summary: Login a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: Login successful
+        '401':
+          description: Invalid credentials
+  /auth/logout:
+    get:
+      summary: Logout user
+      responses:
+        '200':
+          description: Logout successful
+components:
+  schemas:
+    data:
+      type: object
+      properties:
+        dataId:
+          type: string
+        title:
+          type: string
+        summray:
+          type: string
+        Participants:
+          type: array
+          items:
+            type: string
+        date:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        link:
+          type: string
+        createdOn:
+          type: string
+    signup:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    login:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    contactus:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        subject:
+          type: string
+        message:
+          type: string
+        createdOn:
+          type: string
+          format: date-time
+    role:
+      type: object
+      properties:
+        name:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
+    aboutUs:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        lastUpdated:
+          type: string
+          format: date-time
+    faq:
+      type: object
+      properties:
+        title:
+          type: string
+        qa:
+          type: array
+          items:
+            type: string
+        isActive:
+          type: boolean
+    jewelCare:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+    blog:
+      type: object
+      properties:
+        title:
+          type: string
+        subtitle:
+          type: string
+        slug:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        metaTitle:
+          type: string
+        metaDescription:
+          type: string
+        category:
+          type: string
+        author:
+          type: string
+        bannerImage:
+          type: string
+        thumbnailImage:
+          type: string
+        description:
+          type: string
+        createdOn:
+          type: string
+          format: date-time
+        isActive:
+          type: boolean
+    blogType:
+      type: object
+      properties:
+        name:
+          type: string
+    education:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+    banner:
+      type: object
+      properties:
+        imageUrl:
+          type: string
+        redirectUrl:
+          type: string
+        isActive:
+          type: boolean
+    diamondCircle:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+    shape:
+      type: object
+      properties:
+        name:
+          type: string
+        drVariation:
+          type: string
+        lcVariation:
+          type: string
+    carat-size:
+      type: object
+      properties:
+        sequence:
+          type: number
+        size:
+          type: number
+        isVisible:
+          type: boolean
+    jewelryCategory:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        imageUrl:
+          type: string
+    megaMenu:
+      type: object
+      properties:
+        header:
+          type: string
+        links:
+          type: array
+          items:
+            type: string
+    ringSize:
+      type: object
+      properties:
+        size:
+          type: string
+    customer:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+    newsletter:
+      type: object
+      properties:
+        email:
+          type: string
+    virtualAppointment:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        preferredDate:
+          type: string
+          format: date-time
+        message:
+          type: string
+    promotionalStrip:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        enableTimer:
+          type: boolean
+        timerDateTime:
+          type: string
+          format: date-time
+    promotionalImage:
+      type: object
+      properties:
+        imageUrl:
+          type: string
+        category:
+          type: string
+    introPopup:
+      type: object
+      properties:
+        content:
+          type: string
+        isActive:
+          type: boolean
+    flatDiscount:
+      type: object
+      properties:
+        jewelryType:
+          type: string
+        allowThisDiscount:
+          type: boolean
+        siteWide:
+          type: boolean
+        product:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+        discountName:
+          type: string
+        description:
+          type: string
+        discountType:
+          type: string
+        flatDiscount:
+          type: string
+    coupon:
+      type: object
+      properties:
+        couponName:
+          type: string
+        couponCode:
+          type: string
+        minimumAmount:
+          type: number
+        dateRange:
+          type: string
+        discountType:
+          type: string
+        discountValue:
+          type: number
+        allowThisCoupon:
+          type: boolean
+        categoryWise:
+          type: boolean
+        productWise:
+          type: boolean
+        options:
+          type: array
+          items:
+            type: string
+        couponImage:
+          type: string
+    priceManagement:
+      type: object
+      properties:
+        exchangeRates:
+          type: array
+          items:
+            type: string
+        metalDetails:
+          type: array
+          items:
+            type: string
+        metalColors:
+          type: array
+          items:
+            type: string
+        otherPrice:
+          type: number
+        diamondRates:
+          type: number
+    inventory:
+      type: object
+      properties:
+        jewelryType:
+          type: string
+        averageWidth:
+          type: number
+        relationship:
+          type: string
+        cadCode:
+          type: string
+        occasion:
+          type: string
+        title:
+          type: string
+        subType:
+          type: string
+        subTitle:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        metaDetails:
+          type: string
+        estimatedShippingDays:
+          type: number
+        metals:
+          type: array
+          items:
+            type: string
+        metalsWeight:
+          type: string
+        jewelryTypeMode:
+          type: string
+        diamondType:
+          type: string
+        pricingMode:
+          type: string
+        centerStone:
+          type: string
+        lcVariations:
+          type: array
+          items:
+            type: string
+        defaultMetal:
+          type: string
+        defaultShape:
+          type: string
+    collection:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        desktopImage:
+          type: string
+        mobileImage:
+          type: string
+        jewelrySkus:
+          type: array
+          items:
+            type: string
+    order:
+      type: object
+      properties:
+        customerId:
+          type: string
+        products:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+        total:
+          type: number
+        orderedOn:
+          type: string
+          format: date-time

@@ -1,0 +1,612 @@
+{
+  "info": {
+    "name": "Celora Backend - Jewelry Management",
+    "description": "Complete collection for jewelry CRUD operations, categories, shapes, metals, diamonds, and all jewelry-related management",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{authToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://celora-backend.vercel.app",
+      "type": "string"
+    },
+    {
+      "key": "localUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "jewelryId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Jewelry CRUD",
+      "item": [
+        {
+          "name": "Create Jewelry",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    if (response.data && response.data._id) {",
+                  "        pm.collectionVariables.set('jewelryId', response.data._id);",
+                  "    }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jewelryId\": \"JWL-{{$randomUUID}}\",\n  \"title\": \"Elegant Diamond Engagement Ring\",\n  \"description\": \"Beautiful solitaire engagement ring with VS1 clarity diamond\",\n  \"slug\": \"elegant-diamond-engagement-ring\",\n  \"category\": \"6870abab68f9b4a37c8c856c\",\n  \"collection\": \"67123456789abcdef0123456\",\n  \"jewelryType\": \"Engagement Ring\",\n  \"type\": \"engagement\",\n  \"subType\": \"67123456789abcdef0123457\",\n  \"subTypeModel\": \"engagementsubtypelist\",\n  \"cadCode\": \"CAD-{{$randomInt}}\",\n  \"metalWeight\": {\n    \"gold14k\": 3.5,\n    \"gold18k\": 4.2,\n    \"platinum\": 5.1,\n    \"silver\": 2.8\n  },\n  \"shape\": \"6884b4355b8a2ab54b74cd0a\",\n  \"metaldetail\": \"686ab482d853bd069777c9f2\",\n  \"ringsize\": \"68123456789abcdef0123456\",\n  \"occasion\": \"6870abab68f9b4a37c8c856c\",\n  \"centerStone\": {\n    \"shape\": \"6884b4355b8a2ab54b74cd0a\",\n    \"carat\": 1.5,\n    \"color\": \"F\",\n    \"clarity\": \"VS1\",\n    \"cut\": \"Excellent\",\n    \"certification\": \"GIA\",\n    \"certificateNumber\": \"GIA123456789\"\n  },\n  \"centerStoneVariation\": [\n    {\n      \"carat\": 1.0,\n      \"shape\": \"6884b4355b8a2ab54b74cd0a\",\n      \"price\": 5000,\n      \"color\": \"G\",\n      \"clarity\": \"VS2\"\n    },\n    {\n      \"carat\": 1.5,\n      \"shape\": \"6884b4355b8a2ab54b74cd0a\",\n      \"price\": 8500,\n      \"color\": \"F\",\n      \"clarity\": \"VS1\"\n    }\n  ],\n  \"lcVariations\": [\n    {\n      \"labourCostId\": \"67123456789abcdef0123458\",\n      \"metalType\": \"Gold 14K\",\n      \"cost\": 450\n    },\n    {\n      \"labourCostId\": \"67123456789abcdef0123459\",\n      \"metalType\": \"Platinum\",\n      \"cost\": 650\n    }\n  ],\n  \"otherDiamonds\": [\n    {\n      \"position\": \"Side Stones\",\n      \"quantity\": 6,\n      \"totalCarat\": 0.18,\n      \"shape\": \"Round\",\n      \"color\": \"G\",\n      \"clarity\": \"VS\",\n      \"pricePerCarat\": 800\n    }\n  ],\n  \"pricing\": {\n    \"basePrice\": 2500,\n    \"metalPremium\": {\n      \"gold14k\": 0,\n      \"gold18k\": 200,\n      \"platinum\": 500\n    },\n    \"labourCost\": 450,\n    \"makingCharges\": 300,\n    \"otherCharges\": 100,\n    \"discount\": 0,\n    \"tax\": 250,\n    \"finalPrice\": 3600\n  },\n  \"engravingOptions\": {\n    \"available\": true,\n    \"maxCharacters\": 25,\n    \"fonts\": [\"Script\", \"Block\", \"Cursive\"],\n    \"positions\": [\"Inside Band\", \"Outside Band\"],\n    \"additionalCost\": 50\n  },\n  \"metaDetails\": {\n    \"metaTitle\": \"Elegant Diamond Engagement Ring - Celora Jewelry\",\n    \"metaDescription\": \"Stunning solitaire engagement ring with premium diamond\",\n    \"metaKeywords\": \"engagement ring, diamond ring, solitaire, wedding jewelry\"\n  },\n  \"images\": [\n    \"https://example.com/ring1.jpg\",\n    \"https://example.com/ring2.jpg\",\n    \"https://example.com/ring3.jpg\"\n  ],\n  \"status\": \"Active\",\n  \"featuredProduct\": true,\n  \"inStock\": true,\n  \"stockQuantity\": 10,\n  \"customizedJewelry\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/jewelry",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jewelry"]
+            }
+          }
+        },
+        {
+          "name": "Get All Jewelry",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/jewelry?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jewelry"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Single Jewelry",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/jewelry/{{jewelryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jewelry", "{{jewelryId}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Jewelry",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated Elegant Diamond Engagement Ring\",\n  \"description\": \"Updated description with new features\",\n  \"pricing\": {\n    \"basePrice\": 2700,\n    \"finalPrice\": 3800\n  },\n  \"status\": \"Active\",\n  \"featuredProduct\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/jewelry/{{jewelryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jewelry", "{{jewelryId}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Jewelry",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/jewelry/{{jewelryId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jewelry", "{{jewelryId}}"]
+            }
+          }
+        },
+        {
+          "name": "Search Jewelry",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jewelryType\": \"Engagement Ring\",\n  \"priceRange\": {\n    \"min\": 2000,\n    \"max\": 5000\n  },\n  \"centerStone.carat\": {\n    \"$gte\": 1.0\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/jewelry/search",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jewelry", "search"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories & Collections",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/jewelrycategory",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jewelrycategory"]
+            }
+          }
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jewelryCategoryId\": \"CAT-{{$randomInt}}\",\n  \"name\": \"Engagement Rings\",\n  \"description\": \"Beautiful engagement rings for special moments\",\n  \"image\": \"https://example.com/category-engagement.jpg\",\n  \"isActive\": true,\n  \"sortOrder\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/jewelrycategory",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jewelrycategory"]
+            }
+          }
+        },
+        {
+          "name": "Get All Collections",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/collection",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "collection"]
+            }
+          }
+        },
+        {
+          "name": "Create Collection",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"collectionId\": \"COL-{{$randomInt}}\",\n  \"name\": \"Classic Collection\",\n  \"description\": \"Timeless pieces that never go out of style\",\n  \"image\": \"https://example.com/classic-collection.jpg\",\n  \"isActive\": true,\n  \"featured\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/collection",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "collection"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Shapes & Metals",
+      "item": [
+        {
+          "name": "Get All Shapes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/shape",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "shape"]
+            }
+          }
+        },
+        {
+          "name": "Create Shape",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shapeId\": \"SHP-{{$randomInt}}\",\n  \"name\": \"Round\",\n  \"description\": \"Classic round brilliant cut\",\n  \"image\": \"https://example.com/round-shape.jpg\",\n  \"isActive\": true,\n  \"popularityScore\": 95\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/shape",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "shape"]
+            }
+          }
+        },
+        {
+          "name": "Get All Metal Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/metaldetail",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "metaldetail"]
+            }
+          }
+        },
+        {
+          "name": "Create Metal Detail",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"metaldetailId\": \"MTL-{{$randomInt}}\",\n  \"name\": \"18K White Gold\",\n  \"purity\": \"18K\",\n  \"color\": \"White\",\n  \"description\": \"Premium 18K white gold with rhodium plating\",\n  \"pricePerGram\": 65.50,\n  \"isActive\": true,\n  \"durability\": \"High\",\n  \"maintenanceLevel\": \"Low\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/metaldetail",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "metaldetail"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Occasions & Ring Sizes",
+      "item": [
+        {
+          "name": "Get All Occasions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/occasion",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "occasion"]
+            }
+          }
+        },
+        {
+          "name": "Create Occasion",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"occasionId\": \"OCC-{{$randomInt}}\",\n  \"name\": \"Engagement\",\n  \"description\": \"Perfect for engagement ceremonies\",\n  \"image\": \"https://example.com/engagement-occasion.jpg\",\n  \"isActive\": true,\n  \"seasonality\": \"Year Round\",\n  \"popularityScore\": 98\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/occasion",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "occasion"]
+            }
+          }
+        },
+        {
+          "name": "Get All Ring Sizes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ringsize",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ringsize"]
+            }
+          }
+        },
+        {
+          "name": "Create Ring Size",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ringsizeId\": \"RS-{{$randomInt}}\",\n  \"usSize\": \"7\",\n  \"ukSize\": \"N\",\n  \"diameter\": 17.3,\n  \"circumference\": 54.4,\n  \"isActive\": true,\n  \"isPopular\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/ringsize",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ringsize"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Diamond Rates & Exchange Rates",
+      "item": [
+        {
+          "name": "Get Exchange Rates",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/exchangerate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exchangerate"]
+            }
+          }
+        },
+        {
+          "name": "Update Exchange Rate",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currency\": \"USD\",\n  \"rate\": 82.50,\n  \"lastUpdated\": \"{{$isoTimestamp}}\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/exchangerate/EXCHANGE_RATE_ID",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exchangerate", "EXCHANGE_RATE_ID"]
+            }
+          }
+        },
+        {
+          "name": "Get Labour Costs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/labourcost",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "labourcost"]
+            }
+          }
+        },
+        {
+          "name": "Update Labour Cost",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jewelryType\": \"Engagement Ring\",\n  \"metalType\": \"18K Gold\",\n  \"complexity\": \"Medium\",\n  \"cost\": 550,\n  \"timeRequired\": \"3-5 days\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/labourcost/LABOUR_COST_ID",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "labourcost", "LABOUR_COST_ID"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Image Upload",
+      "item": [
+        {
+          "name": "Upload Jewelry Images",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": "/path/to/jewelry-image-1.jpg"
+                },
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": "/path/to/jewelry-image-2.jpg"
+                },
+                {
+                  "key": "images",
+                  "type": "file",
+                  "src": "/path/to/jewelry-image-3.jpg"
+                },
+                {
+                  "key": "jewelryId",
+                  "value": "{{jewelryId}}",
+                  "type": "text"
+                },
+                {
+                  "key": "title",
+                  "value": "Diamond Ring with Images",
+                  "type": "text"
+                },
+                {
+                  "key": "description",
+                  "value": "Beautiful diamond ring with multiple high-quality images",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/jewelry",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jewelry"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}"

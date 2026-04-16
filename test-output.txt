@@ -1,0 +1,11 @@
+(node:44026) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+
+🎀 CREATE NEW ORDER WITH ACTUAL JEWELRY DATA
+
+✅ User created: testuser-1774873527990@test.com
+
+✅ Using 2 products:
+   - Diamond Pendant (5846)
+   - Diamond Bracelet (6880)
+❌ Error: cartModel validation failed: userId: Path `userId` is required., sessionId: Path `sessionId` is required.

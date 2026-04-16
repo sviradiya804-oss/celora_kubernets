@@ -1,0 +1,175 @@
+{
+  "description": "Cart and Checkout Flow - Test Data",
+  "baseUrl": "http://localhost:3000",
+  
+  "1_login": {
+    "method": "POST",
+    "endpoint": "/api/v1/auth/login",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "email": "demo44@yopmail.com",
+      "password": "demo@123"
+    },
+    "expectedResponse": {
+      "success": true,
+      "data": {
+        "token": "JWT_TOKEN_HERE",
+        "user": {
+          "_id": "USER_ID_HERE",
+          "email": "demo44@yopmail.com"
+        }
+      }
+    }
+  },
+
+  "2_add_to_cart": {
+    "method": "POST",
+    "endpoint": "/api/cart/add",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer YOUR_TOKEN_HERE"
+    },
+    "body": {
+      "sessionId": "UNIQUE_SESSION_ID",
+      "userId": "USER_ID_FROM_LOGIN",
+      "productId": "PRODUCT_ID_HERE",
+      "quantity": 1,
+      "selectedVariant": {
+        "selectedOptions": {
+          "ringsize": "6.5",
+          "metaldetail": "6747ebd7ae6e93d5e8a0e7a1"
+        }
+      }
+    },
+    "expectedResponse": {
+      "success": true,
+      "message": "Product added to cart",
+      "sessionId": "SESSION_ID"
+    }
+  },
+
+  "3_checkout_with_token": {
+    "method": "POST",
+    "endpoint": "/api/cart/checkout-with-payment",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer YOUR_TOKEN_HERE"
+    },
+    "body": {
+      "sessionId": "SESSION_ID_FROM_CART",
+      "userId": "USER_ID_FROM_LOGIN",
+      "email": "test@example.com",
+      "phone": "+1234567890",
+      "customerName": "John Doe",
+      "paymentMethod": "card",
+      "token": "tok_visa",
+      "cardDetails": {
+        "cardholderName": "John Doe"
+      },
+      "billingAddress": {
+        "firstName": "John",
+        "lastName": "Doe",
+        "address": "123 Main St",
+        "apartment": "Apt 4B",
+        "city": "New York",
+        "state": "NY",
+        "zipCode": "10001",
+        "country": "US"
+      },
+      "shippingAddress": {
+        "firstName": "John",
+        "lastName": "Doe",
+        "address": "123 Main St",
+        "apartment": "Apt 4B",
+        "city": "New York",
+        "state": "NY",
+        "zipCode": "10001",
+        "country": "US"
+      }
+    },
+    "expectedResponse": {
+      "success": true,
+      "message": "Order placed successfully",
+      "order": {
+        "orderId": "UUID_ORDER_ID",
+        "total": 4531.36,
+        "subtotal": 4531.36,
+        "discount": 0,
+        "paymentStatus": "completed",
+        "cardLast4": "4242",
+        "cardBrand": "visa"
+      }
+    }
+  },
+
+  "stripe_test_tokens": {
+    "description": "Stripe test tokens for secure payment testing (NO raw card data)",
+    "tokens": {
+      "visa": "tok_visa",
+      "mastercard": "tok_mastercard",
+      "amex": "tok_amex",
+      "discover": "tok_discover",
+      "diners": "tok_diners",
+      "jcb": "tok_jcb"
+    },
+    "note": "Use these tokens instead of raw card numbers for PCI compliance"
+  },
+
+  "alternative_checkout_with_payment_method_id": {
+    "method": "POST",
+    "endpoint": "/api/cart/checkout-with-payment",
+    "description": "Alternative method using pre-created payment method ID",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer YOUR_TOKEN_HERE"
+    },
+    "body": {
+      "sessionId": "SESSION_ID_FROM_CART",
+      "userId": "USER_ID_FROM_LOGIN",
+      "email": "test@example.com",
+      "phone": "+1234567890",
+      "customerName": "Jane Smith",
+      "paymentMethod": "card",
+      "cardDetails": {
+        "paymentMethodId": "pm_xxxxxxxxxxxxxxxxxx",
+        "cardholderName": "Jane Smith"
+      },
+      "billingAddress": {
+        "firstName": "Jane",
+        "lastName": "Smith",
+        "address": "456 Oak Ave",
+        "apartment": "",
+        "city": "Los Angeles",
+        "state": "CA",
+        "zipCode": "90001",
+        "country": "US"
+      },
+      "shippingAddress": {
+        "firstName": "Jane",
+        "lastName": "Smith",
+        "address": "456 Oak Ave",
+        "apartment": "",
+        "city": "Los Angeles",
+        "state": "CA",
+        "zipCode": "90001",
+        "country": "US"
+      }
+    }
+  },
+
+  "test_workflow": {
+    "step1": "Login with credentials to get token and userId",
+    "step2": "Add product to cart with sessionId and userId",
+    "step3": "Use returned sessionId for checkout",
+    "step4": "Checkout with Stripe token (tok_visa) or payment method ID",
+    "step5": "Verify order creation and payment status",
+    "notes": [
+      "Always use Stripe test tokens (tok_*) for testing",
+      "Never send raw card numbers to the backend",
+      "Session ID may be updated by the cart API",
+      "Store only cardLast4 and cardBrand (PCI compliant)"
+    ]
+  }
+}

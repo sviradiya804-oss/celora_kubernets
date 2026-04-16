@@ -1,0 +1,1326 @@
+{
+  "info": {
+    "name": "Celora Cart - Complete A-Z Flow",
+    "description": "Complete cart flow: Add → Validate → Update → Apply Coupon → Checkout → Clear | All scenarios covered",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "sessionId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "cartId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "orderId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "productId1",
+      "value": "68e56601fc1041811bf14f1f",
+      "type": "string",
+      "description": "Engagement Ring"
+    },
+    {
+      "key": "productId2",
+      "value": "68e3b292e0c63062982ac1f0",
+      "type": "string",
+      "description": "Pendant"
+    },
+    {
+      "key": "metalId1",
+      "value": "68e3a745e0c63062982ab7d2",
+      "type": "string",
+      "description": "925k White"
+    },
+    {
+      "key": "metalId2",
+      "value": "68afea760686a0c9081db6ad",
+      "type": "string",
+      "description": "14k Rose Gold"
+    },
+    {
+      "key": "couponCode",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "validCard",
+      "value": "4242424242424242",
+      "type": "string"
+    },
+    {
+      "key": "validCVV",
+      "value": "123",
+      "type": "string"
+    },
+    {
+      "key": "validExpMonth",
+      "value": "12",
+      "type": "string"
+    },
+    {
+      "key": "validExpYear",
+      "value": "2026",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "📁 A. CART INITIALIZATION",
+      "item": [
+        {
+          "name": "1. Add First Product to Cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200 or 201', () => {",
+                  "  pm.expect([200, 201]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "pm.test('Product added successfully', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.success).to.eql(true);",
+                  "  pm.expect(data.cart).to.exist;",
+                  "  pm.expect(data.cart.items).to.be.an('array');",
+                  "});",
+                  "",
+                  "// Save session ID for future requests",
+                  "const requestBody = JSON.parse(pm.request.body.raw);",
+                  "pm.collectionVariables.set('sessionId', requestBody.sessionId);",
+                  "",
+                  "// Save cart ID if returned",
+                  "const data = pm.response.json();",
+                  "if (data.cart && data.cart._id) {",
+                  "  pm.collectionVariables.set('cartId', data.cart._id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"{{productId1}}\",\n  \"quantity\": 1,\n  \"selectedOptions\": {\n    \"metaldetail\": \"{{metalId1}}\",\n    \"ringSize\": \"7\",\n    \"centerStone\": {\n      \"carat\": \"0.35\",\n      \"color\": \"D\",\n      \"clarity\": \"VVS1\",\n      \"shape\": \"Marquise\"\n    }\n  },\n  \"customizations\": {\n    \"metalType\": \"White Gold\",\n    \"gemstoneUpgrade\": true\n  },\n  \"engravingOptions\": {\n    \"engravingText\": \"Forever & Always\",\n    \"font\": \"Elegant Script\"\n  },\n  \"sessionId\": \"test-{{$timestamp}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "add"]
+            },
+            "description": "Add the first product to cart with customization options"
+          }
+        },
+        {
+          "name": "2. Add Second Product to Cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200 or 201', () => {",
+                  "  pm.expect([200, 201]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "pm.test('Second product added', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.success).to.eql(true);",
+                  "  pm.expect(data.cart.items.length).to.be.greaterThan(1);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"{{productId2}}\",\n  \"quantity\": 2,\n  \"selectedOptions\": {\n    \"metaldetail\": \"{{metalId2}}\"\n  },\n  \"sessionId\": \"{{sessionId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "add"]
+            },
+            "description": "Add a second product to the existing cart"
+          }
+        },
+        {
+          "name": "3. Add Duplicate Product (Should Update Quantity)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "",
+                  "pm.test('Quantity updated for existing product', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.success).to.eql(true);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": \"{{productId1}}\",\n  \"quantity\": 1,\n  \"selectedOptions\": {\n    \"metaldetail\": \"{{metalId1}}\",\n    \"ringSize\": \"7\",\n    \"centerStone\": {\n      \"carat\": \"0.35\",\n      \"color\": \"D\",\n      \"clarity\": \"VVS1\",\n      \"shape\": \"Marquise\"\n    }\n  },\n  \"sessionId\": \"{{sessionId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/add",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "add"]
+            },
+            "description": "Adding same product should update quantity instead of creating duplicate"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📁 B. CART RETRIEVAL & VALIDATION",
+      "item": [
+        {
+          "name": "1. Get Cart by Session ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "",
+                  "pm.test('Cart retrieved successfully', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.cart).to.exist;",
+                  "  pm.expect(data.cart.items).to.be.an('array');",
+                  "  pm.expect(data.cart.items.length).to.be.greaterThan(0);",
+                  "});",
+                  "",
+                  "pm.test('Cart has pricing information', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.cart.totalAmount).to.exist;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cart/session/{{sessionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "session", "{{sessionId}}"]
+            },
+            "description": "Retrieve cart by session ID"
+          }
+        },
+        {
+          "name": "2. Get Cart by User ID (if authenticated)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200 or 404', () => {",
+                  "  pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cart/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "{{userId}}"]
+            },
+            "description": "Retrieve cart by user ID (for authenticated users)"
+          }
+        },
+        {
+          "name": "3. Debug - View Cart Details",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Debug info retrieved', () => {",
+                  "  pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cart/debug/cart/{{userId}}/{{sessionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "debug", "cart", "{{userId}}", "{{sessionId}}"]
+            },
+            "description": "Get detailed cart information for debugging"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📁 C. CART QUANTITY UPDATE",
+      "item": [
+        {
+          "name": "1. Update Product Quantity - Increase",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "",
+                  "pm.test('Quantity updated successfully', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.success).to.eql(true);",
+                  "  pm.expect(data.cart).to.exist;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"productId\": \"{{productId1}}\",\n  \"quantity\": 3\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/update",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "update"]
+            },
+            "description": "Increase product quantity in cart"
+          }
+        },
+        {
+          "name": "2. Update Product Quantity - Decrease",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "",
+                  "pm.test('Quantity decreased', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.success).to.eql(true);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"productId\": \"{{productId1}}\",\n  \"quantity\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/update",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "update"]
+            },
+            "description": "Decrease product quantity in cart"
+          }
+        },
+        {
+          "name": "3. Update Quantity to Zero (Error)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Should return error', () => {",
+                  "  pm.expect(pm.response.code).to.equal(400);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"productId\": \"{{productId1}}\",\n  \"quantity\": 0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/update",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "update"]
+            },
+            "description": "Setting quantity to 0 should return error (use remove instead)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📁 D. CART ITEM REMOVAL",
+      "item": [
+        {
+          "name": "1. Remove Specific Product by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "",
+                  "pm.test('Product removed successfully', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.success).to.eql(true);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cart/remove/{{productId2}}?sessionId={{sessionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "remove", "{{productId2}}"],
+              "query": [
+                {
+                  "key": "sessionId",
+                  "value": "{{sessionId}}"
+                }
+              ]
+            },
+            "description": "Remove a specific product from cart by product ID"
+          }
+        },
+        {
+          "name": "2. Remove Product (Alternative Endpoint)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "",
+                  "pm.test('Product removed', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.success).to.eql(true);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"productId\": \"{{productId1}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/remove",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "remove"]
+            },
+            "description": "Alternative endpoint to remove product with body params"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📁 E. COUPON MANAGEMENT",
+      "item": [
+        {
+          "name": "1. Apply Coupon Code",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Coupon applied or validation error', () => {",
+                  "  pm.expect([200, 400]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "  pm.test('Coupon applied successfully', () => {",
+                  "    const data = pm.response.json();",
+                  "    pm.expect(data.success).to.eql(true);",
+                  "    pm.expect(data.cart.coupon).to.exist;",
+                  "  });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"couponCode\": \"SAVE10\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/apply-coupon",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "apply-coupon"]
+            },
+            "description": "Apply a coupon code to the cart"
+          }
+        },
+        {
+          "name": "2. Auto-Apply Best Coupon",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Auto-apply executed', () => {",
+                  "  pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "  pm.test('Best coupon auto-applied', () => {",
+                  "    const data = pm.response.json();",
+                  "    pm.expect(data.success).to.eql(true);",
+                  "  });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/auto-apply-coupons",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "auto-apply-coupons"]
+            },
+            "description": "Automatically apply the best available coupon"
+          }
+        },
+        {
+          "name": "3. Remove Applied Coupon",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "",
+                  "pm.test('Coupon removed successfully', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.success).to.eql(true);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/remove-coupon",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "remove-coupon"]
+            },
+            "description": "Remove currently applied coupon from cart"
+          }
+        },
+        {
+          "name": "4. Apply Invalid Coupon (Error)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Should return error', () => {",
+                  "  pm.expect(pm.response.code).to.equal(400);",
+                  "});",
+                  "",
+                  "pm.test('Invalid coupon message', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.message).to.exist;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"couponCode\": \"INVALIDCODE123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/apply-coupon",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "apply-coupon"]
+            },
+            "description": "Attempt to apply an invalid coupon code"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📁 F. CUSTOMER INFORMATION",
+      "item": [
+        {
+          "name": "1. Update Customer Info",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "",
+                  "pm.test('Customer info updated', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.success).to.eql(true);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{userId}}\",\n  \"email\": \"customer@example.com\",\n  \"phone\": \"+1234567890\",\n  \"name\": \"John Doe\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/update-customer-info",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "update-customer-info"]
+            },
+            "description": "Update customer information for the cart"
+          }
+        },
+        {
+          "name": "2. Get Customer Info",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Customer info retrieved', () => {",
+                  "  pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cart/customer-info/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "customer-info", "{{userId}}"]
+            },
+            "description": "Retrieve customer information by user ID"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📁 G. CHECKOUT FLOW",
+      "item": [
+        {
+          "name": "1. Checkout - Same Billing & Shipping Address",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "",
+                  "pm.test('Order created successfully', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.order).to.exist;",
+                  "  pm.expect(data.order._id).to.exist;",
+                  "  pm.collectionVariables.set('orderId', data.order._id);",
+                  "});",
+                  "",
+                  "pm.test('Addresses stored correctly', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.order.shippingAddress).to.exist;",
+                  "  pm.expect(data.order.billingAddress).to.exist;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"shippingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"address\": \"123 Market St\",\n    \"apartment\": \"Suite 100\",\n    \"city\": \"San Francisco\",\n    \"state\": \"CA\",\n    \"zipCode\": \"94102\",\n    \"country\": \"USA\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"address\": \"123 Market St\",\n    \"apartment\": \"Suite 100\",\n    \"city\": \"San Francisco\",\n    \"state\": \"CA\",\n    \"zipCode\": \"94102\",\n    \"country\": \"USA\"\n  },\n  \"paymentDetails\": {\n    \"cardNumber\": \"{{validCard}}\",\n    \"cvv\": \"{{validCVV}}\",\n    \"expiryMonth\": \"{{validExpMonth}}\",\n    \"expiryYear\": \"{{validExpYear}}\",\n    \"cardHolderName\": \"John Doe\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/checkout",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "checkout"]
+            },
+            "description": "Complete checkout with same billing and shipping address"
+          }
+        },
+        {
+          "name": "2. Checkout - Different Billing & Shipping",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "",
+                  "pm.test('Order created with different addresses', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.success).to.eql(true);",
+                  "  pm.expect(data.order).to.exist;",
+                  "});",
+                  "",
+                  "pm.test('Addresses are different', () => {",
+                  "  const data = pm.response.json();",
+                  "  const shipping = data.order.shippingAddress;",
+                  "  const billing = data.order.billingAddress;",
+                  "  pm.expect(shipping.address).to.not.equal(billing.address);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"shippingAddress\": {\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\",\n    \"address\": \"456 Broadway Ave\",\n    \"apartment\": \"Apt 5B\",\n    \"city\": \"Oakland\",\n    \"state\": \"CA\",\n    \"zipCode\": \"94612\",\n    \"country\": \"USA\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"address\": \"123 Market St\",\n    \"apartment\": \"Suite 100\",\n    \"city\": \"San Francisco\",\n    \"state\": \"CA\",\n    \"zipCode\": \"94102\",\n    \"country\": \"USA\"\n  },\n  \"paymentDetails\": {\n    \"cardNumber\": \"{{validCard}}\",\n    \"cvv\": \"{{validCVV}}\",\n    \"expiryMonth\": \"{{validExpMonth}}\",\n    \"expiryYear\": \"{{validExpYear}}\",\n    \"cardHolderName\": \"John Doe\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/checkout",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "checkout"]
+            },
+            "description": "Checkout with different billing and shipping addresses"
+          }
+        },
+        {
+          "name": "3. Checkout With Payment (Stripe)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "",
+                  "pm.test('Payment processed successfully', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.success).to.eql(true);",
+                  "  pm.expect(data.order).to.exist;",
+                  "  pm.expect(data.paymentIntent).to.exist;",
+                  "});",
+                  "",
+                  "pm.test('Order has payment details', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.order.paymentStatus).to.exist;",
+                  "  pm.expect(data.order.stripePaymentIntentId).to.exist;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"email\": \"customer@example.com\",\n  \"phone\": \"+1234567890\",\n  \"paymentDetails\": {\n    \"cardNumber\": \"{{validCard}}\",\n    \"cvv\": \"{{validCVV}}\",\n    \"expiryMonth\": \"{{validExpMonth}}\",\n    \"expiryYear\": \"{{validExpYear}}\",\n    \"cardHolderName\": \"John Doe\"\n  },\n  \"shippingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"address\": \"123 Market St\",\n    \"city\": \"San Francisco\",\n    \"state\": \"CA\",\n    \"zipCode\": \"94102\",\n    \"country\": \"USA\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"address\": \"123 Market St\",\n    \"city\": \"San Francisco\",\n    \"state\": \"CA\",\n    \"zipCode\": \"94102\",\n    \"country\": \"USA\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/checkout-with-payment",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "checkout-with-payment"]
+            },
+            "description": "Complete checkout with Stripe payment processing"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📁 H. CHECKOUT ERROR SCENARIOS",
+      "item": [
+        {
+          "name": "1. Checkout - Empty Cart (Error)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 400', () => pm.response.to.have.status(400));",
+                  "",
+                  "pm.test('Empty cart error message', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.message.toLowerCase()).to.include('empty');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"empty-cart-{{$timestamp}}\",\n  \"shippingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"address\": \"123 Market St\",\n    \"city\": \"San Francisco\",\n    \"state\": \"CA\",\n    \"zipCode\": \"94102\",\n    \"country\": \"USA\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"address\": \"123 Market St\",\n    \"city\": \"San Francisco\",\n    \"state\": \"CA\",\n    \"zipCode\": \"94102\",\n    \"country\": \"USA\"\n  },\n  \"paymentDetails\": {\n    \"cardNumber\": \"{{validCard}}\",\n    \"cvv\": \"{{validCVV}}\",\n    \"expiryMonth\": \"{{validExpMonth}}\",\n    \"expiryYear\": \"{{validExpYear}}\",\n    \"cardHolderName\": \"John Doe\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/checkout",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "checkout"]
+            },
+            "description": "Attempting to checkout with an empty cart"
+          }
+        },
+        {
+          "name": "2. Checkout - Invalid Card (Error)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Payment error', () => {",
+                  "  pm.expect(pm.response.code).to.equal(400);",
+                  "});",
+                  "",
+                  "pm.test('Invalid card error', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.message).to.exist;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"shippingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"address\": \"123 Market St\",\n    \"city\": \"San Francisco\",\n    \"state\": \"CA\",\n    \"zipCode\": \"94102\",\n    \"country\": \"USA\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"address\": \"123 Market St\",\n    \"city\": \"San Francisco\",\n    \"state\": \"CA\",\n    \"zipCode\": \"94102\",\n    \"country\": \"USA\"\n  },\n  \"paymentDetails\": {\n    \"cardNumber\": \"1234567890123456\",\n    \"cvv\": \"123\",\n    \"expiryMonth\": \"12\",\n    \"expiryYear\": \"2026\",\n    \"cardHolderName\": \"John Doe\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/checkout",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "checkout"]
+            },
+            "description": "Checkout with invalid card number"
+          }
+        },
+        {
+          "name": "3. Checkout - Incorrect CVV (Error)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Payment error', () => {",
+                  "  pm.expect([400, 402]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"shippingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"address\": \"123 Market St\",\n    \"city\": \"San Francisco\",\n    \"state\": \"CA\",\n    \"zipCode\": \"94102\",\n    \"country\": \"USA\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"address\": \"123 Market St\",\n    \"city\": \"San Francisco\",\n    \"state\": \"CA\",\n    \"zipCode\": \"94102\",\n    \"country\": \"USA\"\n  },\n  \"paymentDetails\": {\n    \"cardNumber\": \"4000000000000127\",\n    \"cvv\": \"999\",\n    \"expiryMonth\": \"12\",\n    \"expiryYear\": \"2026\",\n    \"cardHolderName\": \"John Doe\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/checkout",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "checkout"]
+            },
+            "description": "Checkout with incorrect CVV"
+          }
+        },
+        {
+          "name": "4. Checkout - Expired Card (Error)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Payment error', () => {",
+                  "  pm.expect([400, 402]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"shippingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"address\": \"123 Market St\",\n    \"city\": \"San Francisco\",\n    \"state\": \"CA\",\n    \"zipCode\": \"94102\",\n    \"country\": \"USA\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"address\": \"123 Market St\",\n    \"city\": \"San Francisco\",\n    \"state\": \"CA\",\n    \"zipCode\": \"94102\",\n    \"country\": \"USA\"\n  },\n  \"paymentDetails\": {\n    \"cardNumber\": \"4000000000000069\",\n    \"cvv\": \"123\",\n    \"expiryMonth\": \"01\",\n    \"expiryYear\": \"2020\",\n    \"cardHolderName\": \"John Doe\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/checkout",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "checkout"]
+            },
+            "description": "Checkout with expired card"
+          }
+        },
+        {
+          "name": "5. Checkout - Insufficient Funds (Error)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Payment error', () => {",
+                  "  pm.expect([400, 402]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"shippingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"address\": \"123 Market St\",\n    \"city\": \"San Francisco\",\n    \"state\": \"CA\",\n    \"zipCode\": \"94102\",\n    \"country\": \"USA\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"address\": \"123 Market St\",\n    \"city\": \"San Francisco\",\n    \"state\": \"CA\",\n    \"zipCode\": \"94102\",\n    \"country\": \"USA\"\n  },\n  \"paymentDetails\": {\n    \"cardNumber\": \"4000000000009995\",\n    \"cvv\": \"123\",\n    \"expiryMonth\": \"12\",\n    \"expiryYear\": \"2026\",\n    \"cardHolderName\": \"John Doe\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/checkout",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "checkout"]
+            },
+            "description": "Checkout with insufficient funds"
+          }
+        },
+        {
+          "name": "6. Checkout - Missing Required Fields (Error)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Validation error', () => {",
+                  "  pm.expect(pm.response.code).to.equal(400);",
+                  "});",
+                  "",
+                  "pm.test('Missing fields error', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.message).to.exist;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"shippingAddress\": {\n    \"firstName\": \"John\"\n  },\n  \"paymentDetails\": {\n    \"cardNumber\": \"{{validCard}}\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/checkout",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "checkout"]
+            },
+            "description": "Checkout with missing required address and payment fields"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📁 I. CART CLEARING",
+      "item": [
+        {
+          "name": "1. Clear Cart by Session ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "",
+                  "pm.test('Cart cleared successfully', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.success).to.eql(true);",
+                  "  pm.expect(data.message).to.exist;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cart/clear?sessionId={{sessionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "clear"],
+              "query": [
+                {
+                  "key": "sessionId",
+                  "value": "{{sessionId}}"
+                }
+              ]
+            },
+            "description": "Clear entire cart by session ID"
+          }
+        },
+        {
+          "name": "2. Clear Cart by User ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "",
+                  "pm.test('User cart cleared', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.success).to.eql(true);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": \"{{userId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/clear-by-user",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "clear-by-user"]
+            },
+            "description": "Clear cart by user ID (for authenticated users)"
+          }
+        },
+        {
+          "name": "3. Cancel Pending Checkout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "",
+                  "pm.test('Pending checkout cancelled', () => {",
+                  "  const data = pm.response.json();",
+                  "  pm.expect(data.success).to.eql(true);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/cancel-pending-checkout",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "cancel-pending-checkout"]
+            },
+            "description": "Cancel a pending checkout and restore cart"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📁 J. DEBUGGING & UTILITIES",
+      "item": [
+        {
+          "name": "1. Debug - Get All Products",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Products retrieved', () => {",
+                  "  pm.expect([200]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cart/debug/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "debug", "products"]
+            },
+            "description": "Get all available products for testing"
+          }
+        },
+        {
+          "name": "2. Debug - Calculate Discount",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Discount calculated', () => {",
+                  "  pm.expect([200]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"couponCode\": \"SAVE10\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cart/debug/discount",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "debug", "discount"]
+            },
+            "description": "Debug discount calculation for a coupon"
+          }
+        },
+        {
+          "name": "3. Debug - Get Customer Details",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Customer details retrieved', () => {",
+                  "  pm.expect([200, 404]).to.include(pm.response.code);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/cart/debug/customer/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cart", "debug", "customer", "{{userId}}"]
+            },
+            "description": "Get detailed customer information for debugging"
+          }
+        }
+      ]
+    }
+  ]
+}

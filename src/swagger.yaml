@@ -1,0 +1,2602 @@
+openapi: 3.0.0
+info:
+  title: Dynamic API
+  version: 1.0.0
+tags:
+  - name: data
+    description: Data APIs
+  - name: signup
+    description: Signup APIs
+  - name: login
+    description: Login APIs
+  - name: contactus
+    description: Contactus APIs
+  - name: role
+    description: Role APIs
+  - name: aboutUs
+    description: AboutUs APIs
+  - name: faq
+    description: Faq APIs
+  - name: jewelCare
+    description: JewelCare APIs
+  - name: blog
+    description: Blog APIs
+  - name: blogType
+    description: BlogType APIs
+  - name: education
+    description: Education APIs
+  - name: banner
+    description: Banner APIs
+  - name: diamondCircle
+    description: DiamondCircle APIs
+  - name: shape
+    description: Shape APIs
+  - name: carat-size
+    description: Carat-size APIs
+  - name: jewelryCategory
+    description: JewelryCategory APIs
+  - name: megaMenu
+    description: MegaMenu APIs
+  - name: ringSize
+    description: RingSize APIs
+  - name: customer
+    description: Customer APIs
+  - name: newsletter
+    description: Newsletter APIs
+  - name: virtualAppointment
+    description: VirtualAppointment APIs
+  - name: promotionalStrip
+    description: PromotionalStrip APIs
+  - name: promotionalImage
+    description: PromotionalImage APIs
+  - name: introPopup
+    description: IntroPopup APIs
+  - name: flatDiscount
+    description: FlatDiscount APIs
+  - name: coupon
+    description: Coupon APIs
+  - name: priceManagement
+    description: PriceManagement APIs
+  - name: inventory
+    description: Inventory APIs
+  - name: collection
+    description: Collection APIs
+  - name: order
+    description: Order APIs
+  - name: auth
+    description: Authentication APIs
+paths:
+  /data:
+    post:
+      tags:
+        - data
+      summary: Insert new data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/data'
+      responses:
+        '200':
+          description: data inserted successfully
+    get:
+      tags:
+        - data
+      summary: Get all datas (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of datas
+    put:
+      tags:
+        - data
+      summary: Update existing data
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/data'
+      responses:
+        '200':
+          description: data updated successfully
+    delete:
+      tags:
+        - data
+      summary: Delete data by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: data deleted successfully
+  /data/{id}:
+    get:
+      tags:
+        - data
+      summary: Get data by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: data found
+        '404':
+          description: data not found
+  /signup:
+    post:
+      tags:
+        - signup
+      summary: Insert new signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/signup'
+      responses:
+        '200':
+          description: signup inserted successfully
+    get:
+      tags:
+        - signup
+      summary: Get all signups (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of signups
+    put:
+      tags:
+        - signup
+      summary: Update existing signup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/signup'
+      responses:
+        '200':
+          description: signup updated successfully
+    delete:
+      tags:
+        - signup
+      summary: Delete signup by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: signup deleted successfully
+  /signup/{id}:
+    get:
+      tags:
+        - signup
+      summary: Get signup by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: signup found
+        '404':
+          description: signup not found
+  /login:
+    post:
+      tags:
+        - login
+      summary: Insert new login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/login'
+      responses:
+        '200':
+          description: login inserted successfully
+    get:
+      tags:
+        - login
+      summary: Get all logins (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of logins
+    put:
+      tags:
+        - login
+      summary: Update existing login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/login'
+      responses:
+        '200':
+          description: login updated successfully
+    delete:
+      tags:
+        - login
+      summary: Delete login by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: login deleted successfully
+  /login/{id}:
+    get:
+      tags:
+        - login
+      summary: Get login by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: login found
+        '404':
+          description: login not found
+  /contactus:
+    post:
+      tags:
+        - contactus
+      summary: Insert new contactus
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/contactus'
+      responses:
+        '200':
+          description: contactus inserted successfully
+    get:
+      tags:
+        - contactus
+      summary: Get all contactuss (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of contactuss
+    put:
+      tags:
+        - contactus
+      summary: Update existing contactus
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/contactus'
+      responses:
+        '200':
+          description: contactus updated successfully
+    delete:
+      tags:
+        - contactus
+      summary: Delete contactus by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: contactus deleted successfully
+  /contactus/{id}:
+    get:
+      tags:
+        - contactus
+      summary: Get contactus by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: contactus found
+        '404':
+          description: contactus not found
+  /role:
+    post:
+      tags:
+        - role
+      summary: Insert new role
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/role'
+      responses:
+        '200':
+          description: role inserted successfully
+    get:
+      tags:
+        - role
+      summary: Get all roles (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of roles
+    put:
+      tags:
+        - role
+      summary: Update existing role
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/role'
+      responses:
+        '200':
+          description: role updated successfully
+    delete:
+      tags:
+        - role
+      summary: Delete role by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: role deleted successfully
+  /role/{id}:
+    get:
+      tags:
+        - role
+      summary: Get role by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: role found
+        '404':
+          description: role not found
+  /aboutUs:
+    post:
+      tags:
+        - aboutUs
+      summary: Insert new aboutUs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/aboutUs'
+      responses:
+        '200':
+          description: aboutUs inserted successfully
+    get:
+      tags:
+        - aboutUs
+      summary: Get all aboutUss (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of aboutUss
+    put:
+      tags:
+        - aboutUs
+      summary: Update existing aboutUs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/aboutUs'
+      responses:
+        '200':
+          description: aboutUs updated successfully
+    delete:
+      tags:
+        - aboutUs
+      summary: Delete aboutUs by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: aboutUs deleted successfully
+  /aboutUs/{id}:
+    get:
+      tags:
+        - aboutUs
+      summary: Get aboutUs by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: aboutUs found
+        '404':
+          description: aboutUs not found
+  /faq:
+    post:
+      tags:
+        - faq
+      summary: Insert new faq
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/faq'
+      responses:
+        '200':
+          description: faq inserted successfully
+    get:
+      tags:
+        - faq
+      summary: Get all faqs (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of faqs
+    put:
+      tags:
+        - faq
+      summary: Update existing faq
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/faq'
+      responses:
+        '200':
+          description: faq updated successfully
+    delete:
+      tags:
+        - faq
+      summary: Delete faq by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: faq deleted successfully
+  /faq/{id}:
+    get:
+      tags:
+        - faq
+      summary: Get faq by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: faq found
+        '404':
+          description: faq not found
+  /jewelCare:
+    post:
+      tags:
+        - jewelCare
+      summary: Insert new jewelCare
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/jewelCare'
+      responses:
+        '200':
+          description: jewelCare inserted successfully
+    get:
+      tags:
+        - jewelCare
+      summary: Get all jewelCares (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of jewelCares
+    put:
+      tags:
+        - jewelCare
+      summary: Update existing jewelCare
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/jewelCare'
+      responses:
+        '200':
+          description: jewelCare updated successfully
+    delete:
+      tags:
+        - jewelCare
+      summary: Delete jewelCare by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: jewelCare deleted successfully
+  /jewelCare/{id}:
+    get:
+      tags:
+        - jewelCare
+      summary: Get jewelCare by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: jewelCare found
+        '404':
+          description: jewelCare not found
+  /blog:
+    post:
+      tags:
+        - blog
+      summary: Insert new blog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/blog'
+      responses:
+        '200':
+          description: blog inserted successfully
+    get:
+      tags:
+        - blog
+      summary: Get all blogs (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of blogs
+    put:
+      tags:
+        - blog
+      summary: Update existing blog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/blog'
+      responses:
+        '200':
+          description: blog updated successfully
+    delete:
+      tags:
+        - blog
+      summary: Delete blog by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: blog deleted successfully
+  /blog/{id}:
+    get:
+      tags:
+        - blog
+      summary: Get blog by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: blog found
+        '404':
+          description: blog not found
+  /blogType:
+    post:
+      tags:
+        - blogType
+      summary: Insert new blogType
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/blogType'
+      responses:
+        '200':
+          description: blogType inserted successfully
+    get:
+      tags:
+        - blogType
+      summary: Get all blogTypes (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of blogTypes
+    put:
+      tags:
+        - blogType
+      summary: Update existing blogType
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/blogType'
+      responses:
+        '200':
+          description: blogType updated successfully
+    delete:
+      tags:
+        - blogType
+      summary: Delete blogType by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: blogType deleted successfully
+  /blogType/{id}:
+    get:
+      tags:
+        - blogType
+      summary: Get blogType by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: blogType found
+        '404':
+          description: blogType not found
+  /education:
+    post:
+      tags:
+        - education
+      summary: Insert new education
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/education'
+      responses:
+        '200':
+          description: education inserted successfully
+    get:
+      tags:
+        - education
+      summary: Get all educations (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of educations
+    put:
+      tags:
+        - education
+      summary: Update existing education
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/education'
+      responses:
+        '200':
+          description: education updated successfully
+    delete:
+      tags:
+        - education
+      summary: Delete education by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: education deleted successfully
+  /education/{id}:
+    get:
+      tags:
+        - education
+      summary: Get education by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: education found
+        '404':
+          description: education not found
+  /banner:
+    post:
+      tags:
+        - banner
+      summary: Insert new banner
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/banner'
+      responses:
+        '200':
+          description: banner inserted successfully
+    get:
+      tags:
+        - banner
+      summary: Get all banners (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of banners
+    put:
+      tags:
+        - banner
+      summary: Update existing banner
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/banner'
+      responses:
+        '200':
+          description: banner updated successfully
+    delete:
+      tags:
+        - banner
+      summary: Delete banner by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: banner deleted successfully
+  /banner/{id}:
+    get:
+      tags:
+        - banner
+      summary: Get banner by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: banner found
+        '404':
+          description: banner not found
+  /diamondCircle:
+    post:
+      tags:
+        - diamondCircle
+      summary: Insert new diamondCircle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/diamondCircle'
+      responses:
+        '200':
+          description: diamondCircle inserted successfully
+    get:
+      tags:
+        - diamondCircle
+      summary: Get all diamondCircles (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of diamondCircles
+    put:
+      tags:
+        - diamondCircle
+      summary: Update existing diamondCircle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/diamondCircle'
+      responses:
+        '200':
+          description: diamondCircle updated successfully
+    delete:
+      tags:
+        - diamondCircle
+      summary: Delete diamondCircle by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: diamondCircle deleted successfully
+  /diamondCircle/{id}:
+    get:
+      tags:
+        - diamondCircle
+      summary: Get diamondCircle by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: diamondCircle found
+        '404':
+          description: diamondCircle not found
+  /shape:
+    post:
+      tags:
+        - shape
+      summary: Insert new shape
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/shape'
+      responses:
+        '200':
+          description: shape inserted successfully
+    get:
+      tags:
+        - shape
+      summary: Get all shapes (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of shapes
+    put:
+      tags:
+        - shape
+      summary: Update existing shape
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/shape'
+      responses:
+        '200':
+          description: shape updated successfully
+    delete:
+      tags:
+        - shape
+      summary: Delete shape by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: shape deleted successfully
+  /shape/{id}:
+    get:
+      tags:
+        - shape
+      summary: Get shape by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: shape found
+        '404':
+          description: shape not found
+  /carat-size:
+    post:
+      tags:
+        - carat-size
+      summary: Insert new carat-size
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/carat-size'
+      responses:
+        '200':
+          description: carat-size inserted successfully
+    get:
+      tags:
+        - carat-size
+      summary: Get all carat-sizes (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of carat-sizes
+    put:
+      tags:
+        - carat-size
+      summary: Update existing carat-size
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/carat-size'
+      responses:
+        '200':
+          description: carat-size updated successfully
+    delete:
+      tags:
+        - carat-size
+      summary: Delete carat-size by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: carat-size deleted successfully
+  /carat-size/{id}:
+    get:
+      tags:
+        - carat-size
+      summary: Get carat-size by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: carat-size found
+        '404':
+          description: carat-size not found
+  /jewelryCategory:
+    post:
+      tags:
+        - jewelryCategory
+      summary: Insert new jewelryCategory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/jewelryCategory'
+      responses:
+        '200':
+          description: jewelryCategory inserted successfully
+    get:
+      tags:
+        - jewelryCategory
+      summary: Get all jewelryCategorys (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of jewelryCategorys
+    put:
+      tags:
+        - jewelryCategory
+      summary: Update existing jewelryCategory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/jewelryCategory'
+      responses:
+        '200':
+          description: jewelryCategory updated successfully
+    delete:
+      tags:
+        - jewelryCategory
+      summary: Delete jewelryCategory by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: jewelryCategory deleted successfully
+  /jewelryCategory/{id}:
+    get:
+      tags:
+        - jewelryCategory
+      summary: Get jewelryCategory by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: jewelryCategory found
+        '404':
+          description: jewelryCategory not found
+  /megaMenu:
+    post:
+      tags:
+        - megaMenu
+      summary: Insert new megaMenu
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/megaMenu'
+      responses:
+        '200':
+          description: megaMenu inserted successfully
+    get:
+      tags:
+        - megaMenu
+      summary: Get all megaMenus (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of megaMenus
+    put:
+      tags:
+        - megaMenu
+      summary: Update existing megaMenu
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/megaMenu'
+      responses:
+        '200':
+          description: megaMenu updated successfully
+    delete:
+      tags:
+        - megaMenu
+      summary: Delete megaMenu by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: megaMenu deleted successfully
+  /megaMenu/{id}:
+    get:
+      tags:
+        - megaMenu
+      summary: Get megaMenu by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: megaMenu found
+        '404':
+          description: megaMenu not found
+  /ringSize:
+    post:
+      tags:
+        - ringSize
+      summary: Insert new ringSize
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ringSize'
+      responses:
+        '200':
+          description: ringSize inserted successfully
+    get:
+      tags:
+        - ringSize
+      summary: Get all ringSizes (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of ringSizes
+    put:
+      tags:
+        - ringSize
+      summary: Update existing ringSize
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ringSize'
+      responses:
+        '200':
+          description: ringSize updated successfully
+    delete:
+      tags:
+        - ringSize
+      summary: Delete ringSize by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: ringSize deleted successfully
+  /ringSize/{id}:
+    get:
+      tags:
+        - ringSize
+      summary: Get ringSize by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ringSize found
+        '404':
+          description: ringSize not found
+  /customer:
+    post:
+      tags:
+        - customer
+      summary: Insert new customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/customer'
+      responses:
+        '200':
+          description: customer inserted successfully
+    get:
+      tags:
+        - customer
+      summary: Get all customers (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of customers
+    put:
+      tags:
+        - customer
+      summary: Update existing customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/customer'
+      responses:
+        '200':
+          description: customer updated successfully
+    delete:
+      tags:
+        - customer
+      summary: Delete customer by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: customer deleted successfully
+  /customer/{id}:
+    get:
+      tags:
+        - customer
+      summary: Get customer by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: customer found
+        '404':
+          description: customer not found
+  /newsletter:
+    post:
+      tags:
+        - newsletter
+      summary: Insert new newsletter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newsletter'
+      responses:
+        '200':
+          description: newsletter inserted successfully
+    get:
+      tags:
+        - newsletter
+      summary: Get all newsletters (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of newsletters
+    put:
+      tags:
+        - newsletter
+      summary: Update existing newsletter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newsletter'
+      responses:
+        '200':
+          description: newsletter updated successfully
+    delete:
+      tags:
+        - newsletter
+      summary: Delete newsletter by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: newsletter deleted successfully
+  /newsletter/{id}:
+    get:
+      tags:
+        - newsletter
+      summary: Get newsletter by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: newsletter found
+        '404':
+          description: newsletter not found
+  /virtualAppointment:
+    post:
+      tags:
+        - virtualAppointment
+      summary: Insert new virtualAppointment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/virtualAppointment'
+      responses:
+        '200':
+          description: virtualAppointment inserted successfully
+    get:
+      tags:
+        - virtualAppointment
+      summary: Get all virtualAppointments (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of virtualAppointments
+    put:
+      tags:
+        - virtualAppointment
+      summary: Update existing virtualAppointment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/virtualAppointment'
+      responses:
+        '200':
+          description: virtualAppointment updated successfully
+    delete:
+      tags:
+        - virtualAppointment
+      summary: Delete virtualAppointment by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: virtualAppointment deleted successfully
+  /virtualAppointment/{id}:
+    get:
+      tags:
+        - virtualAppointment
+      summary: Get virtualAppointment by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: virtualAppointment found
+        '404':
+          description: virtualAppointment not found
+  /promotionalStrip:
+    post:
+      tags:
+        - promotionalStrip
+      summary: Insert new promotionalStrip
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/promotionalStrip'
+      responses:
+        '200':
+          description: promotionalStrip inserted successfully
+    get:
+      tags:
+        - promotionalStrip
+      summary: Get all promotionalStrips (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of promotionalStrips
+    put:
+      tags:
+        - promotionalStrip
+      summary: Update existing promotionalStrip
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/promotionalStrip'
+      responses:
+        '200':
+          description: promotionalStrip updated successfully
+    delete:
+      tags:
+        - promotionalStrip
+      summary: Delete promotionalStrip by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: promotionalStrip deleted successfully
+  /promotionalStrip/{id}:
+    get:
+      tags:
+        - promotionalStrip
+      summary: Get promotionalStrip by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: promotionalStrip found
+        '404':
+          description: promotionalStrip not found
+  /promotionalImage:
+    post:
+      tags:
+        - promotionalImage
+      summary: Insert new promotionalImage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/promotionalImage'
+      responses:
+        '200':
+          description: promotionalImage inserted successfully
+    get:
+      tags:
+        - promotionalImage
+      summary: Get all promotionalImages (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of promotionalImages
+    put:
+      tags:
+        - promotionalImage
+      summary: Update existing promotionalImage
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/promotionalImage'
+      responses:
+        '200':
+          description: promotionalImage updated successfully
+    delete:
+      tags:
+        - promotionalImage
+      summary: Delete promotionalImage by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: promotionalImage deleted successfully
+  /promotionalImage/{id}:
+    get:
+      tags:
+        - promotionalImage
+      summary: Get promotionalImage by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: promotionalImage found
+        '404':
+          description: promotionalImage not found
+  /introPopup:
+    post:
+      tags:
+        - introPopup
+      summary: Insert new introPopup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/introPopup'
+      responses:
+        '200':
+          description: introPopup inserted successfully
+    get:
+      tags:
+        - introPopup
+      summary: Get all introPopups (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of introPopups
+    put:
+      tags:
+        - introPopup
+      summary: Update existing introPopup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/introPopup'
+      responses:
+        '200':
+          description: introPopup updated successfully
+    delete:
+      tags:
+        - introPopup
+      summary: Delete introPopup by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: introPopup deleted successfully
+  /introPopup/{id}:
+    get:
+      tags:
+        - introPopup
+      summary: Get introPopup by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: introPopup found
+        '404':
+          description: introPopup not found
+  /flatDiscount:
+    post:
+      tags:
+        - flatDiscount
+      summary: Insert new flatDiscount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/flatDiscount'
+      responses:
+        '200':
+          description: flatDiscount inserted successfully
+    get:
+      tags:
+        - flatDiscount
+      summary: Get all flatDiscounts (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of flatDiscounts
+    put:
+      tags:
+        - flatDiscount
+      summary: Update existing flatDiscount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/flatDiscount'
+      responses:
+        '200':
+          description: flatDiscount updated successfully
+    delete:
+      tags:
+        - flatDiscount
+      summary: Delete flatDiscount by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: flatDiscount deleted successfully
+  /flatDiscount/{id}:
+    get:
+      tags:
+        - flatDiscount
+      summary: Get flatDiscount by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: flatDiscount found
+        '404':
+          description: flatDiscount not found
+  /coupon:
+    post:
+      tags:
+        - coupon
+      summary: Insert new coupon
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/coupon'
+      responses:
+        '200':
+          description: coupon inserted successfully
+    get:
+      tags:
+        - coupon
+      summary: Get all coupons (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of coupons
+    put:
+      tags:
+        - coupon
+      summary: Update existing coupon
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/coupon'
+      responses:
+        '200':
+          description: coupon updated successfully
+    delete:
+      tags:
+        - coupon
+      summary: Delete coupon by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: coupon deleted successfully
+  /coupon/{id}:
+    get:
+      tags:
+        - coupon
+      summary: Get coupon by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: coupon found
+        '404':
+          description: coupon not found
+  /priceManagement:
+    post:
+      tags:
+        - priceManagement
+      summary: Insert new priceManagement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/priceManagement'
+      responses:
+        '200':
+          description: priceManagement inserted successfully
+    get:
+      tags:
+        - priceManagement
+      summary: Get all priceManagements (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of priceManagements
+    put:
+      tags:
+        - priceManagement
+      summary: Update existing priceManagement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/priceManagement'
+      responses:
+        '200':
+          description: priceManagement updated successfully
+    delete:
+      tags:
+        - priceManagement
+      summary: Delete priceManagement by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: priceManagement deleted successfully
+  /priceManagement/{id}:
+    get:
+      tags:
+        - priceManagement
+      summary: Get priceManagement by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: priceManagement found
+        '404':
+          description: priceManagement not found
+  /inventory:
+    post:
+      tags:
+        - inventory
+      summary: Insert new inventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/inventory'
+      responses:
+        '200':
+          description: inventory inserted successfully
+    get:
+      tags:
+        - inventory
+      summary: Get all inventorys (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of inventorys
+    put:
+      tags:
+        - inventory
+      summary: Update existing inventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/inventory'
+      responses:
+        '200':
+          description: inventory updated successfully
+    delete:
+      tags:
+        - inventory
+      summary: Delete inventory by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: inventory deleted successfully
+  /inventory/{id}:
+    get:
+      tags:
+        - inventory
+      summary: Get inventory by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: inventory found
+        '404':
+          description: inventory not found
+  /collection:
+    post:
+      tags:
+        - collection
+      summary: Insert new collection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/collection'
+      responses:
+        '200':
+          description: collection inserted successfully
+    get:
+      tags:
+        - collection
+      summary: Get all collections (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of collections
+    put:
+      tags:
+        - collection
+      summary: Update existing collection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/collection'
+      responses:
+        '200':
+          description: collection updated successfully
+    delete:
+      tags:
+        - collection
+      summary: Delete collection by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: collection deleted successfully
+  /collection/{id}:
+    get:
+      tags:
+        - collection
+      summary: Get collection by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: collection found
+        '404':
+          description: collection not found
+  /order:
+    post:
+      tags:
+        - order
+      summary: Insert new order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/order'
+      responses:
+        '200':
+          description: order inserted successfully
+    get:
+      tags:
+        - order
+      summary: Get all orders (filtered)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter query
+      responses:
+        '200':
+          description: List of orders
+    put:
+      tags:
+        - order
+      summary: Update existing order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/order'
+      responses:
+        '200':
+          description: order updated successfully
+    delete:
+      tags:
+        - order
+      summary: Delete order by filter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Filter criteria for delete
+      responses:
+        '200':
+          description: order deleted successfully
+  /order/{id}:
+    get:
+      tags:
+        - order
+      summary: Get order by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: order found
+        '404':
+          description: order not found
+  /auth/register:
+    post:
+      tags:
+        - auth
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+                - role
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                role:
+                  type: string
+      responses:
+        '201':
+          description: User registered
+        '400':
+          description: User already exists or role not found
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: Login user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful
+        '401':
+          description: Invalid credentials
+  /auth/logout:
+    get:
+      tags:
+        - auth
+      summary: Logout user
+      responses:
+        '200':
+          description: Logout successful
+components:
+  schemas:
+    data:
+      type: object
+      properties:
+        dataId:
+          type: string
+        title:
+          type: string
+        summray:
+          type: string
+        Participants:
+          type: array
+          items:
+            type: string
+        date:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        link:
+          type: string
+        createdOn:
+          type: string
+    signup:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+    login:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    contactus:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        subject:
+          type: string
+        message:
+          type: string
+        createdOn:
+          type: string
+          format: date-time
+    role:
+      type: object
+      properties:
+        name:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
+    aboutUs:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+        lastUpdated:
+          type: string
+          format: date-time
+    faq:
+      type: object
+      properties:
+        title:
+          type: string
+        qa:
+          type: array
+          items:
+            type: string
+        isActive:
+          type: boolean
+    jewelCare:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+    blog:
+      type: object
+      properties:
+        title:
+          type: string
+        subtitle:
+          type: string
+        slug:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        metaTitle:
+          type: string
+        metaDescription:
+          type: string
+        category:
+          type: string
+        author:
+          type: string
+        bannerImage:
+          type: string
+        thumbnailImage:
+          type: string
+        description:
+          type: string
+        createdOn:
+          type: string
+          format: date-time
+        isActive:
+          type: boolean
+    blogType:
+      type: object
+      properties:
+        name:
+          type: string
+    education:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+    banner:
+      type: object
+      properties:
+        imageUrl:
+          type: string
+        redirectUrl:
+          type: string
+        isActive:
+          type: boolean
+    diamondCircle:
+      type: object
+      properties:
+        title:
+          type: string
+        content:
+          type: string
+    shape:
+      type: object
+      properties:
+        name:
+          type: string
+        drVariation:
+          type: string
+        lcVariation:
+          type: string
+    carat-size:
+      type: object
+      properties:
+        sequence:
+          type: number
+        size:
+          type: number
+        isVisible:
+          type: boolean
+    jewelryCategory:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        imageUrl:
+          type: string
+    megaMenu:
+      type: object
+      properties:
+        header:
+          type: string
+        links:
+          type: array
+          items:
+            type: string
+    ringSize:
+      type: object
+      properties:
+        size:
+          type: string
+    customer:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        address:
+          type: string
+    newsletter:
+      type: object
+      properties:
+        email:
+          type: string
+    virtualAppointment:
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        preferredDate:
+          type: string
+          format: date-time
+        message:
+          type: string
+    promotionalStrip:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        enableTimer:
+          type: boolean
+        timerDateTime:
+          type: string
+          format: date-time
+    promotionalImage:
+      type: object
+      properties:
+        imageUrl:
+          type: string
+        category:
+          type: string
+    introPopup:
+      type: object
+      properties:
+        content:
+          type: string
+        isActive:
+          type: boolean
+    flatDiscount:
+      type: object
+      properties:
+        jewelryType:
+          type: string
+        allowThisDiscount:
+          type: boolean
+        siteWide:
+          type: boolean
+        product:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+        discountName:
+          type: string
+        description:
+          type: string
+        discountType:
+          type: string
+        flatDiscount:
+          type: string
+    coupon:
+      type: object
+      properties:
+        couponName:
+          type: string
+        couponCode:
+          type: string
+        minimumAmount:
+          type: number
+        dateRange:
+          type: string
+        discountType:
+          type: string
+        discountValue:
+          type: number
+        allowThisCoupon:
+          type: boolean
+        categoryWise:
+          type: boolean
+        productWise:
+          type: boolean
+        options:
+          type: array
+          items:
+            type: string
+        couponImage:
+          type: string
+    priceManagement:
+      type: object
+      properties:
+        exchangeRates:
+          type: array
+          items:
+            type: string
+        metalDetails:
+          type: array
+          items:
+            type: string
+        metalColors:
+          type: array
+          items:
+            type: string
+        otherPrice:
+          type: number
+        diamondRates:
+          type: number
+    inventory:
+      type: object
+      properties:
+        jewelryType:
+          type: string
+        averageWidth:
+          type: number
+        relationship:
+          type: string
+        cadCode:
+          type: string
+        occasion:
+          type: string
+        title:
+          type: string
+        subType:
+          type: string
+        subTitle:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        metaDetails:
+          type: string
+        estimatedShippingDays:
+          type: number
+        metals:
+          type: array
+          items:
+            type: string
+        metalsWeight:
+          type: string
+        jewelryTypeMode:
+          type: string
+        diamondType:
+          type: string
+        pricingMode:
+          type: string
+        centerStone:
+          type: string
+        lcVariations:
+          type: array
+          items:
+            type: string
+        defaultMetal:
+          type: string
+        defaultShape:
+          type: string
+    collection:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        desktopImage:
+          type: string
+        mobileImage:
+          type: string
+        jewelrySkus:
+          type: array
+          items:
+            type: string
+    order:
+      type: object
+      properties:
+        customerId:
+          type: string
+        products:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+        total:
+          type: number
+        orderedOn:
+          type: string
+          format: date-time

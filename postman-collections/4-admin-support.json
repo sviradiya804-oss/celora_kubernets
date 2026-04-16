@@ -1,0 +1,668 @@
+{
+  "info": {
+    "name": "Celora Backend - Admin & Support",
+    "description": "Complete collection for admin operations, dashboard analytics, logs, exports, health checks, and support functions",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{authToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://celora-backend.vercel.app",
+      "type": "string"
+    },
+    {
+      "key": "localUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminUserId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health & Status",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Database Health",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/health/database",
+              "host": ["{{baseUrl}}"],
+              "path": ["health", "database"]
+            }
+          }
+        },
+        {
+          "name": "System Metrics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/metrics",
+              "host": ["{{baseUrl}}"],
+              "path": ["metrics"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard Analytics",
+      "item": [
+        {
+          "name": "Get Dashboard Overview",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/overview",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "overview"]
+            }
+          }
+        },
+        {
+          "name": "Get Sales Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/sales?period=30days&startDate=2024-01-01&endDate=2024-01-31",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "sales"],
+              "query": [
+                {"key": "period", "value": "30days"},
+                {"key": "startDate", "value": "2024-01-01"},
+                {"key": "endDate", "value": "2024-01-31"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Product Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "products"]
+            }
+          }
+        },
+        {
+          "name": "Get Customer Analytics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/customers",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "customers"]
+            }
+          }
+        },
+        {
+          "name": "Get Order Statistics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/dashboard/orders?status=all&period=month",
+              "host": ["{{baseUrl}}"],
+              "path": ["dashboard", "orders"],
+              "query": [
+                {"key": "status", "value": "all"},
+                {"key": "period", "value": "month"}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin Logs & Monitoring",
+      "item": [
+        {
+          "name": "Get Admin Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/adminlog?page=1&limit=50&action=all&startDate=2024-01-01",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "adminlog"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "50"},
+                {"key": "action", "value": "all"},
+                {"key": "startDate", "value": "2024-01-01"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Admin Log Entry",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action\": \"USER_CREATION\",\n  \"targetResource\": \"user\",\n  \"resourceId\": \"685b7da5b4057cc3a3daadbd\",\n  \"description\": \"Created new admin user\",\n  \"metadata\": {\n    \"userEmail\": \"admin@celora.com\",\n    \"userRole\": \"admin\",\n    \"permissions\": [\"all\"]\n  },\n  \"severity\": \"INFO\",\n  \"ipAddress\": \"192.168.1.100\",\n  \"userAgent\": \"PostmanRuntime/7.32.0\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/adminlog",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "adminlog"]
+            }
+          }
+        },
+        {
+          "name": "Get User Activity Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/userlog?userId=685b7da5b4057cc3a3daadbd&page=1&limit=20",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "userlog"],
+              "query": [
+                {"key": "userId", "value": "685b7da5b4057cc3a3daadbd"},
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "20"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get System Error Logs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/errorlog?severity=ERROR&startDate=2024-01-01&endDate=2024-01-31",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "errorlog"],
+              "query": [
+                {"key": "severity", "value": "ERROR"},
+                {"key": "startDate", "value": "2024-01-01"},
+                {"key": "endDate", "value": "2024-01-31"}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Data Export & Import",
+      "item": [
+        {
+          "name": "Export Orders",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"format\": \"csv\",\n  \"dateRange\": {\n    \"startDate\": \"2024-01-01\",\n    \"endDate\": \"2024-01-31\"\n  },\n  \"filters\": {\n    \"status\": [\"Completed\", \"Delivered\"],\n    \"includeCustomerInfo\": true,\n    \"includeProductDetails\": true\n  },\n  \"columns\": [\n    \"orderId\",\n    \"customerName\",\n    \"customerEmail\",\n    \"orderDate\",\n    \"totalAmount\",\n    \"status\",\n    \"paymentStatus\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/export/orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["export", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Export Customers",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"format\": \"xlsx\",\n  \"filters\": {\n    \"registrationDate\": {\n      \"startDate\": \"2024-01-01\",\n      \"endDate\": \"2024-01-31\"\n    },\n    \"includeInactive\": false\n  },\n  \"columns\": [\n    \"name\",\n    \"email\",\n    \"phone\",\n    \"registrationDate\",\n    \"totalOrders\",\n    \"totalSpent\",\n    \"lastOrderDate\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/export/customers",
+              "host": ["{{baseUrl}}"],
+              "path": ["export", "customers"]
+            }
+          }
+        },
+        {
+          "name": "Export Jewelry Inventory",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"format\": \"csv\",\n  \"filters\": {\n    \"status\": \"Active\",\n    \"inStock\": true,\n    \"category\": \"all\"\n  },\n  \"includeImages\": false,\n  \"includePricing\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/export/jewelry",
+              "host": ["{{baseUrl}}"],
+              "path": ["export", "jewelry"]
+            }
+          }
+        },
+        {
+          "name": "Import Diamonds Data",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": "/path/to/diamonds-data.xlsx"
+                },
+                {
+                  "key": "updateMode",
+                  "value": "merge",
+                  "type": "text"
+                },
+                {
+                  "key": "validateOnly",
+                  "value": "false",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/import/diamonds",
+              "host": ["{{baseUrl}}"],
+              "path": ["import", "diamonds"]
+            }
+          }
+        },
+        {
+          "name": "Get Export Status",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/export/status/EXPORT_JOB_ID",
+              "host": ["{{baseUrl}}"],
+              "path": ["export", "status", "EXPORT_JOB_ID"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Email & Communication",
+      "item": [
+        {
+          "name": "Send Test Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"templateType\": \"order-confirmation\",\n  \"recipientEmail\": \"test@example.com\",\n  \"testData\": {\n    \"customerName\": \"John Doe\",\n    \"orderId\": \"ORD-12345\",\n    \"orderTotal\": 3600,\n    \"products\": [\n      {\n        \"name\": \"Diamond Engagement Ring\",\n        \"price\": 3600,\n        \"quantity\": 1\n      }\n    ]\n  }\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/test-email/send",
+              "host": ["{{baseUrl}}"],
+              "path": ["test-email", "send"]
+            }
+          }
+        },
+        {
+          "name": "Get Email Templates",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/test-email/templates",
+              "host": ["{{baseUrl}}"],
+              "path": ["test-email", "templates"]
+            }
+          }
+        },
+        {
+          "name": "Send Order Status Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"orderId\": \"ORD-12345\",\n  \"status\": \"Manufacturing\",\n  \"customMessage\": \"Your custom engagement ring is being crafted with special attention to the engraving details.\",\n  \"estimatedCompletion\": \"2024-02-15\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/test-email/order-status",
+              "host": ["{{baseUrl}}"],
+              "path": ["test-email", "order-status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Configuration Management",
+      "item": [
+        {
+          "name": "Get Exchange Rates",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/exchangerate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exchangerate"]
+            }
+          }
+        },
+        {
+          "name": "Update Exchange Rate",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currency\": \"USD\",\n  \"rate\": 82.75,\n  \"lastUpdated\": \"{{$isoTimestamp}}\",\n  \"source\": \"Manual Update\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/exchangerate/EXCHANGE_RATE_ID",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "exchangerate", "EXCHANGE_RATE_ID"]
+            }
+          }
+        },
+        {
+          "name": "Get Labour Costs",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/labourcost",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "labourcost"]
+            }
+          }
+        },
+        {
+          "name": "Update Labour Cost",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jewelryType\": \"Engagement Ring\",\n  \"metalType\": \"18K Gold\",\n  \"complexity\": \"High\",\n  \"cost\": 650,\n  \"timeRequired\": \"5-7 days\",\n  \"skillLevel\": \"Master Craftsman\",\n  \"isActive\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/labourcost/LABOUR_COST_ID",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "labourcost", "LABOUR_COST_ID"]
+            }
+          }
+        },
+        {
+          "name": "Get System Configuration",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/config/system",
+              "host": ["{{baseUrl}}"],
+              "path": ["config", "system"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "SEO & Content",
+      "item": [
+        {
+          "name": "Get Sitemap",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/sitemap.xml",
+              "host": ["{{baseUrl}}"],
+              "path": ["sitemap.xml"]
+            }
+          }
+        },
+        {
+          "name": "Get Robots.txt",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/robots.txt",
+              "host": ["{{baseUrl}}"],
+              "path": ["robots.txt"]
+            }
+          }
+        },
+        {
+          "name": "Get All Blogs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/blog?page=1&limit=10&status=published",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "blog"],
+              "query": [
+                {"key": "page", "value": "1"},
+                {"key": "limit", "value": "10"},
+                {"key": "status", "value": "published"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Blog Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"blogId\": \"BLOG-{{$randomInt}}\",\n  \"title\": \"The Ultimate Guide to Choosing an Engagement Ring\",\n  \"content\": \"<p>Choosing the perfect engagement ring is one of the most important decisions...</p>\",\n  \"excerpt\": \"Everything you need to know about selecting the perfect engagement ring\",\n  \"slug\": \"ultimate-guide-choosing-engagement-ring\",\n  \"author\": \"Celora Jewelry Team\",\n  \"tags\": [\"engagement rings\", \"diamond guide\", \"jewelry tips\"],\n  \"metaTitle\": \"Ultimate Engagement Ring Guide | Celora Jewelry\",\n  \"metaDescription\": \"Expert guide to choosing the perfect engagement ring. Learn about diamonds, settings, and styles.\",\n  \"status\": \"published\",\n  \"featuredImage\": \"https://example.com/engagement-ring-guide.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/blog",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "blog"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

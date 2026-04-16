@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Invoice</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .content {
+            padding: 30px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .invoice-details {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+        .button {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .highlight {
+            color: #007bff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Invoice Ready</h1>
+            <p style="color:#e0e0e0;font-size:16px;margin-top:8px;">Your Order Invoice</p>
+        </div>
+        
+        <div class="content">
+            <h2>Dear {{customerName}},</h2>
+            
+            <p>Thank you for your order! Your invoice has been generated and is attached to this email.</p>
+            
+            <div class="invoice-details">
+                <h3>Order Details:</h3>
+                <p><strong>Order ID:</strong> <span class="highlight">{{orderId}}</span></p>
+                <p><strong>Invoice Date:</strong> {{date}}</p>
+            </div>
+            
+            <p>Please find your invoice attached as a PDF document. Keep this for your records.</p>
+            
+            <p>If you have any questions about your invoice or order, please don't hesitate to contact our customer service team.</p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+                <a href="mailto:support@celorajewelry.com" class="button">Contact Support</a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Thank you for choosing Celora Jewelry</p>
+            <p>© 2025 Celora Jewelry. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

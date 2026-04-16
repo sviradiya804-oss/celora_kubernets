@@ -1,0 +1,185 @@
+{
+	"info": {
+		"_postman_id": "2d36ca6e-accc-4b02-adc1-71d5f6020a03",
+		"name": "Celora Backend - Order & Cart Management",
+		"description": "Complete collection for cart operations, order management, payments, and customer order tracking",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24302412",
+		"_collection_link": "https://interstellar-rocket-623521.postman.co/workspace/Vatsal-workspace~d4a5f746-5f57-4332-8f21-b9b76b0a1e9b/collection/24302412-2d36ca6e-accc-4b02-adc1-71d5f6020a03?action=share&source=collection_link&creator=24302412"
+	},
+	"item": [
+		{
+			"name": "Cart Management",
+			"item": [
+				{
+					"name": "Add Item to Cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200 || pm.response.code === 201) {",
+									"    const response = pm.response.json();",
+									"    if (response.cart && response.cart._id) {",
+									"        pm.collectionVariables.set('cartId', response.cart._id);",
+									"    }",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{authToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productId\": \"6870abab68f9b4a37c8c856c\",\n  \"productType\": \"jewelry\",\n  \"quantity\": 1,\n  \"selectedOptions\": {\n    \"shape\": \"6884b4355b8a2ab54b74cd0a\",\n    \"metaldetail\": \"686ab482d853bd069777c9f2\",\n    \"ringsize\": \"68123456789abcdef0123456\",\n    \"centerStone\": {\n      \"carat\": 1.5,\n      \"color\": \"F\",\n      \"clarity\": \"VS1\"\n    },\n    \"engraving\": {\n      \"text\": \"Forever Yours\",\n      \"font\": \"Script\",\n      \"position\": \"Inside Band\"\n    }\n  },\n  \"customizations\": {\n    \"metalType\": \"18K White Gold\",\n    \"gemstoneUpgrade\": true\n  },\n  \"price\": 3600,\n  \"engraving\": {\n    \"text\": \"Forever Yours\",\n    \"font\": \"Script\",\n    \"position\": \"Inside Band\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/cart/add",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cart",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Item Quantity",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/cart/update",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cart",
+								"update"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"example-session-id\",\n  \"userId\": \"example-user-id\",\n  \"productId\": \"example-product-id\",\n  \"quantity\": 2,\n  \"engravingOptions\": {\"text\": \"Best Wishes\", \"font\": \"Times New Roman\"}\n}"
+						}
+					}
+				},
+				{
+					"name": "Remove Item from Cart",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/cart/remove/example-product-id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cart",
+								"remove",
+								"example-product-id"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"example-session-id\",\n  \"userId\": \"example-user-id\"\n}"
+						}
+					}
+				},
+				{
+					"name": "Clear Cart",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/cart/clear",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"cart",
+								"clear"
+							]
+						},
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sessionId\": \"example-session-id\",\n  \"userId\": \"example-user-id\"\n}"
+						}
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{authToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://celora-backend.vercel.app",
+			"type": "string"
+		},
+		{
+			"key": "localUrl",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "authToken",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "cartId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "orderId",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "paymentIntentId",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

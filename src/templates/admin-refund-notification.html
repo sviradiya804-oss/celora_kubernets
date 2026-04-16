@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Refund Processed - Admin Notification</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', Oxygen, Ubuntu, Cantarell, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f8f9fa;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    
+    .header h1 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .header p {
+      font-size: 16px;
+      opacity: 0.9;
+    }
+    
+    .content {
+      padding: 40px 30px;
+    }
+    
+    .refund-summary {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 4px solid #dc3545;
+    }
+    
+    .refund-amount {
+      font-size: 28px;
+      font-weight: 700;
+      color: #dc3545;
+      margin-bottom: 10px;
+    }
+    
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #e9ecef;
+    }
+    
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+    
+    .detail-label {
+      font-weight: 600;
+      color: #495057;
+    }
+    
+    .detail-value {
+      color: #6c757d;
+      text-align: right;
+    }
+    
+    .alert {
+      background-color: #fff3cd;
+      border: 1px solid #ffeaa7;
+      border-radius: 6px;
+      padding: 15px;
+      margin: 20px 0;
+      color: #856404;
+    }
+    
+    .alert-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    
+    .footer {
+      background-color: #f8f9fa;
+      padding: 30px;
+      text-align: center;
+      border-top: 1px solid #e9ecef;
+    }
+    
+    .footer p {
+      color: #6c757d;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    
+    .system-info {
+      background-color: #e9f7ef;
+      border: 1px solid #c3e6cb;
+      border-radius: 6px;
+      padding: 15px;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+    
+    .timestamp {
+      color: #6c757d;
+      font-size: 12px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>🔄 Refund Processed</h1>
+      <p>Admin Notification - Celora Jewelry</p>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <h2>Refund Successfully Processed</h2>
+      <p>A refund has been processed by an admin user. Here are the details:</p>
+
+      <!-- Refund Summary -->
+      <div class="refund-summary">
+        <div class="refund-amount">${{refundAmount}}</div>
+        <p><strong>Refund ID:</strong> {{refundId}}</p>
+      </div>
+
+      <!-- Order Details -->
+      <h3>Order Information</h3>
+      <div style="margin: 20px 0;">
+        <div class="detail-row">
+          <span class="detail-label">Order ID:</span>
+          <span class="detail-value">{{orderId}}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Customer:</span>
+          <span class="detail-value">{{customerName}} ({{customerEmail}})</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Original Order Date:</span>
+          <span class="detail-value">{{orderDate}}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Refund Date:</span>
+          <span class="detail-value">{{refundDate}}</span>
+        </div>
+      </div>
+
+      <!-- Admin Details -->
+      <h3>Admin Action</h3>
+      <div style="margin: 20px 0;">
+        <div class="detail-row">
+          <span class="detail-label">Processed By:</span>
+          <span class="detail-value">{{processedBy}}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Reason:</span>
+          <span class="detail-value">{{reason}}</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Stripe Status:</span>
+          <span class="detail-value">{{stripeRefundStatus}}</span>
+        </div>
+      </div>
+
+      <!-- Alert -->
+      <div class="alert">
+        <div class="alert-title">⚠️ Action Required</div>
+        <p>Please verify that the customer has been notified and monitor for any follow-up inquiries.</p>
+      </div>
+
+      <!-- System Info -->
+      <div class="system-info">
+        <p><strong>System Information:</strong></p>
+        <p>• Customer notification email: {{#if customerEmailSent}}✅ Sent successfully{{else}}❌ Failed to send{{/if}}</p>
+        <p>• Order status updated to: Cancelled</p>
+        <p>• Payment status updated to: Refunded</p>
+        <p>• Refund will appear in customer's account within 5-10 business days</p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>This is an automated admin notification from Celora Jewelry</p>
+      <p class="timestamp">Generated on {{refundDate}} at {{currentTime}}</p>
+      <p style="margin-top: 15px;">
+        <strong>Celora Jewelry Admin Panel</strong><br>
+        <span style="color: #6c757d;">{{currentYear}} Celora Jewelry. All rights reserved.</span>
+      </p>
+    </div>
+  </div>
+</body>
+</html>

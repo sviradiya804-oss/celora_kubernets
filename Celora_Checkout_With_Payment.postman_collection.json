@@ -1,0 +1,303 @@
+{
+  "info": {
+    "_postman_id": "checkout-payment-collection-v1",
+    "name": "Celora - Checkout with Card Payment",
+    "description": "Collection for testing the new checkout flow with card payment handling, including billing/shipping addresses and payment validation",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Checkout with Card Payment - Success",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}",
+            "description": "JWT token from login"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\",\n  \"paymentMethod\": \"card\",\n  \"cardDetails\": {\n    \"cardNumber\": \"4242424242424242\",\n    \"expiryMonth\": \"12\",\n    \"expiryYear\": \"2025\",\n    \"cvv\": \"123\",\n    \"cardholderName\": \"John Doe\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+1-234-567-8900\",\n    \"address1\": \"123 Main Street\",\n    \"address2\": \"Apt 4B\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"zipCode\": \"10001\",\n    \"country\": \"US\"\n  },\n  \"shippingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"phone\": \"+1-234-567-8900\",\n    \"address1\": \"456 Oak Avenue\",\n    \"address2\": \"\",\n    \"city\": \"Brooklyn\",\n    \"state\": \"NY\",\n    \"zipCode\": \"11201\",\n    \"country\": \"US\"\n  },\n  \"shippingDetails\": {\n    \"estimatedDeliveryDays\": 7,\n    \"shippingMethod\": \"Standard\",\n    \"shippingCost\": 0\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/cart/checkout-with-payment",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cart", "checkout-with-payment"]
+        },
+        "description": "Checkout with valid card details, billing address, and shipping address. Uses Stripe test card 4242424242424242 (Visa)."
+      },
+      "response": []
+    },
+    {
+      "name": "2. Checkout with Mastercard",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\",\n  \"paymentMethod\": \"card\",\n  \"cardDetails\": {\n    \"cardNumber\": \"5555555555554444\",\n    \"expiryMonth\": \"12\",\n    \"expiryYear\": \"2025\",\n    \"cvv\": \"123\",\n    \"cardholderName\": \"Jane Smith\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\",\n    \"email\": \"jane.smith@example.com\",\n    \"phone\": \"+1-234-567-8901\",\n    \"address1\": \"789 Elm Street\",\n    \"address2\": \"\",\n    \"city\": \"Los Angeles\",\n    \"state\": \"CA\",\n    \"zipCode\": \"90001\",\n    \"country\": \"US\"\n  },\n  \"shippingAddress\": {\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Smith\",\n    \"phone\": \"+1-234-567-8901\",\n    \"address1\": \"789 Elm Street\",\n    \"address2\": \"\",\n    \"city\": \"Los Angeles\",\n    \"state\": \"CA\",\n    \"zipCode\": \"90001\",\n    \"country\": \"US\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/cart/checkout-with-payment",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cart", "checkout-with-payment"]
+        },
+        "description": "Checkout with Mastercard test card 5555555555554444"
+      },
+      "response": []
+    },
+    {
+      "name": "3. Checkout with Affirm",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\",\n  \"paymentMethod\": \"affirm\",\n  \"billingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+1-234-567-8900\",\n    \"address1\": \"123 Main Street\",\n    \"address2\": \"Apt 4B\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"zipCode\": \"10001\",\n    \"country\": \"US\"\n  },\n  \"shippingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"phone\": \"+1-234-567-8900\",\n    \"address1\": \"456 Oak Avenue\",\n    \"address2\": \"\",\n    \"city\": \"Brooklyn\",\n    \"state\": \"NY\",\n    \"zipCode\": \"11201\",\n    \"country\": \"US\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/cart/checkout-with-payment",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cart", "checkout-with-payment"]
+        },
+        "description": "Checkout with Affirm payment method - returns checkout URL for Affirm payment page"
+      },
+      "response": []
+    },
+    {
+      "name": "4. Invalid Card Number",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\",\n  \"paymentMethod\": \"card\",\n  \"cardDetails\": {\n    \"cardNumber\": \"1234\",\n    \"expiryMonth\": \"12\",\n    \"expiryYear\": \"2025\",\n    \"cvv\": \"123\",\n    \"cardholderName\": \"Test User\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+1-234-567-8900\",\n    \"address1\": \"123 Main Street\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"zipCode\": \"10001\",\n    \"country\": \"US\"\n  },\n  \"shippingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"phone\": \"+1-234-567-8900\",\n    \"address1\": \"456 Oak Avenue\",\n    \"city\": \"Brooklyn\",\n    \"state\": \"NY\",\n    \"zipCode\": \"11201\",\n    \"country\": \"US\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/cart/checkout-with-payment",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cart", "checkout-with-payment"]
+        },
+        "description": "Test validation - invalid card number (too short). Should return 400 error."
+      },
+      "response": []
+    },
+    {
+      "name": "5. Expired Card",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\",\n  \"paymentMethod\": \"card\",\n  \"cardDetails\": {\n    \"cardNumber\": \"4242424242424242\",\n    \"expiryMonth\": \"12\",\n    \"expiryYear\": \"2020\",\n    \"cvv\": \"123\",\n    \"cardholderName\": \"Test User\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+1-234-567-8900\",\n    \"address1\": \"123 Main Street\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"zipCode\": \"10001\",\n    \"country\": \"US\"\n  },\n  \"shippingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"phone\": \"+1-234-567-8900\",\n    \"address1\": \"456 Oak Avenue\",\n    \"city\": \"Brooklyn\",\n    \"state\": \"NY\",\n    \"zipCode\": \"11201\",\n    \"country\": \"US\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/cart/checkout-with-payment",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cart", "checkout-with-payment"]
+        },
+        "description": "Test validation - expired card (year 2020). Should return 400 error."
+      },
+      "response": []
+    },
+    {
+      "name": "6. Invalid CVV",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\",\n  \"paymentMethod\": \"card\",\n  \"cardDetails\": {\n    \"cardNumber\": \"4242424242424242\",\n    \"expiryMonth\": \"12\",\n    \"expiryYear\": \"2025\",\n    \"cvv\": \"12\",\n    \"cardholderName\": \"Test User\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+1-234-567-8900\",\n    \"address1\": \"123 Main Street\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"zipCode\": \"10001\",\n    \"country\": \"US\"\n  },\n  \"shippingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"phone\": \"+1-234-567-8900\",\n    \"address1\": \"456 Oak Avenue\",\n    \"city\": \"Brooklyn\",\n    \"state\": \"NY\",\n    \"zipCode\": \"11201\",\n    \"country\": \"US\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/cart/checkout-with-payment",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cart", "checkout-with-payment"]
+        },
+        "description": "Test validation - invalid CVV (only 2 digits). Should return 400 error."
+      },
+      "response": []
+    },
+    {
+      "name": "7. Missing Billing Address Fields",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\",\n  \"paymentMethod\": \"card\",\n  \"cardDetails\": {\n    \"cardNumber\": \"4242424242424242\",\n    \"expiryMonth\": \"12\",\n    \"expiryYear\": \"2025\",\n    \"cvv\": \"123\",\n    \"cardholderName\": \"Test User\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+1-234-567-8900\",\n    \"address1\": \"123 Main Street\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"zipCode\": \"10001\",\n    \"country\": \"US\"\n  },\n  \"shippingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"phone\": \"+1-234-567-8900\",\n    \"address1\": \"456 Oak Avenue\",\n    \"city\": \"Brooklyn\",\n    \"state\": \"NY\",\n    \"zipCode\": \"11201\",\n    \"country\": \"US\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/cart/checkout-with-payment",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cart", "checkout-with-payment"]
+        },
+        "description": "Test validation - missing lastName in billing address. Should return 400 error."
+      },
+      "response": []
+    },
+    {
+      "name": "8. Invalid Email Format",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\",\n  \"paymentMethod\": \"card\",\n  \"cardDetails\": {\n    \"cardNumber\": \"4242424242424242\",\n    \"expiryMonth\": \"12\",\n    \"expiryYear\": \"2025\",\n    \"cvv\": \"123\",\n    \"cardholderName\": \"Test User\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"invalid-email\",\n    \"phone\": \"+1-234-567-8900\",\n    \"address1\": \"123 Main Street\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"zipCode\": \"10001\",\n    \"country\": \"US\"\n  },\n  \"shippingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"phone\": \"+1-234-567-8900\",\n    \"address1\": \"456 Oak Avenue\",\n    \"city\": \"Brooklyn\",\n    \"state\": \"NY\",\n    \"zipCode\": \"11201\",\n    \"country\": \"US\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/cart/checkout-with-payment",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cart", "checkout-with-payment"]
+        },
+        "description": "Test validation - invalid email format. Should return 400 error."
+      },
+      "response": []
+    },
+    {
+      "name": "9. Invalid US Zip Code",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\",\n  \"paymentMethod\": \"card\",\n  \"cardDetails\": {\n    \"cardNumber\": \"4242424242424242\",\n    \"expiryMonth\": \"12\",\n    \"expiryYear\": \"2025\",\n    \"cvv\": \"123\",\n    \"cardholderName\": \"Test User\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+1-234-567-8900\",\n    \"address1\": \"123 Main Street\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"zipCode\": \"123\",\n    \"country\": \"US\"\n  },\n  \"shippingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"phone\": \"+1-234-567-8900\",\n    \"address1\": \"456 Oak Avenue\",\n    \"city\": \"Brooklyn\",\n    \"state\": \"NY\",\n    \"zipCode\": \"11201\",\n    \"country\": \"US\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/cart/checkout-with-payment",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cart", "checkout-with-payment"]
+        },
+        "description": "Test validation - invalid US zip code format (should be 5 or 5+4 digits). Should return 400 error."
+      },
+      "response": []
+    },
+    {
+      "name": "10. Invalid Payment Method",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{authToken}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"sessionId\": \"{{sessionId}}\",\n  \"userId\": \"{{userId}}\",\n  \"paymentMethod\": \"paypal\",\n  \"cardDetails\": {\n    \"cardNumber\": \"4242424242424242\",\n    \"expiryMonth\": \"12\",\n    \"expiryYear\": \"2025\",\n    \"cvv\": \"123\",\n    \"cardholderName\": \"Test User\"\n  },\n  \"billingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"phone\": \"+1-234-567-8900\",\n    \"address1\": \"123 Main Street\",\n    \"city\": \"New York\",\n    \"state\": \"NY\",\n    \"zipCode\": \"10001\",\n    \"country\": \"US\"\n  },\n  \"shippingAddress\": {\n    \"firstName\": \"John\",\n    \"lastName\": \"Doe\",\n    \"phone\": \"+1-234-567-8900\",\n    \"address1\": \"456 Oak Avenue\",\n    \"city\": \"Brooklyn\",\n    \"state\": \"NY\",\n    \"zipCode\": \"11201\",\n    \"country\": \"US\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/cart/checkout-with-payment",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "cart", "checkout-with-payment"]
+        },
+        "description": "Test validation - invalid payment method (only 'card' and 'affirm' are supported). Should return 400 error."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "authToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "sessionId",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}

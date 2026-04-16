@@ -1,0 +1,881 @@
+{
+	"info": {
+		"_postman_id": "celora-complete-api-2025",
+		"name": "Celora Complete API Collection",
+		"description": "Complete API collection for Celora Backend including Currency Management and Admin Authentication",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Admin Authentication",
+			"item": [
+				{
+					"name": "1. Admin Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Admin login successful\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.true;",
+									"    pm.expect(jsonData.data.isAdmin).to.be.true;",
+									"});",
+									"",
+									"// Save admin token for subsequent requests",
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set('admin_token', jsonData.data.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"testadmin@celora.com\",\n  \"password\": \"newpassword456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/admin/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"admin",
+								"login"
+							]
+						},
+						"description": "Admin-only login endpoint. Verifies admin role and returns isAdmin flag with JWT token."
+					},
+					"response": []
+				},
+				{
+					"name": "2. Update User Password (Admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Password updated successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.true;",
+									"    pm.expect(jsonData.message).to.include('updated');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{admin_token}}",
+								"description": "Admin JWT token required"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"password\": \"newSecurePassword123\",\n  \"sendEmail\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/admin/update-password/:userId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"admin",
+								"update-password",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "6914705c90a5d4bd0a7798f3",
+									"description": "User ID to update password for"
+								}
+							]
+						},
+						"description": "Admin endpoint to update any user's password. Requires admin authentication."
+					},
+					"response": []
+				},
+				{
+					"name": "3. Regular User Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Save auth token",
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set('auth_token', jsonData.data.token);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Regular user login endpoint"
+					},
+					"response": []
+				},
+				{
+					"name": "4. Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"logout"
+							]
+						},
+						"description": "Logout and invalidate JWT token"
+					},
+					"response": []
+				}
+			],
+			"description": "Admin authentication and user management endpoints"
+		},
+		{
+			"name": "Currency Management",
+			"item": [
+				{
+					"name": "1. Get Available Currencies",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Has currencies array\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.currencies).to.be.an('array');",
+									"    pm.expect(jsonData.baseCurrency).to.eql('USD');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/currency/available",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"currency",
+								"available"
+							]
+						},
+						"description": "Public endpoint - Get list of all available currencies with exchange rates"
+					},
+					"response": []
+				},
+				{
+					"name": "2. Validate Currency",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Currency is valid\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.valid).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"currency\": \"EUR\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/currency/validate",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"currency",
+								"validate"
+							]
+						},
+						"description": "Validate if a currency code is supported"
+					},
+					"response": []
+				},
+				{
+					"name": "3. Set Currency Preference",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Currency preference saved\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.success).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"currency\": \"EUR\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/currency/set",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"currency",
+								"set"
+							]
+						},
+						"description": "Set currency preference for authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "4. Get Currency Preference",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/currency/preference",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"currency",
+								"preference"
+							]
+						},
+						"description": "Get user's saved currency preference"
+					},
+					"response": []
+				},
+				{
+					"name": "5. Update Currency Preference",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"currency\": \"INR\",\n  \"country\": \"India\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/currency/preference",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"currency",
+								"preference"
+							]
+						},
+						"description": "Update currency preference"
+					},
+					"response": []
+				},
+				{
+					"name": "6. Reset to Default (USD)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/currency/preference",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"currency",
+								"preference"
+							]
+						},
+						"description": "Reset currency to default USD"
+					},
+					"response": []
+				}
+			],
+			"description": "Currency management and conversion endpoints"
+		},
+		{
+			"name": "Jewelry API (with Currency)",
+			"item": [
+				{
+					"name": "Get Jewelry (USD - Default)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/jewelry?limit=5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"jewelry"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						},
+						"description": "Get jewelry in USD (default currency)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Jewelry (EUR - Query Param)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Prices converted to EUR\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data[0].pricing.metalPricing[0].currencyCode).to.eql('EUR');",
+									"    pm.expect(jsonData.data[0].pricing.metalPricing[0].currencySymbol).to.eql('€');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/jewelry?currency=EUR&limit=5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"jewelry"
+							],
+							"query": [
+								{
+									"key": "currency",
+									"value": "EUR"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						},
+						"description": "Get jewelry with prices in EUR using query parameter"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Jewelry (INR - Header)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Prices converted to INR\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data[0].pricing.metalPricing[0].currencyCode).to.eql('INR');",
+									"    pm.expect(jsonData.data[0].pricing.metalPricing[0].currencySymbol).to.eql('₹');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Currency",
+								"value": "INR"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/jewelry?limit=5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"jewelry"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						},
+						"description": "Get jewelry with prices in INR using X-Currency header"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Jewelry (AUD)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/jewelry?currency=AUD&limit=5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"jewelry"
+							],
+							"query": [
+								{
+									"key": "currency",
+									"value": "AUD"
+								},
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						},
+						"description": "Get jewelry with prices in Australian Dollars"
+					},
+					"response": []
+				}
+			],
+			"description": "Jewelry API endpoints with currency conversion support"
+		},
+		{
+			"name": "Cart & Checkout (with Currency)",
+			"item": [
+				{
+					"name": "Get Cart (with Currency)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							},
+							{
+								"key": "X-Currency",
+								"value": "EUR"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/cart",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"cart"
+							]
+						},
+						"description": "Get cart with prices converted to specified currency"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Checkout (with Currency)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/checkout?currency=INR",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"checkout"
+							],
+							"query": [
+								{
+									"key": "currency",
+									"value": "INR"
+								}
+							]
+						},
+						"description": "Get checkout with prices in specified currency"
+					},
+					"response": []
+				}
+			],
+			"description": "Cart and checkout endpoints with currency support"
+		},
+		{
+			"name": "Test Scenarios",
+			"item": [
+				{
+					"name": "Scenario: Admin Password Update Flow",
+					"item": [
+						{
+							"name": "Step 1: Admin Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Admin logged in\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.data.isAdmin).to.be.true;",
+											"    pm.environment.set('admin_token', jsonData.data.token);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"email\": \"testadmin@celora.com\",\n  \"password\": \"newpassword456\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/auth/admin/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"admin",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Step 2: Update User Password",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Password updated\", function () {",
+											"    var jsonData = pm.response.json();",
+											"    pm.expect(jsonData.success).to.be.true;",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"password\": \"updatedPassword789\",\n  \"sendEmail\": false\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/auth/admin/update-password/6914705c90a5d4bd0a7798f3",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"auth",
+										"admin",
+										"update-password",
+										"6914705c90a5d4bd0a7798f3"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Complete admin password update workflow"
+				},
+				{
+					"name": "Scenario: Currency Conversion Test",
+					"item": [
+						{
+							"name": "USD Price",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/jewelry?limit=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"jewelry"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EUR Price",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/jewelry?currency=EUR&limit=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"jewelry"
+									],
+									"query": [
+										{
+											"key": "currency",
+											"value": "EUR"
+										},
+										{
+											"key": "limit",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "INR Price",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/jewelry?currency=INR&limit=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"jewelry"
+									],
+									"query": [
+										{
+											"key": "currency",
+											"value": "INR"
+										},
+										{
+											"key": "limit",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"description": "Compare prices across different currencies"
+				}
+			],
+			"description": "Complete test scenarios for various workflows"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string",
+			"description": "Base URL for the API"
+		},
+		{
+			"key": "auth_token",
+			"value": "",
+			"type": "string",
+			"description": "JWT token for authenticated user"
+		},
+		{
+			"key": "admin_token",
+			"value": "",
+			"type": "string",
+			"description": "JWT token for admin user"
+		}
+	]
+}

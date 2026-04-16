@@ -1,0 +1,34 @@
+
+> Celora-jewelry-backend@1.0.2 dev
+> nodemon src/server.js
+
+[33m[nodemon] 3.1.10[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): *.*[39m
+[33m[nodemon] watching extensions: js,mjs,cjs,json[39m
+[32m[nodemon] starting `node src/server.js`[39m
+[INFO] Server version 1.0.2
+[TRACE] Starting server.js...
+🕒 Exchange rate CRON scheduler started.
+(node:5370) [MONGOOSE] Warning: `collection` is a reserved schema pathname and may break some functionality. You are allowed to use it, but use at your own risk. To disable this warning pass `suppressReservedKeysWarning` as a schema option.
+(Use `node --trace-warnings ...` to show where the warning was created)
+ Redis connected
+MongoDB Connected
+[TRACE] Database connected successfully
+[TRACE] Server running on port 3000
+node:events:502
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: read EIO
+    at TTY.onStreamRead (node:internal/stream_base_commons:218:20)
+Emitted 'error' event on ReadStream instance at:
+    at emitErrorNT (node:internal/streams/destroy:169:8)
+    at emitErrorCloseNT (node:internal/streams/destroy:128:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:82:21) {
+  errno: -5,
+  code: 'EIO',
+  syscall: 'read'
+}
+
+Node.js v20.19.6

@@ -1,0 +1,1127 @@
+{
+  "info": {
+    "name": "Group-wise RBAC System Testing",
+    "description": "Test collection for hierarchical role-based access control system with group permissions",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{admin_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set base URL if not set",
+          "if (!pm.environment.get('base_url')) {",
+          "    pm.environment.set('base_url', 'http://localhost:3000');",
+          "}"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Setup & Authentication",
+      "item": [
+        {
+          "name": "Login as Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Admin login successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('token');",
+                  "    pm.environment.set('admin_token', responseJson.token);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Create Test User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Test user created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    const responseJson = pm.response.json();",
+                  "    if (responseJson.user && responseJson.user._id) {",
+                  "        pm.environment.set('test_user_id', responseJson.user._id);",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"testuser@celora.com\",\n  \"password\": \"test123\",\n  \"firstName\": \"Test\",\n  \"lastName\": \"User\",\n  \"role\": \"USER\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/user",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user"]
+            }
+          }
+        },
+        {
+          "name": "Login as Test User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Test user login successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('token');",
+                  "    pm.environment.set('test_user_token', responseJson.token);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"testuser@celora.com\",\n  \"password\": \"test123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "auth", "login"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Group Permission Management",
+      "item": [
+        {
+          "name": "Get All Page Groups",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Groups retrieved successfully', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('groups');",
+                  "    pm.expect(responseJson.groups).to.have.property('pricemanagement');",
+                  "    pm.expect(responseJson.groups.pricemanagement).to.include('exchangerate');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/permissions/groups",
+              "host": ["{{base_url}}"],
+              "path": ["api", "permissions", "groups"]
+            }
+          }
+        },
+        {
+          "name": "Get ADMIN Role Permissions",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Admin role permissions retrieved', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('role');",
+                  "    pm.environment.set('admin_role_id', responseJson.role._id);",
+                  "});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Get ADMIN role ID first",
+                  "pm.sendRequest({",
+                  "    url: pm.environment.get('base_url') + '/api/v1/rbac/roles',",
+                  "    method: 'GET',",
+                  "    header: {",
+                  "        'Authorization': 'Bearer ' + pm.environment.get('admin_token')",
+                  "    }",
+                  "}, function (err, response) {",
+                  "    if (!err) {",
+                  "        const roles = response.json().roles;",
+                  "        const adminRole = roles.find(r => r.name === 'ADMIN');",
+                  "        if (adminRole) {",
+                  "            pm.environment.set('admin_role_id', adminRole._id);",
+                  "        }",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/permissions/roles/{{admin_role_id}}/permissions",
+              "host": ["{{base_url}}"],
+              "path": ["api", "permissions", "roles", "{{admin_role_id}}", "permissions"]
+            }
+          }
+        },
+        {
+          "name": "Create Test Role with Group Permissions",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Test role created successfully', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('role');",
+                  "    pm.environment.set('test_role_id', responseJson.role._id);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"TEST_MANAGER\",\n  \"description\": \"Test role with group permissions\",\n  \"permissions\": [\n    {\n      \"resource\": \"pricemanagement\",\n      \"actions\": [\"read\", \"update\"],\n      \"group\": null\n    },\n    {\n      \"resource\": \"jewelry\",\n      \"actions\": [\"create\", \"read\", \"update\"],\n      \"group\": null\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/v1/rbac/roles",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "rbac", "roles"]
+            }
+          }
+        },
+        {
+          "name": "Update Role with Group Permissions",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Role permissions updated successfully', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.success).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"groupPermissions\": {\n    \"pricemanagement\": {\n      \"enabled\": true,\n      \"actions\": [\"read\", \"update\"]\n    },\n    \"jewelry\": {\n      \"enabled\": true,\n      \"actions\": [\"create\", \"read\", \"update\"]\n    },\n    \"contentmanagement\": {\n      \"enabled\": true,\n      \"actions\": [\"read\"]\n    }\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/permissions/roles/{{test_role_id}}/permissions",
+              "host": ["{{base_url}}"],
+              "path": ["api", "permissions", "roles", "{{test_role_id}}", "permissions"]
+            }
+          }
+        },
+        {
+          "name": "Add Group Permission to Role",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Group permission added successfully', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.success).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enabled\": true,\n  \"actions\": [\"create\", \"read\", \"update\", \"delete\"]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/permissions/roles/{{test_role_id}}/groups/dashboard",
+              "host": ["{{base_url}}"],
+              "path": ["api", "permissions", "roles", "{{test_role_id}}", "groups", "dashboard"]
+            }
+          }
+        },
+        {
+          "name": "Remove Group Permission from Role",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Group permission removed successfully', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.success).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enabled\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/permissions/roles/{{test_role_id}}/groups/contentmanagement",
+              "host": ["{{base_url}}"],
+              "path": ["api", "permissions", "roles", "{{test_role_id}}", "groups", "contentmanagement"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Permission Testing - Price Management Group",
+      "item": [
+        {
+          "name": "Test Access: Exchange Rate (READ) - Should PASS",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Access granted via group permission', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Assign test role to test user first",
+                  "pm.sendRequest({",
+                  "    url: pm.environment.get('base_url') + '/api/user/' + pm.environment.get('test_user_id'),",
+                  "    method: 'PUT',",
+                  "    header: {",
+                  "        'Authorization': 'Bearer ' + pm.environment.get('admin_token'),",
+                  "        'Content-Type': 'application/json'",
+                  "    },",
+                  "    body: {",
+                  "        mode: 'raw',",
+                  "        raw: JSON.stringify({",
+                  "            role: pm.environment.get('test_role_id')",
+                  "        })",
+                  "    }",
+                  "}, function(err, response) {",
+                  "    console.log('User role updated:', response ? response.status : 'error');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{test_user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/exchangerate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "exchangerate"]
+            }
+          }
+        },
+        {
+          "name": "Test Access: Metal Price (UPDATE) - Should PASS",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Update access granted via group permission', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{test_user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"MetalName\": \"Gold\",\n  \"MetalType\": \"18K\",\n  \"MetalPrice\": 65.50\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/metalprice/test-id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "metalprice", "test-id"]
+            }
+          }
+        },
+        {
+          "name": "Test Access: Other Price (DELETE) - Should FAIL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Delete access denied (no delete permission in group)', function () {",
+                  "    pm.response.to.have.status(403);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.message).to.include('Forbidden');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{test_user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/api/otherprice/test-id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "otherprice", "test-id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Permission Testing - Individual API vs Group",
+      "item": [
+        {
+          "name": "Test Access: Jewelry (CREATE) - Should PASS",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Create access granted via group permission', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{test_user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Test Ring\",\n  \"description\": \"Test jewelry item\",\n  \"type\": \"engagement\",\n  \"price\": 1500,\n  \"weight\": 5.5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/jewelry",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jewelry"]
+            }
+          }
+        },
+        {
+          "name": "Test Access: Category (READ) - Should FAIL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Access denied (no group permission for productmanagement)', function () {",
+                  "    pm.response.to.have.status(403);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.message).to.include('Forbidden');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{test_user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/category",
+              "host": ["{{base_url}}"],
+              "path": ["api", "category"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. GUEST User Testing",
+      "item": [
+        {
+          "name": "GUEST: View Jewelry (No Auth) - Should PASS",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('GUEST can view public jewelry', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/jewelry",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jewelry"]
+            }
+          }
+        },
+        {
+          "name": "GUEST: View Categories (No Auth) - Should PASS",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('GUEST can view public categories', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/category",
+              "host": ["{{base_url}}"],
+              "path": ["api", "category"]
+            }
+          }
+        },
+        {
+          "name": "GUEST: View Blogs (No Auth) - Should PASS",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('GUEST can view public blogs', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/blog",
+              "host": ["{{base_url}}"],
+              "path": ["api", "blog"]
+            }
+          }
+        },
+        {
+          "name": "GUEST: Create Jewelry (No Auth) - Should FAIL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('GUEST cannot create jewelry', function () {",
+                  "    pm.response.to.have.status(401);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Unauthorized Ring\",\n  \"description\": \"Should not be created\",\n  \"price\": 1000\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/jewelry",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jewelry"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Group Permission Removal Testing",
+      "item": [
+        {
+          "name": "Remove Price Management Group Permission",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Group permission removed successfully', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.success).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enabled\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/permissions/roles/{{test_role_id}}/groups/pricemanagement",
+              "host": ["{{base_url}}"],
+              "path": ["api", "permissions", "roles", "{{test_role_id}}", "groups", "pricemanagement"]
+            }
+          }
+        },
+        {
+          "name": "Test Access: Exchange Rate (After Group Removal) - Should FAIL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Access denied after group permission removal', function () {",
+                  "    pm.response.to.have.status(403);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.message).to.include('Forbidden');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{test_user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/exchangerate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "exchangerate"]
+            }
+          }
+        },
+        {
+          "name": "Test Access: Metal Price (After Group Removal) - Should FAIL",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Access denied for all APIs in removed group', function () {",
+                  "    pm.response.to.have.status(403);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.message).to.include('Forbidden');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{test_user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/metalprice",
+              "host": ["{{base_url}}"],
+              "path": ["api", "metalprice"]
+            }
+          }
+        },
+        {
+          "name": "Test Access: Jewelry (Still Works) - Should PASS",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Other group permissions still work', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{test_user_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/jewelry",
+              "host": ["{{base_url}}"],
+              "path": ["api", "jewelry"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Setup Scripts Testing",
+      "item": [
+        {
+          "name": "Test GUEST Role Permissions",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('GUEST role has proper public permissions', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson.roles).to.be.an('array');",
+                  "    const guestRole = responseJson.roles.find(r => r.name === 'GUEST');",
+                  "    pm.expect(guestRole).to.not.be.undefined;",
+                  "    pm.expect(guestRole.permissions).to.be.an('array');",
+                  "    pm.environment.set('guest_role_id', guestRole._id);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/v1/rbac/roles",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "rbac", "roles"]
+            }
+          }
+        },
+        {
+          "name": "Get GUEST Role Detailed Permissions",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('GUEST role has grouped public permissions', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    const responseJson = pm.response.json();",
+                  "    pm.expect(responseJson).to.have.property('role');",
+                  "    pm.expect(responseJson.role.name).to.equal('GUEST');",
+                  "    pm.expect(responseJson).to.have.property('ungroupedPermissions');",
+                  "    ",
+                  "    // Check for public resources",
+                  "    const hasJewelryPerm = responseJson.ungroupedPermissions.some(p => ",
+                  "        p.resource === 'jewelry' && p.actions.includes('read')",
+                  "    );",
+                  "    pm.expect(hasJewelryPerm).to.be.true;",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/permissions/roles/{{guest_role_id}}/permissions",
+              "host": ["{{base_url}}"],
+              "path": ["api", "permissions", "roles", "{{guest_role_id}}", "permissions"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Cleanup",
+      "item": [
+        {
+          "name": "Delete Test Role",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Test role deleted successfully', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/api/v1/rbac/roles/{{test_role_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "v1", "rbac", "roles", "{{test_role_id}}"]
+            }
+          }
+        },
+        {
+          "name": "Delete Test User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Test user deleted successfully', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/api/user/{{test_user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "user", "{{test_user_id}}"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

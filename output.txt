@@ -1,0 +1,211 @@
+db.ringsizes.insertMany([
+  {
+    ringsizeId: ObjectId(),
+    size: "4",
+    prices: { gold10k: 20, gold14k: 25, gold18k: 30, silver925: 15 },
+    gender: { men: true, women: true },
+    isDefault: { men: false, women: false },
+    createdOn: new Date(),
+    createdBy: ObjectId("685cd5ad2169d032519eeb3f"),
+    updatedOn: new Date(),
+    updatedBy: ObjectId("685cd5ad2169d032519eeb3f")
+  },
+  {
+    ringsizeId: ObjectId(),
+    size: "5",
+    prices: { gold10k: 0, gold14k: 0, gold18k: 0, silver925: 0 },
+    gender: { men: true, women: true },
+    isDefault: { men: false, women: false },
+    createdOn: new Date(),
+    createdBy: ObjectId("685cd5ad2169d032519eeb3f"),
+    updatedOn: new Date(),
+    updatedBy: ObjectId("685cd5ad2169d032519eeb3f")
+  },
+  {
+    ringsizeId: ObjectId(),
+    size: "6",
+    prices: { gold10k: 0, gold14k: 0, gold18k: 0, silver925: 0 },
+    gender: { men: true, women: true },
+    isDefault: { men: false, women: false },
+    createdOn: new Date(),
+    createdBy: ObjectId("685cd5ad2169d032519eeb3f"),
+    updatedOn: new Date(),
+    updatedBy: ObjectId("685cd5ad2169d032519eeb3f")
+  },
+  {
+    ringsizeId: ObjectId(),
+    size: "7",
+    prices: { gold10k: 0, gold14k: 0, gold18k: 0, silver925: 0 },
+    gender: { men: true, women: true },
+    isDefault: { men: false, women: false },
+    createdOn: new Date(),
+    createdBy: ObjectId("685cd5ad2169d032519eeb3f"),
+    updatedOn: new Date(),
+    updatedBy: ObjectId("685cd5ad2169d032519eeb3f")
+  },
+  {
+    ringsizeId: ObjectId(),
+    size: "8",
+    prices: { gold10k: 0, gold14k: 0, gold18k: 0, silver925: 0 },
+    gender: { men: true, women: true },
+    isDefault: { men: false, women: false },
+    createdOn: new Date(),
+    createdBy: ObjectId("685cd5ad2169d032519eeb3f"),
+    updatedOn: new Date(),
+    updatedBy: ObjectId("685cd5ad2169d032519eeb3f")
+  },
+  {
+    ringsizeId: ObjectId(),
+    size: "9",
+    prices: { gold10k: 0, gold14k: 0, gold18k: 0, silver925: 0 },
+    gender: { men: true, women: true },
+    isDefault: { men: false, women: false },
+    createdOn: new Date(),
+    createdBy: ObjectId("685cd5ad2169d032519eeb3f"),
+    updatedOn: new Date(),
+    updatedBy: ObjectId("685cd5ad2169d032519eeb3f")
+  },
+  {
+    ringsizeId: ObjectId(),
+    size: "10",
+    prices: { gold10k: 0, gold14k: 0, gold18k: 0, silver925: 0 },
+    gender: { men: true, women: true },
+    isDefault: { men: false, women: false },
+    createdOn: new Date(),
+    createdBy: ObjectId("685cd5ad2169d032519eeb3f"),
+    updatedOn: new Date(),
+    updatedBy: ObjectId("685cd5ad2169d032519eeb3f")
+  },
+  {
+    ringsizeId: ObjectId(),
+    size: "11",
+    prices: { gold10k: 0, gold14k: 0, gold18k: 0, silver925: 0 },
+    gender: { men: true, women: true },
+    isDefault: { men: false, women: false },
+    createdOn: new Date(),
+    createdBy: ObjectId("685cd5ad2169d032519eeb3f"),
+    updatedOn: new Date(),
+    updatedBy: ObjectId("685cd5ad2169d032519eeb3f")
+  },
+  {
+    ringsizeId: ObjectId(),
+    size: "12",
+    prices: { gold10k: 0, gold14k: 0, gold18k: 0, silver925: 0 },
+    gender: { men: true, women: true },
+    isDefault: { men: false, women: false },
+    createdOn: new Date(),
+    createdBy: ObjectId("685cd5ad2169d032519eeb3f"),
+    updatedOn: new Date(),
+    updatedBy: ObjectId("685cd5ad2169d032519eeb3f")
+  },
+  {
+    ringsizeId: ObjectId(),
+    size: "13",
+    prices: { gold10k: 0, gold14k: 0, gold18k: 0, silver925: 0 },
+    gender: { men: true, women: true },
+    isDefault: { men: false, women: false },
+    createdOn: new Date(),
+    createdBy: ObjectId("685cd5ad2169d032519eeb3f"),
+    updatedOn: new Date(),
+    updatedBy: ObjectId("685cd5ad2169d032519eeb3f")
+  },
+  {
+    ringsizeId: ObjectId(),
+    size: "4.5",
+    prices: { gold10k: 0, gold14k: 0, gold18k: 0, silver925: 0 },
+    gender: { men: true, women: true },
+    isDefault: { men: false, women: false },
+    createdOn: new Date(),
+    createdBy: ObjectId("685cd5ad2169d032519eeb3f"),
+    updatedOn: new Date(),
+    updatedBy: ObjectId("685cd5ad2169d032519eeb3f")
+  },
+  {
+    ringsizeId: ObjectId(),
+    size: "5.5",
+    prices: { gold10k: 0, gold14k: 0, gold18k: 0, silver925: 0 },
+    gender: { men: true, women: true },
+    isDefault: { men: false, women: false },
+    createdOn: new Date(),
+    createdBy: ObjectId("685cd5ad2169d032519eeb3f"),
+    updatedOn: new Date(),
+    updatedBy: ObjectId("685cd5ad2169d032519eeb3f")
+  },
+  {
+    ringsizeId: ObjectId(),
+    size: "6.5",
+    prices: { gold10k: 0, gold14k: 0, gold18k: 0, silver925: 0 },
+    gender: { men: true, women: true },
+    isDefault: { men: false, women: false },
+    createdOn: new Date(),
+    createdBy: ObjectId("685cd5ad2169d032519eeb3f"),
+    updatedOn: new Date(),
+    updatedBy: ObjectId("685cd5ad2169d032519eeb3f")
+  },
+  {
+    ringsizeId: ObjectId(),
+    size: "7.5",
+    prices: { gold10k: 0, gold14k: 0, gold18k: 0, silver925: 0 },
+    gender: { men: true, women: true },
+    isDefault: { men: false, women: false },
+    createdOn: new Date(),
+    createdBy: ObjectId("685cd5ad2169d032519eeb3f"),
+    updatedOn: new Date(),
+    updatedBy: ObjectId("685cd5ad2169d032519eeb3f")
+  },
+  {
+    ringsizeId: ObjectId(),
+    size: "8.5",
+    prices: { gold10k: 0, gold14k: 0, gold18k: 0, silver925: 0 },
+    gender: { men: true, women: true },
+    isDefault: { men: false, women: false },
+    createdOn: new Date(),
+    createdBy: ObjectId("685cd5ad2169d032519eeb3f"),
+    updatedOn: new Date(),
+    updatedBy: ObjectId("685cd5ad2169d032519eeb3f")
+  },
+  {
+    ringsizeId: ObjectId(),
+    size: "9.5",
+    prices: { gold10k: 0, gold14k: 0, gold18k: 0, silver925: 0 },
+    gender: { men: true, women: true },
+    isDefault: { men: false, women: false },
+    createdOn: new Date(),
+    createdBy: ObjectId("685cd5ad2169d032519eeb3f"),
+    updatedOn: new Date(),
+    updatedBy: ObjectId("685cd5ad2169d032519eeb3f")
+  },
+  {
+    ringsizeId: ObjectId(),
+    size: "10.5",
+    prices: { gold10k: 0, gold14k: 0, gold18k: 0, silver925: 0 },
+    gender: { men: true, women: true },
+    isDefault: { men: false, women: false },
+    createdOn: new Date(),
+    createdBy: ObjectId("685cd5ad2169d032519eeb3f"),
+    updatedOn: new Date(),
+    updatedBy: ObjectId("685cd5ad2169d032519eeb3f")
+  },
+  {
+    ringsizeId: ObjectId(),
+    size: "11.5",
+    prices: { gold10k: 0, gold14k: 0, gold18k: 0, silver925: 0 },
+    gender: { men: true, women: true },
+    isDefault: { men: false, women: false },
+    createdOn: new Date(),
+    createdBy: ObjectId("685cd5ad2169d032519eeb3f"),
+    updatedOn: new Date(),
+    updatedBy: ObjectId("685cd5ad2169d032519eeb3f")
+  },
+  {
+    ringsizeId: ObjectId(),
+    size: "12.5",
+    prices: { gold10k: 0, gold14k: 0, gold18k: 0, silver925: 0 },
+    gender: { men: true, women: true },
+    isDefault: { men: false, women: false },
+    createdOn: new Date(),
+    createdBy: ObjectId("685cd5ad2169d032519eeb3f"),
+    updatedOn: new Date(),
+    updatedBy: ObjectId("685cd5ad2169d032519eeb3f")
+  }
+]);

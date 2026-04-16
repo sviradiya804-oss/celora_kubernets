@@ -1,0 +1,184 @@
+{
+  "info": {
+    "name": "RBAC - Groupwise & Guest Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "rbac-groupwise-guest-collection"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:3000" },
+    { "key": "admin_email", "value": "admin@yopmail.com" },
+    { "key": "admin_password", "value": "admin@123" },
+    { "key": "test_email", "value": "testuser101@yopmail.com" },
+    { "key": "test_password", "value": "admin@123" },
+    { "key": "admin_token", "value": "" },
+    { "key": "test_token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth - Admin Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{admin_email}}\",\n  \"password\": \"{{admin_password}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","v1","auth","login"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var json = pm.response.json();",
+              "if (json && json.token) {",
+              "  pm.environment.set('admin_token', json.token);",
+              "  console.log('Saved admin_token');",
+              "} else {",
+              "  console.log('No token in login response');",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Auth - Test User Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{test_email}}\",\n  \"password\": \"{{test_password}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/auth/login",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","v1","auth","login"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "var json = pm.response.json();",
+              "if (json && json.token) {",
+              "  pm.environment.set('test_token', json.token);",
+              "  console.log('Saved test_token');",
+              "} else {",
+              "  console.log('No token in login response');",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin - List Roles (group permissions)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{admin_token}}" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/v1/rbac/roles",
+          "host": ["{{baseUrl}}"],
+          "path": ["api","v1","rbac","roles"]
+        }
+      }
+    },
+    {
+      "name": "Admin - Get Available Permission Groups",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{admin_token}}" } ],
+        "url": { "raw": "{{baseUrl}}/api/permissions/groups", "host": ["{{baseUrl}}"], "path": ["api","permissions","groups"] }
+      }
+    },
+    {
+      "name": "Admin - Get Available Permissions (flat)",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{admin_token}}" } ],
+        "url": { "raw": "{{baseUrl}}/api/user-permissions/available-permissions", "host": ["{{baseUrl}}"], "path": ["api","user-permissions","available-permissions"] }
+      }
+    },
+    {
+      "name": "Admin - Search user (demo/test)",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{admin_token}}" } ],
+        "url": { "raw": "{{baseUrl}}/api/user-permissions/users/search?q={{test_email}}", "host": ["{{baseUrl}}"], "path": ["api","user-permissions","users","search"], "query": [ { "key": "q", "value": "{{test_email}}" } ] }
+      }
+    },
+    {
+      "name": "Admin - Assign Role to User",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{admin_token}}" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"roleId\": \"{{roleId}}\"\n}" },
+        "url": { "raw": "{{baseUrl}}/api/user-permissions/users/{{userId}}/role", "host": ["{{baseUrl}}"], "path": ["api","user-permissions","users","{{userId}}","role"] }
+      }
+    },
+    {
+      "name": "Admin - Add Individual Permission to User",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{admin_token}}" } ],
+        "body": { "mode": "raw", "raw": "{\n  \"resource\": \"dashboard\",\n  \"actions\": [\"read\"]\n}\n" },
+        "url": { "raw": "{{baseUrl}}/api/user-permissions/users/{{userId}}/permissions/add", "host": ["{{baseUrl}}"], "path": ["api","user-permissions","users","{{userId}}","permissions","add"] }
+      }
+    },
+    {
+      "name": "Admin - Get User (effective permissions)",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{admin_token}}" } ],
+        "url": { "raw": "{{baseUrl}}/api/user-permissions/users/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api","user-permissions","users","{{userId}}"] }
+      }
+    },
+    {
+      "name": "Test User - Check Effective Permissions (self)",
+      "request": {
+        "method": "GET",
+        "header": [ { "key": "Authorization", "value": "Bearer {{test_token}}" } ],
+        "url": { "raw": "{{baseUrl}}/api/user-permissions/users/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api","user-permissions","users","{{userId}}"] }
+      }
+    },
+    {
+      "name": "Guest - Try read public resource (e.g. jewelry)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/jewelry", "host": ["{{baseUrl}}"], "path": ["api","jewelry"] }
+      }
+    },
+    {
+      "name": "Guest - Try read protected resource (e.g. user list)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/api/user-permissions/users", "host": ["{{baseUrl}}"], "path": ["api","user-permissions","users"] }
+      }
+    },
+    {
+      "name": "Admin - Remove Individual Permission",
+      "request": {
+        "method": "DELETE",
+        "header": [ { "key": "Authorization", "value": "Bearer {{admin_token}}" } ],
+        "url": { "raw": "{{baseUrl}}/api/user-permissions/users/{{userId}}/permissions/dashboard", "host": ["{{baseUrl}}"], "path": ["api","user-permissions","users","{{userId}}","permissions","dashboard"] }
+      }
+    }
+  ]
+}

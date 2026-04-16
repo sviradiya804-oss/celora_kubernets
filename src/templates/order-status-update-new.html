@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{#if isConfirmation}}Order Confirmation{{else}}Order Status Update{{/if}} - Celora Jewelry</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 0;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 300;
+        }
+        .content {
+            padding: 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        .status-update {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 5px solid #667eea;
+            position: relative;
+        }
+        .status-icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        .order-summary {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 5px solid #f39c12;
+        }
+        .order-details {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border: 1px solid #e9ecef;
+        }
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #495057;
+        }
+        .detail-value {
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        .images-section {
+            text-align: center;
+            margin: 25px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            border-radius: 12px;
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .image-item {
+            text-align: center;
+        }
+        .image-item img {
+            max-width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        .image-item img:hover {
+            transform: scale(1.05);
+        }
+        .image-caption {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #6c757d;
+            font-style: italic;
+        }
+        .next-steps {
+            background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 5px solid #28a745;
+        }
+        .next-steps ul {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+        .next-steps li {
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        .tracking-info {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 5px solid #ffc107;
+        }
+        .btn-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+        .footer {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            text-align: center;
+            padding: 25px;
+            color: #6c757d;
+            font-size: 14px;
+            border-top: 1px solid #dee2e6;
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .social-links {
+            margin: 15px 0;
+        }
+        .social-links a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: 500;
+        }
+        
+        /* Status-specific styling */
+        .status-confirmed { background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border-left-color: #28a745; }
+        .status-manufacturing { background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); border-left-color: #ffc107; }
+        .status-quality { background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%); border-left-color: #17a2b8; }
+        .status-delivery { background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%); border-left-color: #dc3545; }
+        .status-delivered { background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border-left-color: #28a745; }
+        
+        @media (max-width: 600px) {
+            .container { margin: 10px; }
+            .content { padding: 20px; }
+            .detail-row { flex-direction: column; align-items: flex-start; }
+            .detail-row .detail-value { margin-top: 5px; }
+            .image-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="logo">Celora Jewelry</div>
+            <h1>
+                {{#if isConfirmation}}
+                    Order Confirmation
+                {{else}}
+                    {{#if isDelivered}}
+                        Order Delivered!
+                    {{else}}
+                        Order Status Update
+                    {{/if}}
+                {{/if}}
+            </h1>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Greeting -->
+            <div class="greeting">
+                Hello {{customerName}},
+            </div>
+
+            <!-- Dynamic Status Message -->
+            {{#if isConfirmation}}
+                <p>We're excited to confirm that we've received your order and it's being processed! Your beautiful jewelry piece is now in our care.</p>
+            {{else if isDelivered}}
+                <p>Congratulations! Your order has been successfully delivered. We hope you absolutely love your new jewelry piece!</p>
+            {{else}}
+                <p>We have an important update regarding your order. Your order status has been updated!</p>
+            {{/if}}
+
+            <!-- Order Summary Section -->
+            <div class="order-summary">
+                <h3>Order Summary</h3>
+                <div class="detail-row">
+                    <span class="detail-label">Order ID:</span>
+                    <span class="detail-value">#{{orderId}}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Order Date:</span>
+                    <span class="detail-value">{{orderDate}}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status:</span>
+                    <span class="detail-value"><span class="status-badge">{{newStatus}}</span></span>
+                </div>
+                {{#if total}}
+                <div class="detail-row">
+                    <span class="detail-label">Total Amount:</span>
+                    <span class="detail-value">${{total}}</span>
+                </div>
+                {{/if}}
+            </div>
+
+            <!-- Status Update Section (for non-confirmation emails) -->
+            {{#unless isConfirmation}}
+            <div class="status-update status-{{statusClass}}">
+                <h3><span class="status-icon">Update</span>Status Update</h3>
+                {{#if oldStatus}}
+                <p><strong>Previous Status:</strong> {{oldStatus}}</p>
+                {{/if}}
+                <p><strong>Current Status:</strong> <span class="status-badge">{{newStatus}}</span></p>
+                {{#if statusMessage}}
+                <p><strong>Update Message:</strong> {{statusMessage}}</p>
+                {{/if}}
+            </div>
+            {{/unless}}
+
+            <!-- Sub-Order Update Section (when a specific item is updated) -->
+            {{#if isSubOrderUpdate}}
+            <div class="order-summary">
+                <h3>Item Status Update</h3>
+                <p><strong>Your Order Items:</strong></p>
+                {{#if subOrderCount}}
+                <p style="font-size: 16px; color: #2c3e50; margin: 15px 0;">
+                    You have <strong>{{subOrderCount}} item(s)</strong> in your order. <strong>1 item</strong> got updated to <strong>{{newStatus}}</strong>.
+                </p>
+                {{/if}}
+                <div class="detail-row" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #dee2e6;">
+                    <span class="detail-label">Updated Item ID:</span>
+                    <span class="detail-value">{{subOrderId}}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">New Status:</span>
+                    <span class="detail-value"><span class="status-badge">{{newStatus}}</span></span>
+                </div>
+            </div>
+            {{/if}}
+
+            <!-- Payment Confirmation (for confirmed orders) -->
+            {{#if isConfirmation}}
+            <div class="status-update status-confirmed">
+                <h3>Payment Confirmed & Order Processing</h3>
+                <p>Your payment has been successfully processed and your order is now confirmed. We'll begin working on your beautiful jewelry piece right away!</p>
+            </div>
+            {{/if}}
+
+            <!-- Images Section -->
+            {{#if images}}
+            {{#if (gt images.length 0)}}
+            <div class="images-section">
+                <h3>
+                    {{#if isConfirmation}}
+                        Order Confirmation Photos
+                    {{else if isManufacturing}}
+                        Manufacturing Progress Photos
+                    {{else if isQuality}}
+                        Quality Check Photos
+                    {{else if isDelivery}}
+                        Shipping Photos
+                    {{else if isDelivered}}
+                        Delivery Confirmation Photos
+                    {{else}}
+                        Status Update Photos
+                    {{/if}}
+                </h3>
+                <p>
+                    {{#if isConfirmation}}
+                        Here are the details of your confirmed order:
+                    {{else if isManufacturing}}
+                        Take a look at the progress of your jewelry being crafted:
+                    {{else if isQuality}}
+                        Your jewelry has passed our quality checks:
+                    {{else if isDelivery}}
+                        Your order is packaged and ready for delivery:
+                    {{else if isDelivered}}
+                        Here's confirmation of your delivered order:
+                    {{else}}
+                        Here are the current photos of your order:
+                    {{/if}}
+                </p>
+                
+                <div class="image-grid">
+                    {{#each images}}
+                    <div class="image-item">
+                        <img src="cid:{{this.cid}}" alt="{{this.description}}" />
+                        <div class="image-caption">{{this.description}}</div>
+                    </div>
+                    {{/each}}
+                </div>
+                <p style="font-size: 14px; color: #6c757d; margin-top: 15px;">
+                    📎 These images are also attached to this email for your records.
+                </p>
+            </div>
+            {{/if}}
+            {{/if}}
+
+            <!-- Next Steps Section -->
+            {{#if showNextSteps}}
+            <div class="next-steps">
+                <h3>What's Next?</h3>
+                <ul>
+                    {{#if isConfirmation}}
+                        <li>Your order will move to manufacturing within 1-2 business days</li>
+                        <li>You'll receive updates at each stage of the process</li>
+                        <li>Expected completion time: 5-7 business days</li>
+                        <li>We'll notify you when your order ships</li>
+                    {{else if isManufacturing}}
+                        <li>Our skilled artisans are carefully crafting your piece</li>
+                        <li>Manufacturing typically takes 3-5 business days</li>
+                        <li>Next: Quality assurance and final inspection</li>
+                        <li>You'll receive updates as we progress</li>
+                    {{else if isQuality}}
+                        <li>Final quality checks are being performed</li>
+                        <li>Professional packaging and preparation for shipping</li>
+                        <li>Your order will ship within 1-2 business days</li>
+                        <li>Tracking information will be provided once shipped</li>
+                    {{else if isDelivery}}
+                        <li>Your package is on its way!</li>
+                        <li>Expected delivery: {{expectedDelivery}}</li>
+                        <li>Track your package using the information below</li>
+                        <li>Someone should be available to receive the package</li>
+                    {{else if isDelivered}}
+                        <li>Enjoy your beautiful new jewelry!</li>
+                        <li>Share your photos on social media and tag us</li>
+                        <li>Leave a review to help other customers</li>
+                        <li>Contact us if you have any questions or concerns</li>
+                    {{/if}}
+                </ul>
+            </div>
+            {{/if}}
+
+            <!-- Tracking Information -->
+            {{#if trackingInfo}}
+            <div class="tracking-info">
+                <h4><span class="status-icon">📍</span>Tracking Information</h4>
+                <p><strong>Tracking Number:</strong> {{trackingInfo.number}}</p>
+                <p><strong>Carrier:</strong> {{trackingInfo.carrier}}</p>
+                <p><strong>Expected Delivery:</strong> {{trackingInfo.expectedDelivery}}</p>
+                {{#if trackingInfo.url}}
+                <p><a href="{{trackingInfo.url}}" style="color: #667eea; text-decoration: none; font-weight: bold;">Track Your Package →</a></p>
+                {{/if}}
+            </div>
+            {{/if}}
+
+            <!-- Action Button -->
+            <div class="btn-container">
+                <a href="https://celorajewelry.com/orders/{{orderId}}" class="btn">
+                    {{#if isDelivered}}
+                        Leave a Review
+                    {{else}}
+                        Track Your Order
+                    {{/if}}
+                </a>
+            </div>
+
+            <!-- Order Details -->
+            {{#if products}}
+            <div class="order-details">
+                <h3><span class="status-icon">💍</span>Order Details</h3>
+                {{#each products}}
+                <div class="detail-row">
+                    <span class="detail-label">{{this.name}}</span>
+                    <span class="detail-value">Qty: {{this.quantity}} - ${{this.price}}</span>
+                </div>
+                {{/each}}
+                {{#if subtotal}}
+                <div class="detail-row">
+                    <span class="detail-label">Subtotal:</span>
+                    <span class="detail-value">${{subtotal}}</span>
+                </div>
+                {{/if}}
+                {{#if shipping}}
+                <div class="detail-row">
+                    <span class="detail-label">Shipping:</span>
+                    <span class="detail-value">${{shipping}}</span>
+                </div>
+                {{/if}}
+                {{#if tax}}
+                <div class="detail-row">
+                    <span class="detail-label">Tax:</span>
+                    <span class="detail-value">${{tax}}</span>
+                </div>
+                {{/if}}
+                {{#if total}}
+                <div class="detail-row" style="border-top: 2px solid #667eea; margin-top: 10px; padding-top: 10px;">
+                    <span class="detail-label"><strong>Total:</strong></span>
+                    <span class="detail-value"><strong>${{total}}</strong></span>
+                </div>
+                {{/if}}
+            </div>
+            {{/if}}
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Thank you for choosing Celora Jewelry!</strong></p>
+            <p>We're committed to creating beautiful, high-quality jewelry just for you.</p>
+            
+            <div class="social-links">
+                <a href="https://celorajewelry.com">Visit Our Website</a> |
+                <a href="mailto:support@celorajewelry.com">Contact Support</a> |
+                <a href="https://instagram.com/celorajewelry">Follow Us</a>
+            </div>
+            
+            <p style="margin-top: 20px; font-size: 12px; color: #adb5bd;">
+                © 2025 Celora Jewelry. All rights reserved.<br>
+                If you have any questions, please contact our customer support team.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
