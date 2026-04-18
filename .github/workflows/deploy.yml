@@ -28,7 +28,13 @@ jobs:
       - name: Setup kubectl
         uses: azure/setup-kubectl@v3
 
+      - name: Set up Kubeconfig
+        run: echo "${{ secrets.KUBE_CONFIG }}" > kubeconfig.yaml
+
       - name: Deploy to Kubernetes
+        env:
+          KUBECONFIG: ${{ github.workspace }}/kubeconfig.yaml
         run: |
+          kubectl get nodes   # debug (optional)
           kubectl apply -f deployment.yaml
           kubectl apply -f service.yaml
